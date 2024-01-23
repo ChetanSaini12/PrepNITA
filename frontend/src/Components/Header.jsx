@@ -37,11 +37,14 @@ function Header() {
               <Navbar.Link active={path==='/'}  as={'div'}>
                   <Link to='/'>Home</Link>
               </Navbar.Link>
-              <Navbar.Link active={path==='/about'} as={'div'}>
-                  <Link to='/about'>About</Link>
+              <Navbar.Link active={path==='/quizes'} as={'div'}>
+                  <Link to='/quizes'>Quizes</Link>
               </Navbar.Link>
               <Navbar.Link active={path==='/dashboard'} as={'div'}>
-                  <Link to='/dashboard'></Link>
+                  <Link to='/dashboard'>Dashboard</Link>
+              </Navbar.Link>
+              <Navbar.Link active={path==='/discuss'} as={'div'}>
+                  <Link to='/discuss'>Discuss</Link>
               </Navbar.Link>
           </Navbar.Collapse>
       </Navbar>
