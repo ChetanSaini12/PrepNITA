@@ -43,9 +43,13 @@ function Header() {
               <Navbar.Link active={path==='/dashboard'} as={'div'}>
                   <Link to='/dashboard'>Dashboard</Link>
               </Navbar.Link>
+              <Navbar.Link active={path==='/interview'} as={'div'}>
+                  <Link to='/interview'>Interviews</Link>
+              </Navbar.Link>
               <Navbar.Link active={path==='/discuss'} as={'div'}>
                   <Link to='/discuss'>Discuss</Link>
               </Navbar.Link>
+              
           </Navbar.Collapse>
       </Navbar>
     )
