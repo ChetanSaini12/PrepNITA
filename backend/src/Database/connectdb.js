@@ -1,13 +1,14 @@
 import Client from 'pg'
+import asyncHandler from '../utils/AsyncHandle.js'
 
-const connectDB = async () => {
+const connectDB = asyncHandler(async () => {
   try {
     const client = new Client.Client({
-      host: 'localhost',
-      port: 5432,
-      database: 'MindSet',
-      user: 'postgres',
-      password: 'chetanPOSTGRES1241@',
+      host: process.env.PG_HOST,
+      port: process.env.PG_PORT,
+      database: process.env.PG_DATABASE,
+      user: process.env.PG_USER,
+      password: process.env.PG_PASSWORD,
     })
 
     await client.connect()
@@ -22,10 +23,9 @@ const connectDB = async () => {
 
     await client.end()
     console.log('client has disconnected')
-    
   } catch (error) {
-    console.log("Error while connecting with Postgres : ", error);
+    console.log('Error while connecting with Postgres : ', error)
   }
-}
+})
 
 export default connectDB
