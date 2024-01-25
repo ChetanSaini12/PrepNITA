@@ -18,6 +18,7 @@ function App() {
           <Route path='/quizes' element={<Quizes></Quizes>}></Route>
           <Route path='/discuss' element={<Discuss></Discuss>}></Route>
           <Route path='/signUp' element={<SignUp></SignUp>}></Route>
+          <Route path='/signIn' element={<SignIn></SignIn>}></Route>
         </Routes>
     </BrowserRouter>
   );
