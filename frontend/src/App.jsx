@@ -5,7 +5,7 @@ import Home from './Pages/Home';
 import Header from './Components/Header';
 import Quizes from './Pages/Quizes';
 import Discuss from './Pages/Discuss';
-import Interviews from './Pages/Interview';
+import SignUp from './Pages/SignUp';
 
 function App() {
   return (
@@ -16,7 +16,7 @@ function App() {
           <Route path='/dashboard' element={<Dashboard></Dashboard>}></Route>
           <Route path='/quizes' element={<Quizes></Quizes>}></Route>
           <Route path='/discuss' element={<Discuss></Discuss>}></Route>
-          <Route path='/interview' element={<Interviews></Interviews>}></Route>
+          <Route path='/signUp' element={<SignUp></SignUp>}></Route>
         </Routes>
     </BrowserRouter>
   );
