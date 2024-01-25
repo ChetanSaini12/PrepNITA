@@ -24,4 +24,6 @@ app.use(cookieParser())
 
 // ROUTING
 
+app.use('/auth', authRouter);
+
 export {app}
