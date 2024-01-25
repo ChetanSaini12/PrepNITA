@@ -6,6 +6,7 @@ import Header from './Components/Header';
 import Quizes from './Pages/Quizes';
 import Discuss from './Pages/Discuss';
 import SignUp from './Pages/SignUp';
+import SignIn from './Pages/SignIn';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path='/quizes' element={<Quizes></Quizes>}></Route>
           <Route path='/discuss' element={<Discuss></Discuss>}></Route>
           <Route path='/signUp' element={<SignUp></SignUp>}></Route>
+          <Route path='/signIn' element={<SignIn></SignIn>}></Route>
         </Routes>
     </BrowserRouter>
   );

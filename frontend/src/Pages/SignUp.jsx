@@ -7,6 +7,7 @@ function SignUp() {
   const handleChange=(e)=>{
     setFormData({...formData,[e.target.id]:e.target.value})
   }
+  console.log(formData);
   return (
     <div className='min-h-screen mt-20 '>
       <div className='flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5'>
@@ -42,7 +43,7 @@ function SignUp() {
           </form>
           <div className='flex gap-2 text-sm mt-5'>
             <span>Already Have an Account ?</span>
-            <Link to={'/singIn'} className='text-blue-500'>SignIn</Link>
+            <Link to={'/signIn'} className='text-blue-500'>SignIn</Link>
           </div>
         </div>
       </div>
