@@ -1,8 +1,14 @@
-import { loginUser, logoutUser, registerUser } from "../controllers/auth.constroller"
-import { Router } from "express"
+import {
+  loginUser,
+  logoutUser,
+  registerUser,
+} from '../controllers/auth.constroller.js'
+import { Router } from 'express'
 
-const router = Router()
+const authRouter = Router()
 
-router.use('/login').post(loginUser)
-router.use('/logout').post(logoutUser)
-router.use('/register').post(registerUser)
+authRouter.route('/login').post(loginUser)
+authRouter.route('/logout').post(logoutUser)
+authRouter.route('/register').post(registerUser)
+
+export default authRouter
