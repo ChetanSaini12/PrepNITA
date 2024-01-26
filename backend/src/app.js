@@ -31,6 +31,8 @@ app.use(cookieParser())
 
 // ROUTING
 
+app.get('/', (req, res) => res.status(200).json({msg : "Lge rho bhai, tu kafi accha fodega!!"}))
+
 app.use('/auth', authRouter)
 
 export { app }
