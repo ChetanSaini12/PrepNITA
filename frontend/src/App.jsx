@@ -7,6 +7,8 @@ import Quizes from './Pages/Quizes';
 import Discuss from './Pages/Discuss';
 import SignUp from './Pages/SignUp';
 
+
+
 function App() {
   return (
     <BrowserRouter>
