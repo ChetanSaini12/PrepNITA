@@ -1,13 +1,43 @@
-import { Button, Label, TextInput} from 'flowbite-react'
-import {Link} from "react-router-dom"
+import { Alert, Button, Label, Spinner, TextInput} from 'flowbite-react'
+import {Link,useNavigate} from "react-router-dom"
 import React, { useState } from 'react'
 
 function SignUp() {
   const [formData,setFormData]=useState({})
+  const [errorMessage,setErrorMessage]=useState(null);
+  const[loading,setLoading]=useState(false);
+  const navigate=useNavigate;
   const handleChange=(e)=>{
     setFormData({...formData,[e.target.id]:e.target.value})
   }
   console.log(formData);
+  const handleSubmit= async(e)=>{
+    e.preventDefault();
+    if(!formData.username || !formData.email || !formData.password){
+      return setErrorMessage(`Please Fillout All Fields`)
+    }
+    try{
+      setLoading(true);
+      setErrorMessage(null);
+      const res=await fetch('/register',{
+        method:"POST",
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(formData),
+      })
+      const data=await res.json();
+      if(data.success===false){
+        return setErrorMessage(data.message)
+      }
+      setLoading(false);
+      if(res.ok){
+        navigate('/signIn')
+      }
+    }
+    catch(error){
+      setErrorMessage(error.message);
+      setLoading(false);
+    }
+  }
   return (
     <div className='min-h-screen mt-20 '>
       <div className='flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5'>
@@ -21,7 +51,7 @@ function SignUp() {
             </p>
         </div>
         <div className='flex-1'>
-          <form className='flex flex-col gap-4'>
+          <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
             <div>
               <Label value='Your Username' >
               </Label>
@@ -37,14 +67,28 @@ function SignUp() {
               </Label>
               <TextInput type='password' placeholder='Password' id="password" onChange={handleChange}></TextInput>
             </div>
-            <Button gradientDuoTone="purpleToPink" type='submit'>
-              SignUp
+            <Button gradientDuoTone="purpleToPink" type='submit' disabled={loading}>
+              {
+                loading ? (
+                  <>
+                    <Spinner size='sm'></Spinner>
+                    <span>Loading...</span>
+                  </>
+                ):"SignUp"
+              }
             </Button>
           </form>
           <div className='flex gap-2 text-sm mt-5'>
             <span>Already Have an Account ?</span>
-            <Link to={'/signIn'} className='text-blue-500'>SignIn</Link>
+            <Link to={'/signIn'} className='text-blue-500'>Sign_in</Link>
           </div>
+          {
+            errorMessage && (
+              <Alert className='mt-5' color='failure'>
+                {errorMessage}
+              </Alert>
+            )
+          }
         </div>
       </div>
     </div>
