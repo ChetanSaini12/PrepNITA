@@ -13,7 +13,7 @@ import SignIn from './Pages/SignIn';
 function App() {
   return (
     <BrowserRouter>
-        <Header></Header>
+        <Header/>
         <Routes>
           <Route path='/' element={<Home/>}></Route>
           <Route path='/dashboard' element={<Dashboard></Dashboard>}></Route>
