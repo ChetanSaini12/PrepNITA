@@ -63,8 +63,6 @@
 #sidebar {
   grid-area: sidebar;
   height: 100%;
-  /* background-color: #263043; */
-  background: linear-gradient(135deg, #7820dd, #f420c2);
   overflow-y: auto;
   transition: all 0.5s;
   -webkit-transition: all 0.5s;
@@ -154,7 +152,7 @@
 }
 
 .card:first-child {
-  background-color: #2962ff;
+  background-color: #000000;
 }
 
 .card:nth-child(2) {

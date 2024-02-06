@@ -2,7 +2,7 @@ import React from 'react'
 
 function Discuss() {
   return (
-    <div>Discuss</div>
+    <div className='bg-slate-600 w-screen h-screen'>Discuss</div>
   )
 }
 

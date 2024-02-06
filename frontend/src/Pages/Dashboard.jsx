@@ -33,7 +33,7 @@ import  {BsCart3, BsGrid1X2Fill, BsFillArchiveFill, BsFillGrid3X3GapFill, BsPeop
 
  function Sidebar({ openSidebarToggle, OpenSidebar }) {
   return (
-    <aside id="sidebar" className={openSidebarToggle ? "sidebar-responsive" : ""} >
+    <aside id="sidebar" className={openSidebarToggle ? "sidebar-responsive " : "bg-slate-900"}  >
       <div className='sidebar-title' >
         <div className='sidebar-brand'>
           {/* <BsCart3 className='icon_header' /> MENU */}
@@ -98,7 +98,7 @@ function Home() {
   ];
 
   return (
-    <main className='main-container' >
+    <main className='main-container bg-slate-600 w-screen h-screen' >
       <div className='main-title'>
         <h3>DASHBOARD</h3>
       </div>
@@ -111,7 +111,7 @@ function Home() {
           </div>
           <h1>300</h1>
         </div>
-        <div className='card'>
+        <div  gradientDuoTone='purpleToBlue' >
           <div className='card-inner'>
             <h3>DOMAINS</h3>
             <BsFillGrid3X3GapFill className='card_icon' />
