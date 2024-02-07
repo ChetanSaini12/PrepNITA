@@ -9,8 +9,6 @@ const loginUser = asyncHandler(async (req, res) => {
   if (!usernameOrEmail || !password) {
     throw new ApiError(400, 'Please fill all required fields!!')
   }
-
-
 })
 
 const logoutUser = asyncHandler(async (req, res) => {})
