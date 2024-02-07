@@ -1,33 +1,22 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import { Provider } from 'react-redux';
-import { persistor, store } from './app/store';
-
-
-
-import {
-  ApolloClient,
-  InMemoryCache,
-  ApolloProvider,
-} from "@apollo/client";
-import ThemeProvider from './Components/ThemeProvider';
-import { PersistGate } from 'redux-persist/integration/react';
-
-const BaseUrl = "http://localhost:7000";
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import { Provider } from "react-redux";
+import { store } from "./app/store";
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 
 // client for graphql
 const client = new ApolloClient({
-  uri: BaseUrl,
+  uri: process.env.BASE_URL,
   cache: new InMemoryCache(),
   headers: {
-    authorization: localStorage.getItem('token') || '',
-  }
+    authorization: localStorage.getItem("token") || "",
+  },
 });
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
@@ -42,7 +31,4 @@ root.render(
   </React.StrictMode>
 );
 
-
 reportWebVitals();
-
-
