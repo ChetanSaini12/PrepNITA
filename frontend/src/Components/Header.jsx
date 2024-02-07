@@ -2,11 +2,15 @@ import { Navbar, TextInput,Button } from 'flowbite-react'
 import React from 'react'
 import {Link, useLocation} from "react-router-dom"
 import {AiOutlineSearch} from "react-icons/ai"
-import {FaMoon} from "react-icons/fa"
+import {FaMoon,FaSun} from "react-icons/fa"
+import { useDispatch, useSelector } from 'react-redux'
+import { toggleTheme } from '../app/theme/themSlice'
 import '../CSS/header.css'
 
 function Header() {
     const path=useLocation().pathname;
+    const dispatch=useDispatch()
+    const {theme}=useSelector(state=>state.theme)
     return (
       <Navbar className='navbar'>
           <Link to="/" className='nav-logo'>
@@ -17,7 +21,7 @@ function Header() {
                   type='text'
                   placeholder='Search...'
                   rightIcon={AiOutlineSearch}
-                  className='hidden lg:inline'
+                  className='hidden lg:inline bg-slate-600'
               >
   
               </TextInput>
@@ -27,10 +31,17 @@ function Header() {
               <AiOutlineSearch></AiOutlineSearch>
           </Button> */}
           <div className='flex gap-2 md:order-2'>
+              <Button className='w-12 h-10 sm:inline' color='grey' pill onClick={()=>{
+                dispatch(toggleTheme())
+              }}>
+                {
+                    theme==='light' ?<FaMoon></FaMoon>:<FaSun></FaSun>
+                }
+              </Button>
               <Button className='w-12 h-10 text-2xl sm:inline' pill><FaMoon/></Button>
               
-              <Link to='/signUp'>
-                  <Button gradientDuoTone='purpleToBlue' outline>Sign In</Button>
+              <Link to='/register'>
+                  <Button gradientDuoTone='purpleToBlue' outline>Register/Login</Button>
               </Link>
               <Navbar.Toggle></Navbar.Toggle>
           </div>
