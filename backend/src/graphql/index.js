@@ -21,6 +21,7 @@ async function createApolloGraphqlServer() {
           ...User.resolvers.mutations
         }
     },
+    includeStacktraceInErrorResponses : false
   })
 
   await gqlserver.start()
