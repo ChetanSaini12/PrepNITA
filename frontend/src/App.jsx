@@ -13,8 +13,8 @@ import FooterCom from './Components/Footer';
 
 function App() {
   return (
-    <BrowserRouter >
-        <Header></Header>
+    <BrowserRouter>
+        <Header/>
         <Routes>
           <Route path='/' element={<Home/>}></Route>
           <Route path='/dashboard' element={<Dashboard></Dashboard>}></Route>

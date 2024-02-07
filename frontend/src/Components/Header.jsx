@@ -5,17 +5,18 @@ import {AiOutlineSearch} from "react-icons/ai"
 import {FaMoon,FaSun} from "react-icons/fa"
 import { useDispatch, useSelector } from 'react-redux'
 import { toggleTheme } from '../app/theme/themSlice'
+import '../CSS/header.css'
 
 function Header() {
     const path=useLocation().pathname;
     const dispatch=useDispatch()
     const {theme}=useSelector(state=>state.theme)
     return (
-      <Navbar className='border-b-2'>
-          <Link to="/" className='self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white'>
-              <span className='px-2 py-1 bg-gradient-to-r from from-indigo-500  via-purple-500 to-pink-500 rounded-lg text-white'>MindSet</span>
+      <Navbar className='navbar'>
+          <Link to="/" className='nav-logo'>
+              <span className='nav-logo-name'>MindSet</span>
           </Link>
-          <form  >
+          {/* <form >
               <TextInput
                   type='text'
                   placeholder='Search...'
@@ -25,10 +26,10 @@ function Header() {
   
               </TextInput>
   
-          </form>
-          <Button className='w-12 h-10 lg:hidden' color='gray' pill>
+          </form> */}
+          {/* <Button className='w-10 h-10' color='gray' pill>
               <AiOutlineSearch></AiOutlineSearch>
-          </Button>
+          </Button> */}
           <div className='flex gap-2 md:order-2'>
               <Button className='w-12 h-10 sm:inline' color='grey' pill onClick={()=>{
                 dispatch(toggleTheme())
@@ -37,6 +38,7 @@ function Header() {
                     theme==='light' ?<FaMoon></FaMoon>:<FaSun></FaSun>
                 }
               </Button>
+              <Button className='w-12 h-10 text-2xl sm:inline' pill><FaMoon/></Button>
               
               <Link to='/register'>
                   <Button gradientDuoTone='purpleToBlue' outline>Register/Login</Button>
@@ -44,19 +46,24 @@ function Header() {
               <Navbar.Toggle></Navbar.Toggle>
           </div>
           <Navbar.Collapse>
-              <Navbar.Link active={path==='/'}  as={'div'}>
+              {/* <Navbar.Link active={path==='/'}  as={'div'}> */}
+              <Navbar.Link className= {path==='/' ? "nav-links-active" : "nav-links" }  as={'div'}>
                   <Link to='/'>Home</Link>
               </Navbar.Link>
-              <Navbar.Link active={path==='/quizes'} as={'div'}>
+              {/* <Navbar.Link active={path==='/quizes'} as={'div'}> */}
+              <Navbar.Link className= {path==='/quizes' ? "nav-links-active" : "nav-links" }  as={'div'}>
                   <Link to='/quizes'>Quizes</Link>
               </Navbar.Link>
-              <Navbar.Link active={path==='/dashboard'} as={'div'}>
+              {/* <Navbar.Link active={path==='/dashboard'} as={'div'}> */}
+              <Navbar.Link className= {path==='/dashboard' ? "nav-links-active" : "nav-links" }  as={'div'}>
                   <Link to='/dashboard'>Dashboard</Link>
               </Navbar.Link>
-              <Navbar.Link active={path==='/interview'} as={'div'}>
+              {/* <Navbar.Link active={path==='/interview'} as={'div'}> */}
+              <Navbar.Link className= {path==='/interview' ? "nav-links-active" : "nav-links" }  as={'div'}>
                   <Link to='/interview'>Interviews</Link>
               </Navbar.Link>
-              <Navbar.Link active={path==='/discuss'} as={'div'}>
+              {/* <Navbar.Link active={path==='/discuss'} as={'div'}> */}
+              <Navbar.Link className= {path==='/discuss' ? "nav-links-active" : "nav-links" }  as={'div'}>
                   <Link to='/discuss'>Discuss</Link>
               </Navbar.Link>
               

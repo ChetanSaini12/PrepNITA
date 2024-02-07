@@ -3,6 +3,8 @@ import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import 'dotenv/config'
 import authRouter from './routes/auth.route.js'
+import { expressMiddleware } from '@apollo/server/express4'
+import { createApolloGraphqlServer } from './graphql/index.js'
 
 const app = express()
 
@@ -31,8 +33,10 @@ app.use(cookieParser())
 
 // ROUTING
 
-app.get('/', (req, res) => res.status(200).json({msg : "Lge rho bhai, tu kafi accha fodega!! Tum bhi !!"}))
+app.get('/', (req, res) => res.status(200).json({msg : "Server is responding"}))
 
 app.use('/auth', authRouter)
+
+app.use('/graphql', expressMiddleware(await createApolloGraphqlServer()));
 
 export { app }
