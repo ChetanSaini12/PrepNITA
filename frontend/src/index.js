@@ -4,7 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
-import { store } from './app/store';
+import { persistor, store } from './app/store';
 
 
 
@@ -13,6 +13,8 @@ import {
   InMemoryCache,
   ApolloProvider,
 } from "@apollo/client";
+import ThemeProvider from './Components/ThemeProvider';
+import { PersistGate } from 'redux-persist/integration/react';
 
 const BaseUrl = "http://localhost:7000";
 
@@ -29,9 +31,13 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
-      <Provider store={store}>
-        <App />
-      </Provider>
+      <PersistGate persistor={persistor}>
+        <Provider store={store}>
+          <ThemeProvider>
+            <App />
+          </ThemeProvider>
+        </Provider>
+      </PersistGate>
     </ApolloProvider>
   </React.StrictMode>
 );
