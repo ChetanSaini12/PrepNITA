@@ -4,7 +4,7 @@ export const typeDefs = `#graphql
         firstName: String!
         lastName: String
         email: String!
-        mobileNum: Int!
+        mobileNum: String!
         password: String!
     }
 
@@ -20,7 +20,7 @@ export const typeDefs = `#graphql
         firstName: String!
         lastName: String
         email: String!
-        mobileNum: Int!
+        mobileNum: String!
         password: String!
         username: String!
     }
