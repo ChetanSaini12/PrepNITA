@@ -118,7 +118,7 @@ function SignUp() {
             <div>
               <Label value="Your Mobile Number"></Label>
               <TextInput
-                type="string"
+                type="text"
                 placeholder="1234567890"
                 id="mobileNum"
                 onChange={(e) => setMobileNum(parseInt(e.target.value, 10))}
