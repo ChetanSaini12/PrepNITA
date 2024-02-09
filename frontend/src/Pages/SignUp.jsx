@@ -6,47 +6,47 @@ import { useMutation } from "@apollo/client";
 import { REGISTER_USER } from "../gqlOperatons/mutations";
 
 function SignUp() {
-  
-  const [username, setUsername] = useState();
-  const [email, setEmail] = useState();
-  const [firstName, setFirstName] = useState();
-  const [lastName, setLastName] = useState();
-  const [password, setPassword] = useState();
-  const [mobileNum, setMobileNum] = useState();
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({});
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value })
+  }
 
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [userRegister, { _loading, _error }] = useMutation(REGISTER_USER, {
-    variables : {
-      user : {
-        username, password, email, firstName, lastName, mobileNum
-      }
-    },
-    onCompleted : (data) => {
-      console.log(data);
-    }
-  });
-  if (_loading) setLoading(true);
-  if (_error){
-    console.log(_error);
-    setError(error);}
+  const [signUpUser, { loading: _loading, data, error: _error }] = useMutation(REGISTER_USER)
 
-  const navigate = useNavigate;
-
-  // const handleChange = (e) => {
-  //   setFormData({ ...formData, [e.target.id]: e.target.value });
-  // };
-
+  if (_loading) return <h1> yha loading hai .. </h1>
+  if (data) {
+    console.log("user : ", data);
+    return <h1>user registered</h1>
+  }
+  if (_error) {
+    console.log(" error yha hai  : ", _error);
+    setError(_error);
+    return <h1>Error hai bhai </h1>
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!username || !firstName || !email || !password) {
+    const { username, password, email, firstName, lastName, mobileNum } = formData;
+    console.log("mobileNum : ", mobileNum);
+    console.log(typeof(mobileNum));
+    if (!username || !firstName || !email || !password || !mobileNum) {
       return setError(`Please Fillout All Fields`);
     }
 
     try {
-      userRegister();
+      signUpUser({
+        variables: {
+          user: {
+            username, password, email, firstName, lastName, mobileNum
+          }
+        },
+      });
       /* 
       if (data.success === false) {
         return setError(data.message);
@@ -55,14 +55,16 @@ function SignUp() {
       if (res.ok) {
       }
       */
-    //  navigate("/login");
+      //  navigate("/login");
     } catch (error) {
       console.log("ERROR in tyrCatch : ", error);
-      setError(error.message);
       setLoading(false);
+      return setError(error.message);
     }
   };
-
+  if (loading) {
+    return <h1>Loading.....</h1>
+  }
   return (
     <div className="min-h-screen mt-20 ">
       <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5">
@@ -85,7 +87,7 @@ function SignUp() {
                 type="text"
                 placeholder="Username"
                 id="username"
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={handleChange}
               ></TextInput>
             </div>
             <div>
@@ -94,7 +96,7 @@ function SignUp() {
                 type="text"
                 placeholder="John"
                 id="firstName"
-                onChange={(e) => setFirstName(e.target.value)}
+                onChange={handleChange}
               ></TextInput>
             </div>
             <div>
@@ -103,7 +105,7 @@ function SignUp() {
                 type="text"
                 placeholder="Doe"
                 id="lastName"
-                onChange={(e) => setLastName(e.target.value)}
+                onChange={handleChange}
               ></TextInput>
             </div>
             <div>
@@ -112,16 +114,16 @@ function SignUp() {
                 type="email"
                 placeholder="name@company.com"
                 id="email"
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={handleChange}
               ></TextInput>
             </div>
             <div>
               <Label value="Your Mobile Number"></Label>
               <TextInput
-                type="number"
+                type="text"
                 placeholder="1234567890"
                 id="mobileNum"
-                onChange={(e) => setMobileNum(parseInt(e.target.value, 10))}
+                onChange={handleChange}
               ></TextInput>
             </div>
             <div>
@@ -130,7 +132,7 @@ function SignUp() {
                 type="password"
                 placeholder="Password"
                 id="password"
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={handleChange}
               ></TextInput>
             </div>
             <Button
