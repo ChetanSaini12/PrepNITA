@@ -10,4 +10,4 @@
 ALTER TABLE "User" DROP COLUMN "name",
 ADD COLUMN     "firstName" TEXT NOT NULL,
 ADD COLUMN     "lastName" TEXT,
-ADD COLUMN     "mobileNum" INTEGER NOT NULL;
+ADD COLUMN     "mobileNum" TEXT NOT NULL;
