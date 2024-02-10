@@ -1,20 +1,4 @@
 // Its a temparory file created for making a sample graphQl query
-// Its a temparory file created for making a sample graphQl query
-// Its a temparory file created for making a sample graphQl query
-// Its a temparory file created for making a sample graphQl query
-// Its a temparory file created for making a sample graphQl query
-// Its a temparory file created for making a sample graphQl query
-// Its a temparory file created for making a sample graphQl query
-// Its a temparory file created for making a sample graphQl query
-// Its a temparory file created for making a sample graphQl query
-// Its a temparory file created for making a sample graphQl query
-// Its a temparory file created for making a sample graphQl query
-// Its a temparory file created for making a sample graphQl query
-// Its a temparory file created for making a sample graphQl query
-// Its a temparory file created for making a sample graphQl query
-// Its a temparory file created for making a sample graphQl query
-// Its a temparory file created for making a sample graphQl query
-// Its a temparory file created for making a sample graphQl query
 
 
 import { useMutation, useQuery } from "@apollo/client";
@@ -32,6 +16,11 @@ function AllUsers() {
       setTempData(data.tempMut);
     },
   });
+
+  if(mutationError) 
+  {
+    return <div className='p-10'>ERROR IN MUT </div>
+  }
 
   return (
     <>
@@ -51,7 +40,7 @@ function AllUsers() {
       )}
       {queryLoading && <div>Loading...</div>}
       {queryError && <div>{queryError.message}</div>}
-      <button
+      <button className="p-5"
         onClick={tempStr}
       >
         CLICK

@@ -1,8 +1,12 @@
-import React from 'react'
+import React from 'react';
+
 
 function Quizes() {
   return (
-    <div>Quizes</div>
+    <div 
+    className= 'bg-slate-600 w-screen h-screen border-spacing-0 text-white' >
+      Quizes
+    </div>
   )
 }
 
