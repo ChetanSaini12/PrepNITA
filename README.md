@@ -55,3 +55,12 @@
         * lastName: String
         * mobileNum: Int!
         * username: String!
+
+
+* **loginUser:**
+    * Description: login a new user.
+    * Parameters:
+        * email : String, username: String, password: String
+    * Response:
+        * token : String
+    
