@@ -12,6 +12,7 @@
     --element-color: #417a55;
     --helper-color: #4ea8d0;
     --text-color: #FEFEFA;
+    /* --text-color:white; */
 
 
     /* Font Variables */
@@ -32,4 +33,5 @@ body {
     background-color: var(--primary-color);
     font-family: var(--main-font-family);
     padding: var(--default-padding);
+    color:white;
 }

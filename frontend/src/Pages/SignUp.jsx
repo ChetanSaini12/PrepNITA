@@ -4,67 +4,69 @@ import React, { useState } from "react";
 import OAuth from "../Components/OAuth";
 import { useMutation } from "@apollo/client";
 import { REGISTER_USER } from "../gqlOperatons/mutations";
+import { Loader } from "./Loader";
 
 function SignUp() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value })
-  }
-
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [signUpUser, { loading: _loading, data, error: _error }] = useMutation(REGISTER_USER)
-
-  if (_loading) return <h1> yha loading hai .. </h1>
-  if (data) {
-    console.log("user : ", data);
-    return <h1>user registered</h1>
-  }
-  if (_error) {
-    console.log(" error yha hai  : ", _error);
-    setError(_error);
-    return <h1>Error hai bhai </h1>
-  }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const { username, password, email, firstName, lastName, mobileNum } = formData;
-    console.log("mobileNum : ", mobileNum);
-    console.log(typeof(mobileNum));
-    if (!username || !firstName || !email || !password || !mobileNum) {
-      return setError(`Please Fillout All Fields`);
-    }
-
-    try {
-      signUpUser({
-        variables: {
-          user: {
-            username, password, email, firstName, lastName, mobileNum
-          }
-        },
-      });
-      /* 
-      if (data.success === false) {
-        return setError(data.message);
-      }
-      setLoading(false);
-      if (res.ok) {
-      }
-      */
-      //  navigate("/login");
-    } catch (error) {
-      console.log("ERROR in tyrCatch : ", error);
-      setLoading(false);
-      return setError(error.message);
-    }
+    setFormData({ ...formData, [e.target.id]: e.target.value });
   };
-  if (loading) {
-    return <h1>Loading.....</h1>
-  }
+
+  const [signUpUser] = useMutation(REGISTER_USER, {
+    onError: (mutationError) => {
+      console.log("Error in signUpUser mutation:", mutationError.message);
+      setLoading(false);
+      return setError(mutationError.message);
+    },
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const { username, password, email, firstName, lastName, mobileNum } = formData;
+
+    if (!username || !firstName || !email || !password || !mobileNum) {
+      return setError("Please Fillout All The Fields");
+    }
+
+    setLoading(true);
+
+    signUpUser({
+      variables: {
+        user: {
+          username,
+          password,
+          email,
+          firstName,
+          lastName,
+          mobileNum,
+        },
+      },
+    })
+      .then((user) => {
+        console.log("user:", user);
+        setLoading(false);
+        // Handle success or navigation here
+        if (!user.data) {
+          setError(user.errors.graphQLErrors[0].message);
+        }
+        else
+          navigate("/home");
+      })
+      .catch((catchError) => {
+        console.log("Error in signUpUser catch block:", catchError);
+        setLoading(false);
+        return  setError(catchError);
+      });
+  };
+
+
+  if (loading) return <Loader />;
+
   return (
     <div className="min-h-screen mt-20 ">
       <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5">

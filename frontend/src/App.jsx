@@ -9,6 +9,7 @@ import SignUp from "./Pages/SignUp";
 import SignIn from "./Pages/SignIn";
 import FooterCom from "./Components/Footer";
 import AllUsers from "./Pages/AllUsers";
+import Interviews from "./Pages/Interview";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/discuss" element={<Discuss></Discuss>}></Route>
         <Route path="/login" element={<SignIn></SignIn>}></Route>
         <Route path="/register" element={<SignUp></SignUp>}></Route>
+        <Route path="/interview" element={<Interviews/>}></Route>
       </Routes>
       <FooterCom></FooterCom>
     </BrowserRouter>
