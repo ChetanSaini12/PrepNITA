@@ -11,7 +11,7 @@ import { PersistGate } from "redux-persist/integration/react";
 
 
 // client for graphql
-const client = new ApolloClient({
+export const client = new ApolloClient({
   uri: BASE_URL + "/graphql",
   cache: new InMemoryCache(),
   headers: {
