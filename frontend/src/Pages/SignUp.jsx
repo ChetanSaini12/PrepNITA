@@ -55,7 +55,7 @@ function SignUp() {
           setError(user.errors.graphQLErrors[0].message);
         }
         else
-          navigate("/home");
+          navigate("/");
       })
       .catch((catchError) => {
         console.log("Error in signUpUser catch block:", catchError);

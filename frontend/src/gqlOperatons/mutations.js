@@ -14,6 +14,12 @@ export const REGISTER_USER = gql`
   }
 `;
 
+export const LOGIN_USER=gql`
+  mutation loginUserMutation($username:String,$email:String,$password:String){
+    loginUser(username: $username, email: $email, password: $password)
+  }
+`;
+
 export const TEMP_MUT = gql`
     mutation tempMutation($tempVal: String) {
         tempMut(tempVal: $tempVal)
