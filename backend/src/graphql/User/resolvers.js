@@ -1,7 +1,8 @@
 import {GraphQLError} from 'graphql'
-import { createUserInDB, getAllUserData, loginUser } from '../../controllers/auth.constroller.js'
+import { createUserInDB, getAllUserData, getCurrentUser, loginUser } from '../../controllers/auth.constroller.js'
 const queries = {
   getAllUser: () => getAllUserData(),
+  getMe: (_,__, context) => getCurrentUser(_, __, context)
 }
 
 const mutations = {

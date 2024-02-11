@@ -2,6 +2,7 @@ import { prisma } from '../../prisma/index.js'
 import { GraphQLError } from 'graphql'
 import JWT from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
+import { getUserById } from '../Services/user.service.js'
 
 const createUserInDB = async (_, payload) => {
   console.log('Creating user', payload)
@@ -77,4 +78,13 @@ const getAllUserData = () => {
   return users
 }
 
-export { createUserInDB, getAllUserData, loginUser }
+const getCurrentUser = async (_, __, context) => {
+  if (context && context.userId) {
+    const user = await getUserById(context.userId)
+    console.log('USERUSER : ', user)
+    return user
+  }
+  throw new Error('I dont know who are you')
+}
+
+export { createUserInDB, getAllUserData, loginUser, getCurrentUser }
