@@ -104,7 +104,7 @@ function SignIn() {
           </form>
           <div className='flex gap-2 text-sm mt-5'>
             <span>Don't Have an Account ?</span>
-            <Link to={'/signUp'} className='text-blue-500'>SignUp</Link>
+            <Link to={'/register'} className='text-blue-500'>SignUp</Link>
           </div>
           {
             error && (
