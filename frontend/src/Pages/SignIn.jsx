@@ -6,13 +6,18 @@ import OAuth from '../Components/OAuth'
 import { Loader } from './Loader'
 import { useMutation } from '@apollo/client'
 import { LOGIN_USER } from '../gqlOperatons/mutations';
-import {client} from '../index';
+import { client } from '../index';
+
+import { useDispatch } from "react-redux";
+import { setUser } from '../app/user/userSlice'
+// import { setUser } from "../path-to-your-slices/userSlice";
 
 function SignIn() {
   const [formData, setFormData] = useState({});
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const navigate=useNavigate();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value })
@@ -36,7 +41,7 @@ function SignIn() {
 
     setLoading(true);
     try {
-       const  response  = await loginUser({
+      const response = await loginUser({
         variables: {
           username,
           email,
@@ -45,25 +50,22 @@ function SignIn() {
       });
       console.log("Response ", response);
       setLoading(false);
-      if (!response||!response.data) {
-        return setError(response.errors.message||"Internal Server Error");
+      if (!response || !response.data) {
+        return setError(response.errors.message || "Internal Server Error");
       }
-      const token=response.data.loginUser;
-      localStorage.setItem("token",token);
+      const token = response.data.loginUser;
+      dispatch(setUser({ username, email }));
+      localStorage.setItem("token", token);
       // client.setHeaders({
       //   authorization: token ? `Bearer ${token}` : '',
       // });
-      console.log("client",client);
       return navigate('/');
-
-
     } catch (err) {
-      console.log("try catch block error : ", err);
-      return <h1>error in try ca</h1>
+      console.log("try catch block error in signIn page  : ", err);
+      return setError(err);
     }
 
   };
-
 
   if (loading) return <Loader />;
   return (
