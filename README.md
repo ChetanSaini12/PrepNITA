@@ -24,12 +24,16 @@
 ### Types
 
 * User :
+    * id: ID!
     * username: String!
     * email: String!
     * firstName: String!
     * lastName: String
     * mobileNum: Int!
     * username: String!
+    * role: UserRole!
+
+* UserRole (enum) : {USER, ADMIN, SUPER_ADMIN, MANAGER}
 
 ### Queries
 
@@ -37,11 +41,27 @@
     * Description: Fetches information for all users.
     * Parameters: None
     * Response:
+        * id : ID!
         * email: String!
         * firstName: String!
         * lastName: String
         * mobileNum: Int!
         * username: String!
+        * role : UserRole!
+
+
+* **getMe:**
+    * Description: Fetches information for cuurent users.
+    * Parameters: None
+    * Headers : Authorization : JWT_TOKEN
+    * Response:
+        * id : ID!
+        * email: String!
+        * firstName: String!
+        * lastName: String
+        * mobileNum: Int!
+        * username: String!
+        * role : UserRole!
 
 ### Mutations
 
@@ -50,11 +70,13 @@
     * Parameters:
         * user: User
     * Response:
+        * id : ID!
         * email: String!
         * firstName: String!
         * lastName: String
         * mobileNum: Int!
         * username: String!
+        * role : UserRole!
 
 
 * **loginUser:**
