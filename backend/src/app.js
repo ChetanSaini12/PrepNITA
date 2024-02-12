@@ -47,10 +47,14 @@ app.use(
       const token = req.headers.authorization || ''
       if (!token) return {}
       // console.log('TOKEN : ', token)
-      const userId = decodeToken(token)
-      // console.log('USER ID : ', userId)
-      return {
-        userId,
+      try {
+        const userId = decodeToken(token)
+        // console.log('USER ID : ', userId)
+        return {
+          userId,
+        }
+      } catch (error) {
+        return {}
       }
     },
   })
