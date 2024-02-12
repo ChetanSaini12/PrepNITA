@@ -38,7 +38,7 @@ model Question {
   postedBy    Int
   tags        String[]
   links       QueAddOnLink[]
-  isApproved  Boolean
+  isApproved  Boolean   @default(false)
   upvotes     Int       @default(0)
   downvotes   Int       @default(0)
 }
