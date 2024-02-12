@@ -1,12 +1,12 @@
 export const typeDefs = `#graphql
     type User {
-        id: Int!
-        username: String!
-        firstName: String!
+        id: Int
+        username: String
+        firstName: String
         lastName: String
-        email: String!
-        mobileNum: String!
-        role : UserRole!
+        email: String
+        mobileNum: String
+        role : UserRole
     }
 
     enum UserRole {
