@@ -82,6 +82,14 @@
         * username: String!
         * role : UserRole!
 
+
+* **getQuestions:**
+    * Description: Fetches all questions
+    * Parameters: None
+    * Headers : Authorization : None
+    * Response:
+        * Question
+
 ### Mutations
 
 * **createUser:**
@@ -125,5 +133,14 @@
         * id: Int!, role : UserRole!
     * Response:
         * role : UserRole!
+
+
+* **createQuestion(Question : QuestionInput) : Question :**
+    * Description: create a question
+    * Headers : Authorisation : ADMIN_JWT_TOKEN
+    * Parameters:
+        * QuestionInput
+    * Response:
+        * Question
 
 

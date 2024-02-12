@@ -1,6 +1,7 @@
 import JWT from 'jsonwebtoken'
 const decodeToken = (token) => {
-    return JWT.verify(token, process.env.JWT_SECRET).id;
+    const userId = JWT.verify(token, process.env.JWT_SECRET).id;
+    return userId
 }
 
 export {decodeToken}
