@@ -22,18 +22,37 @@
 * URL for your GraphQL endpoint
 
 ### Types
-
 * User :
-    * id: Int!
-    * username: String!
-    * email: String!
-    * firstName: String!
-    * lastName: String
-    * mobileNum: Int!
-    * username: String!
-    * role: UserRole!
+    * id: Int! - Auto-incremented unique identifier for each user.
+    * email: String! - Unique email address of the user.
+    * username: String! - Unique username of the user.
+    * firstName: String! - First name of the user.
+    * lastName: String - Last name of the user (optional).
+    * password: String! - Password of the user.
+    * mobileNum: String! - Mobile number of the user.
+    * role: UserRole! - Role of the user.
 
-* UserRole (enum) : {USER, ADMIN, SUPER_ADMIN, MANAGER}
+* UserRole (enum) : {USER, ADMIN, SUPERADMIN, MANAGER}
+
+* Question :
+    * id: Int! - Auto-incremented unique identifier for each question.
+    * title: String! - Title of the question.
+    * description: String! - Description or body of the question.
+    * answer: String - Answer to the question (optional).
+    * postedBy: Int! - ID of the user who posted the question.
+    * tags: [String]! - Array of tags associated with the question.
+    * links: [QueAddOnLink] - Array of additional links related to the question.
+    * isApproved: Boolean - Flag indicating whether the question is approved.
+    * upvotes: Int - Number of upvotes for the question.
+    * downvotes: Int - Number of downvotes for the question.
+
+* QueAddOnLink :
+    * id: Int! - Auto-incremented unique identifier for each additional link.
+    * title: String! - Title of the additional link.
+    * url: String! - URL of the additional link.
+    * questionId: Int! - ID of the question associated with the link.
+
+
 
 ### Queries
 
