@@ -24,7 +24,7 @@
 ### Types
 
 * User :
-    * id: ID!
+    * id: Int!
     * username: String!
     * email: String!
     * firstName: String!
@@ -41,7 +41,7 @@
     * Description: Fetches information for all users.
     * Parameters: None
     * Response:
-        * id : ID!
+        * id : Int!
         * email: String!
         * firstName: String!
         * lastName: String
@@ -55,7 +55,7 @@
     * Parameters: None
     * Headers : Authorization : JWT_TOKEN
     * Response:
-        * id : ID!
+        * id : Int!
         * email: String!
         * firstName: String!
         * lastName: String
@@ -70,7 +70,7 @@
     * Parameters:
         * user: User
     * Response:
-        * id : ID!
+        * id : Int!
         * email: String!
         * firstName: String!
         * lastName: String
@@ -82,7 +82,29 @@
 * **loginUser:**
     * Description: login a new user.
     * Parameters:
-        * email : String, username: String, password: String
+        * email : String, username: String, password: String!
     * Response:
         * token : String
-    
+
+* **getUserById:**
+    * Description: get a user from id
+    * Parameters:
+        * id: Int!
+    * Response:
+        * id : Int!
+        * email: String!
+        * firstName: String!
+        * lastName: String
+        * mobileNum: Int!
+        * username: String!
+        * role : UserRole!
+
+
+* **updateUserRole:**
+    * Description: update role of a user from id
+    * Parameters:
+        * id: Int!, role : UserRole!
+    * Response:
+        * role : UserRole!
+
+
