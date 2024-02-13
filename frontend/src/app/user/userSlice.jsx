@@ -4,7 +4,7 @@ const initialState = {
     id: undefined,
     loggedIn: false,
     isLoading: true,
-    role:"USER",
+    role: "USER",
     username: undefined,
     profile_pic: "https://ik.imagekit.io/pqymxdgbi/avtar.png",
 };
@@ -14,12 +14,14 @@ const userSlice = createSlice({
     initialState,
     reducers: {
         LoginUser(state, actions) {
+            if (actions.payload.id) state.id = actions.payload.id;
             state.loggedIn = true;
             state.isLoading = false;
             state.role = actions.payload.role;
             state.username = actions.payload.username;
             if (actions.payload.profile_pic)
-                state.profile_pic = actions.payload.profile_pic;
+            state.profile_pic = actions.payload.profile_pic;
+            else state.profile_pic = "https://ik.imagekit.io/pqymxdgbi/avtar.png";
         },
         LogoutUser(state) {
             state.loggedIn = false;

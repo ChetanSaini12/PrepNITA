@@ -6,7 +6,7 @@ import { FaMoon, FaSun } from "react-icons/fa"
 import { useDispatch, useSelector } from 'react-redux'
 import { toggleTheme } from '../app/theme/themSlice'
 import '../CSS/header.css'
-import { LogoutUser} from '../app/user/userSlice'
+import { LogoutUser,setLoading} from '../app/user/userSlice'
 
 function Header() {
     const path = useLocation().pathname;
@@ -82,6 +82,9 @@ function Header() {
                 {/* <Navbar.Link active={path==='/discuss'} as={'div'}> */}
                 <Navbar.Link className={path === '/discuss' ? "nav-links-active" : "nav-links"} as={'div'}>
                     <Link to='/discuss'>Discuss</Link>
+                </Navbar.Link>
+                <Navbar.Link className={path === '/profile' ? "nav-links-active" : "nav-links"} as={'div'}>
+                    <Link to='/profile'>Profile</Link>
                 </Navbar.Link>
 
             </Navbar.Collapse>
