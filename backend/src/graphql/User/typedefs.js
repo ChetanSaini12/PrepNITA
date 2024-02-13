@@ -24,6 +24,11 @@ export const typeDefs = `#graphql
         country: String!
     }
 
+    type loginUserWithJWT {
+        token: String!
+        user: User
+    }
+
     input UserInput {
         firstName: String!
         lastName: String

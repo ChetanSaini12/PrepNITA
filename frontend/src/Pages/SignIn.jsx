@@ -51,7 +51,7 @@ function SignIn() {
       if (!response || !response.data) {
         return setError(response.errors.message || "Internal Server Error");
       }
-      const token = response.data.loginUser;
+      const token = response.data.loginUser.token;
       dispatch(LoginUser({
         username,
       }));

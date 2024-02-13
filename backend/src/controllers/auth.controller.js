@@ -66,7 +66,12 @@ const loginUser = async (_, payload) => {
 
   console.log('TOKEN', token)
 
-  return token
+  const loginUserWithJWT = {
+    token,
+    user
+  }
+
+  return loginUserWithJWT;
 }
 
 
