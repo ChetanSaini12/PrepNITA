@@ -6,11 +6,9 @@ import OAuth from '../Components/OAuth'
 import { Loader } from './Loader'
 import { useMutation } from '@apollo/client'
 import { LOGIN_USER } from '../gqlOperatons/mutations';
-import { client } from '../index';
 
 import { useDispatch, useSelector } from "react-redux";
-import { LoginUser } from '../app/user/userSlice'
-// import { setUser } from "../path-to-your-slices/userSlice";
+
 
 function SignIn() {
   const [formData, setFormData] = useState({});
@@ -27,8 +25,6 @@ function SignIn() {
     onError: (mutationError) => {
       console.log("onError in LOGIN_USER ", mutationError.message);
       return setError(mutationError.message);
-      // return null;
-      // return <h1>onError in Mutation </h1>;
     }
   });
 
@@ -51,10 +47,7 @@ function SignIn() {
       if (!response || !response.data) {
         return setError(response.errors.message || "Internal Server Error");
       }
-      const token = response.data.loginUser.token;
-      dispatch(LoginUser({
-        username,
-      }));
+      const token = response.data.loginUser;
       localStorage.setItem("token", token);
       console.log("token for login ",token);
       // client.setHeaders({
@@ -83,11 +76,6 @@ function SignIn() {
         </div>
         <div className='flex-1'>
           <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
-            {/* <div>
-              <Label value='Your Email' >
-              </Label>
-              <TextInput type='email' placeholder='name@company.com' id="email" onChange={handleChange}></TextInput>
-            </div> */}
             <div>
               <Label value='Your userName' >
               </Label>

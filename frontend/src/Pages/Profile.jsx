@@ -8,10 +8,12 @@ export const Profile = () => {
   const [loading, setLoading] = useState(true);
 
   const { loggedIn } = useSelector((state) => state.user);
+  const { username, profile_pic, role } = useSelector((state) => state.user);
+  console.log("profile pic : ", profile_pic);
 
-  // console.log('Token in profile page:', token, typeof (token));
   useEffect(() => {
     if (!loggedIn) {
+      alert("User is not authorized. Redirecting to login page");
       console.log('User is not authorized. Redirecting to login page.');
       setLoading(false);
       return navigate('/login');
@@ -22,8 +24,12 @@ export const Profile = () => {
   if (loading) return <Loader />;
 
   return (
-    <h1 className='flex justify-center items-center text-4xl bg-slate-600 w-screen h-screen border-spacing-0 '>
-      Profile Page
-    </h1>
+    <div className='bg-slate-600 w-screen h-screen flex flex-col justify-center items-center'>
+      <h1 className='text-white text-4xl mt-2'>
+        Welcome {username} to your profile page. You are a {role}.
+      </h1>
+      <img className='rounded-full  w-20 h-20 border-white' src={profile_pic} alt='profile_pic' />
+    </div>
   );
+
 };
