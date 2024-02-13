@@ -4,7 +4,6 @@
 import { useMutation, useQuery } from "@apollo/client";
 import React, { useState } from "react";
 import { ALL_USER } from "../gqlOperatons/queries";
-import { TEMP_MUT } from "../gqlOperatons/mutations";
 
 function AllUsers() {
   const { data, loading: queryLoading, error: queryError } = useQuery(ALL_USER);

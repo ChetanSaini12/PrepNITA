@@ -1,5 +1,5 @@
 //queries for Frontend to get data from backend
-import {gql} from '@apollo/client'
+import { gql } from '@apollo/client'
 
 export const ALL_USER = gql`
     query AllUser {
@@ -14,3 +14,16 @@ export const ALL_USER = gql`
         }
     }  
 `
+export const GET_USER_STATUS = gql`
+    query GetUserStatus{
+        getMe{
+            id
+            email
+            firstName
+            lastName
+            mobileNum
+            username
+            role
+        }
+    }
+`;

@@ -52,10 +52,10 @@ function SignUp() {
         setLoading(false);
         // Handle success or navigation here
         if (!user.data) {
-          setError(user.errors.graphQLErrors[0].message);
+          return setError(user.errors.message || "Internal Server Error");
         }
         else
-          navigate("/");
+          navigate("/login");
       })
       .catch((catchError) => {
         console.log("Error in signUpUser catch block:", catchError);
