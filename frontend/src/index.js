@@ -8,6 +8,7 @@ import { persistor, store } from "./app/store";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import { BASE_URL } from "./utils";
 import { PersistGate } from "redux-persist/integration/react";
+import { Auth } from "./Components/Auth";
 
 
 // client for graphql
@@ -28,7 +29,9 @@ root.render(
       <PersistGate persistor={persistor}>
         <Provider store={store}>
           {/* <ThemeProvider> */}
-            <App />
+          <Auth>
+            <App/>
+          </Auth>
           {/* </ThemeProvider> */}
         </Provider>
       </PersistGate>

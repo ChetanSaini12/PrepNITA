@@ -11,9 +11,13 @@ import FooterCom from "./Components/Footer";
 import AllUsers from "./Pages/AllUsers";
 import Interviews from "./Pages/Interview";
 import { Profile } from "./Pages/Profile";
+import { VerifyToken } from "./utils/verifyToken";
 
 
 function App() {
+  VerifyToken().then((response)=>{
+    console.log("response from verifyToken",response);
+  });
   return (
     <BrowserRouter>
       <Header />
