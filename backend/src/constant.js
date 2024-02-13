@@ -1,4 +1,13 @@
 /*
-user token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwiaWF0IjoxNzA3NzY5OTg3LCJleHAiOjE3MDc4NTYzODd9.N35zTpUsmpYSkEGpsoWRBsLw0HJE6xeGj7Syve7MXBI
-admin token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiaWF0IjoxNzA3NzcwNjI1LCJleHAiOjE3MDc4NTcwMjV9.HzVmVIGyN4nKrtzv-cnr7EgzK61AkEWwlH-_3ukHeh0
+user token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsImlhdCI6MTcwNzg1ODU2MSwiZXhwIjoxNzE2NDk4NTYxfQ.uKvBeCj0BYc30bAF816Zho-vmi6Es_qpUR6mk6TE994
+temp -> password : 10
+
+admin token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiaWF0IjoxNzA3ODU4MTI0LCJleHAiOjE3MTY0OTgxMjR9.7675Ma9ZCzCHgBzOZWHMwMnp9Z4noj2eRfgoDhrONJY
+admin1 -> adminpassword : 9
+
+superadmin token : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTEsImlhdCI6MTcwNzg1ODI5MiwiZXhwIjoxNzE2NDk4MjkyfQ.-3J7YV1MclHUF7MZ5CxR82mtVtVNA3mVirC-oJYX7fo
+superadmin -> superadminpassword : 11
+
+manager token : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIsImlhdCI6MTcwNzg1ODIyMywiZXhwIjoxNzE2NDk4MjIzfQ.m7vATj6uzD6Id0LaGhlYCf-MKAsaKakBLphwlfNdQdY
+manager -> managerpassword : 12
 */
