@@ -1,9 +1,11 @@
 export const mutations = `#graphql
     createQuestion(Question : QuestionInput) : Question 
 
-    upVoteQuestion(QuestionId : Int!, userId : Int!) : Question  
+    getQuestionById(QuestionId : Int!) : Question
+
+    upVoteQuestion(QuestionId : Int!) : Question  
     
-    downVoteQuestion(QuestionId : Int!, userId : Int!) : Question
+    downVoteQuestion(QuestionId : Int!) : Question
     
     changeApproveStatusOfQue(QuestionId : Int!) : Question
 
