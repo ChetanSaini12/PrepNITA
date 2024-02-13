@@ -3,6 +3,13 @@ import { GraphQLError } from 'graphql'
 import JWT from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 
+const generateJwtToken = (id) => {
+  const token = JWT.sign({ id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRATION,
+  })
+  return token
+}
+
 const createUserInDB = async (_, payload) => {
   console.log('Creating user', payload)
 
@@ -13,7 +20,7 @@ const createUserInDB = async (_, payload) => {
   })
 
   if (existingUser) {
-    console.log('EXISTING USER', existingUser)
+    console.log('User already exist : ', existingUser)
     throw new GraphQLError('User already exist ', {
       extensions: {
         code: 'USER_ALREADY_EXISTS',
@@ -27,7 +34,17 @@ const createUserInDB = async (_, payload) => {
   const user = await prisma.user.create({
     data: payload.User,
   })
-  return user
+
+  const token = generateJwtToken(user.id);
+
+  console.log('TOKEN', token)
+
+  const loginUserWithJWT = {
+    token,
+    user
+  }
+
+  return loginUserWithJWT;
 }
 
 const loginUser = async (_, payload) => {
@@ -60,9 +77,7 @@ const loginUser = async (_, payload) => {
     })
   }
 
-  const token = JWT.sign({ id: user.id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRATION,
-  })
+  const token = generateJwtToken(user.id);
 
   console.log('TOKEN', token)
 
