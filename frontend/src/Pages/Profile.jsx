@@ -7,11 +7,11 @@ export const Profile = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
 
-  const { user } = useSelector((state) => state.user);
+  const { loggedIn } = useSelector((state) => state.user);
 
   // console.log('Token in profile page:', token, typeof (token));
   useEffect(() => {
-    if (!user) {
+    if (!loggedIn) {
       console.log('User is not authorized. Redirecting to login page.');
       setLoading(false);
       return navigate('/login');

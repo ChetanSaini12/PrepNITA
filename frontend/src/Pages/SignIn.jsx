@@ -8,16 +8,16 @@ import { useMutation } from '@apollo/client'
 import { LOGIN_USER } from '../gqlOperatons/mutations';
 import { client } from '../index';
 
-import { useDispatch } from "react-redux";
-import { setUser } from '../app/user/userSlice'
+import { useDispatch, useSelector } from "react-redux";
+import { LoginUser } from '../app/user/userSlice'
 // import { setUser } from "../path-to-your-slices/userSlice";
 
 function SignIn() {
   const [formData, setFormData] = useState({});
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { isLoading } = useSelector((state) => state.user);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value })
@@ -25,37 +25,38 @@ function SignIn() {
 
   const [loginUser] = useMutation(LOGIN_USER, {
     onError: (mutationError) => {
-      console.log("onError in LOGIN_USER ", mutationError);
-      return <h1>mutation error </h1>;
+      console.log("onError in LOGIN_USER ", mutationError.message);
+      return setError(mutationError.message);
+      // return null;
+      // return <h1>onError in Mutation </h1>;
     }
   });
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("user details for login : ", formData);
-    const { username, email, password } = formData;
-    if (!username || !email || !password) {
+    console.log("user details for login from Client Side  : ", formData);
+    const { username, password } = formData;
+    if (!username || !password) {
       return setError("Please Fillout All The Fields");
     }
-
-    setLoading(true);
     try {
       const response = await loginUser({
         variables: {
           username,
-          email,
-          password
+          password,
         }
       });
-      console.log("Response ", response);
-      setLoading(false);
+      console.log("Response from backend for loginUser  ", response);
+
       if (!response || !response.data) {
         return setError(response.errors.message || "Internal Server Error");
       }
       const token = response.data.loginUser;
-      dispatch(setUser({ username, email }));
+      dispatch(LoginUser({
+        username,
+      }));
       localStorage.setItem("token", token);
+      console.log("token for login ",token);
       // client.setHeaders({
       //   authorization: token ? `Bearer ${token}` : '',
       // });
@@ -67,7 +68,7 @@ function SignIn() {
 
   };
 
-  if (loading) return <Loader />;
+  if (isLoading) return <Loader />;
   return (
     <div className='min-h-screen mt-20 '>
       <div className='flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5'>
@@ -82,11 +83,11 @@ function SignIn() {
         </div>
         <div className='flex-1'>
           <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
-            <div>
+            {/* <div>
               <Label value='Your Email' >
               </Label>
               <TextInput type='email' placeholder='name@company.com' id="email" onChange={handleChange}></TextInput>
-            </div>
+            </div> */}
             <div>
               <Label value='Your userName' >
               </Label>

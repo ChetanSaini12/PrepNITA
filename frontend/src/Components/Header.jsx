@@ -6,18 +6,17 @@ import { FaMoon, FaSun } from "react-icons/fa"
 import { useDispatch, useSelector } from 'react-redux'
 import { toggleTheme } from '../app/theme/themSlice'
 import '../CSS/header.css'
-import { clearUser } from '../app/user/userSlice'
+import { LogoutUser} from '../app/user/userSlice'
 
 function Header() {
     const path = useLocation().pathname;
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { theme } = useSelector(state => state.theme)
-    const { user } = useSelector((state) => state.user);
+    const { loggedIn } = useSelector((state) => state.user);
 
     const logoutHandler = () => {
-        dispatch(clearUser());
-        localStorage.removeItem("token");
+        dispatch(LogoutUser());
         return navigate('/login');
     };
 
@@ -50,14 +49,14 @@ function Header() {
                 </Button>
                 <Button className='w-12 h-10 text-2xl sm:inline' pill><FaMoon /></Button>
 
-                {!user && (
+                {!loggedIn && (
                     <Link to='/register' >
                         <Button gradientDuoTone='purpleToBlue' outline >Login/Register</Button>
                     </Link>
                 )}
 
 
-                {user && (
+                {loggedIn && (
                     <Button gradientDuoTone='purpleToBlue' outline onClick={logoutHandler} >Logout</Button>
                 )}
 
