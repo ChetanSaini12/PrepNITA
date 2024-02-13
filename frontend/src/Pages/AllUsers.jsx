@@ -7,7 +7,7 @@ import { ALL_USER } from "../gqlOperatons/queries";
 
 function AllUsers() {
   const { data, loading: queryLoading, error: queryError } = useQuery(ALL_USER);
-
+  
   return (
     <>
       <div>AllUsers</div>
@@ -26,7 +26,6 @@ function AllUsers() {
       )}
       {queryLoading && <div>Loading...</div>}
       {queryError && <div>{queryError.message}</div>}
-     
     </>
   );
 }

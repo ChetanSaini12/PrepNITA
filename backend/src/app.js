@@ -54,6 +54,7 @@ app.use(
           userId,
         }
       } catch (error) {
+        console.log("ERRRROR : ", error);
         return {}
       }
     },

@@ -5,6 +5,5 @@ export const mutations = `#graphql
 
     updateUserRole(id : Int!, role : UserRole!) : String
 
-
     getUserById(id : Int!) : User
 `

@@ -19,6 +19,7 @@ model User {
   password    String
   mobileNum   String
   role        Roles      @default(USER)
+  questions   Question[]
 }
 
 enum Roles {
@@ -26,4 +27,26 @@ enum Roles {
   ADMIN
   SUPERADMIN
   MANAGER
+}
+
+model Question {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String
+  answer      String?
+  user User @relation(fields: [postedBy], references: [id])
+  postedBy    Int
+  tags        String[]
+  links       QueAddOnLink[]
+  isApproved  Boolean   @default(false)
+  upvotes     Int       @default(0)
+  downvotes   Int       @default(0)
+}
+
+model QueAddOnLink {
+  id    Int    @id @default(autoincrement())
+  title String
+  url   String
+  question Question @relation(fields: [questionId], references: [id])
+  questionId Int
 }
