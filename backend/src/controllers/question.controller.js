@@ -12,7 +12,7 @@ const createQuestion = async (_, payload, context) => {
         answer: payload.Question.answer,
         postedBy: context.userId,
         tags: payload.Question.tags,
-        links: {create : payload.Question.links}
+        links: { create: payload.Question.links },
       },
     })
 
@@ -26,16 +26,15 @@ const createQuestion = async (_, payload, context) => {
 }
 
 const getQuestions = async () => {
-    const questions = await prisma.question.findMany();
-    return questions
+  const questions = await prisma.question.findMany()
+  return questions
 }
 
 const upVoteQuestion = async (_, payload, context) => {
-  if(context.user)
-  {
+  if (context.user) {
     const question = await prisma.question.update({
       where: { id: payload.QuestionId },
-      data: { upvotes: payload.upvotes + 1 },
+      data: { upvotes: { increment: 1 }},
     })
     return question
   }
@@ -48,11 +47,10 @@ const upVoteQuestion = async (_, payload, context) => {
 }
 
 const downVoteQuestion = async (_, payload, context) => {
-  if(context.user)
-  {
+  if (context.user) {
     const question = await prisma.question.update({
       where: { id: payload.QuestionId },
-      data: { downvotes: payload.downvotes + 1 },
+      data: { downvotes: { increment: 1 }},
     })
     return question
   }
@@ -65,8 +63,7 @@ const downVoteQuestion = async (_, payload, context) => {
 }
 
 const changeApproveStatusOfQue = async (_, payload, context) => {
-  if(context.admin)
-  {
+  if (context.admin) {
     const question = await prisma.question.update({
       where: { id: payload.QuestionId },
       data: { isApproved: { not: { equals: true } } },
@@ -82,23 +79,26 @@ const changeApproveStatusOfQue = async (_, payload, context) => {
 
 const deleteQuestion = async (_, payload, context) => {
   // Admin can delete any question, a simple user can delete his/her own question only
-  if(context.isAdmin || context.userId === payload.userId)
-  {
+  const question = await prisma.question.findFirst({
+    where: { id: payload.QuestionId },
+  })
+  
+  if (context.isAdmin || context.userId === question.postedBy) {
     const question = await prisma.question.delete({
       where: { id: payload.QuestionId },
     })
-    return question
+    return `DELETED QUESTION WITH TITLE : ${question.title}` 
   }
 
   throw new GraphQLError('You are not an authorised admin!!', {
     extensions: {
       code: 'NOT_AUTHORISED',
     },
-  })  
+  })
 }
 
 const updateQuestion = async (_, payload, context) => {
-  if(payload.userId === context.userId) {
+  if (payload.userId === context.userId) {
     const question = await prisma.question.update({
       where: { id: payload.QuestionId },
       data: {
@@ -106,7 +106,7 @@ const updateQuestion = async (_, payload, context) => {
         description: payload.Question.description,
         answer: payload.Question.answer,
         tags: payload.Question.tags,
-        links: {create : payload.Question.links}
+        links: { create: payload.Question.links },
       },
     })
     return question
@@ -119,4 +119,12 @@ const updateQuestion = async (_, payload, context) => {
   })
 }
 
-export { createQuestion, getQuestions, upVoteQuestion, downVoteQuestion, changeApproveStatusOfQue, deleteQuestion, updateQuestion } 
+export {
+  createQuestion,
+  getQuestions,
+  upVoteQuestion,
+  downVoteQuestion,
+  changeApproveStatusOfQue,
+  deleteQuestion,
+  updateQuestion,
+}
