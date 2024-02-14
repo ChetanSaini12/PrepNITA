@@ -30,7 +30,7 @@ root.render(
         <Provider store={store}>
           {/* <ThemeProvider> */}
           <Auth>
-            <App/>
+            <App />
           </Auth>
           {/* </ThemeProvider> */}
         </Provider>

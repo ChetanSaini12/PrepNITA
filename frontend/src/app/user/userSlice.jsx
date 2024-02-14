@@ -24,6 +24,7 @@ const userSlice = createSlice({
             else state.profile_pic = "https://ik.imagekit.io/pqymxdgbi/avtar.png";
         },
         LogoutUser(state) {
+            state.id = undefined;
             state.loggedIn = false;
             state.isLoading = false;
             state.role = "USER";
