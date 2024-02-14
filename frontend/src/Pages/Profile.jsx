@@ -1,27 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Loader } from './Loader';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { setLoading } from '../app/user/userSlice';
 
 export const Profile = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
+  const dispatch=useDispatch();
 
-  const { loggedIn } = useSelector((state) => state.user);
+  const { loggedIn,isLoading } = useSelector((state) => state.user);
   const { username, profile_pic, role } = useSelector((state) => state.user);
-  console.log("profile pic : ", profile_pic);
+  // console.log("profile pic : ", profile_pic);
 
   useEffect(() => {
     if (!loggedIn) {
       alert("User is not authorized. Redirecting to login page");
       console.log('User is not authorized. Redirecting to login page.');
-      setLoading(false);
+      dispatch(setLoading(false));
       return navigate('/login');
     }
-    setLoading(false);
+    dispatch(setLoading(false));
   }, []);
 
-  if (loading) return <Loader />;
+  if (isLoading) return <Loader />;
 
   return (
     <div className='bg-slate-600 w-screen h-screen flex flex-col justify-center items-center'>

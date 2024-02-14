@@ -1,6 +1,6 @@
 import { Button, Label, TextInput } from 'flowbite-react'
 import { Link, useNavigate } from "react-router-dom"
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Alert } from 'flowbite-react'
 import OAuth from '../Components/OAuth'
 import { Loader } from './Loader'
@@ -8,6 +8,8 @@ import { useMutation } from '@apollo/client'
 import { LOGIN_USER } from '../gqlOperatons/mutations';
 
 import { useDispatch, useSelector } from "react-redux";
+import { LoginUser, setLoading } from '../app/user/userSlice'
+import { VerifyToken } from '../utils/verifyToken'
 
 
 function SignIn() {
@@ -16,6 +18,26 @@ function SignIn() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { isLoading } = useSelector((state) => state.user);
+
+
+  useEffect(() => {
+    const checkToken = async () => {
+      try {
+        const response = await VerifyToken(dispatch);
+        if (response.verified) {
+          dispatch(setLoading(false));
+          navigate('/');
+        }
+
+      } catch (error) {
+        console.log("Error in Auth try catch:", error.message);
+        dispatch(setLoading(false));
+      }
+    };
+
+    checkToken();
+  }, []); // Added dependencies for useEffect
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value })
@@ -49,10 +71,13 @@ function SignIn() {
       }
       const token = response.data.loginUser.token;
       localStorage.setItem("token", token);
-      console.log("token for login ",token);
-      // client.setHeaders({
-      //   authorization: token ? `Bearer ${token}` : '',
-      // });
+      console.log("token for login ", token);
+      const { id, role } = response.data.loginUser.user;
+      dispatch(LoginUser({
+        id,
+        username,
+        role,
+      }));
       return navigate('/');
     } catch (err) {
       console.log("try catch block error in signIn page  : ", err);
