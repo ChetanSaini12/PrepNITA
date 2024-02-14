@@ -12,7 +12,7 @@ export const typeDefs = `#graphql
     enum UserRole {
         USER
         ADMIN
-        SUPER_ADMIN
+        SUPERADMIN
         MANAGER
     }
 
@@ -22,6 +22,11 @@ export const typeDefs = `#graphql
         state: String!
         zip: String!
         country: String!
+    }
+
+    type UserWithJWT {
+        token: String
+        user: User
     }
 
     input UserInput {
