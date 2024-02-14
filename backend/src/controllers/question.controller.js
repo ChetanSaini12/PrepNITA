@@ -2,7 +2,7 @@ import { GraphQLError } from 'graphql'
 import { prisma } from '../../prisma/index.js'
 
 const createQuestion = async (_, payload, context) => {
-  console.log('CREATING QUESTION : ', payload)
+  console.log('CREATING QUESTION : ', payload) ;
   if (context.isUser) {
     const question = await prisma.question.create({
       data: {

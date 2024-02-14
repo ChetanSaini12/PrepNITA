@@ -11,14 +11,10 @@ import FooterCom from "./Components/Footer";
 import AllUsers from "./Pages/AllUsers";
 import Interviews from "./Pages/Interview";
 import { Profile } from "./Pages/Profile";
-import { VerifyToken } from "./utils/verifyToken";
-import DisplayUsers from "./Pages/DisplayUsers";
+import Question from "./Pages/Question";
 
 
 function App() {
-  VerifyToken().then((response)=>{
-    console.log("response from verifyToken",response);
-  });
   return (
     <BrowserRouter>
       <Header />
@@ -32,7 +28,8 @@ function App() {
         <Route path="/register" element={<SignUp></SignUp>}></Route>
         <Route path="/interview" element={<Interviews />}></Route>
         <Route path="/profile" element={<Profile />}></Route>
-        <Route path="/students" element={<DisplayUsers />}></Route>
+        <Route path="/questions" element={<Question/>}></Route>
+
       </Routes>
       <FooterCom></FooterCom>
     </BrowserRouter>
