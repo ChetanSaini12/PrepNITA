@@ -1,17 +1,40 @@
 import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
 import { Link, useNavigate } from "react-router-dom";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import OAuth from "../Components/OAuth";
 import { useMutation } from "@apollo/client";
 import { REGISTER_USER } from "../gqlOperatons/mutations";
 import { Loader } from "./Loader";
+import { useDispatch} from "react-redux";
+import { LoginUser, setLoading } from "../app/user/userSlice";
+import { VerifyToken } from "../utils/verifyToken";
 
 function SignUp() {
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({});
-  const [loading, setLoading] = useState(false);
+  const [loading, setloading] = useState(false);
   const [error, setError] = useState(null);
+
+  // const { loggedIn } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    const checkToken = async () => {
+      try {
+        const response = await VerifyToken(dispatch);
+        if (response.verified) {
+          dispatch(setLoading(false));
+          navigate('/');
+        }
+
+      } catch (error) {
+        console.log("Error in Auth try catch:", error.message);
+        dispatch(setLoading(false));
+      }
+    };
+
+    checkToken();
+  }); // Added dependencies for useEffect
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -20,20 +43,21 @@ function SignUp() {
   const [signUpUser] = useMutation(REGISTER_USER, {
     onError: (mutationError) => {
       console.log("Error in signUpUser mutation:", mutationError.message);
-      setLoading(false);
+      setloading(false);
       return setError(mutationError.message);
     },
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setloading(true);
     const { username, password, email, firstName, lastName, mobileNum } = formData;
 
     if (!username || !firstName || !email || !password || !mobileNum) {
+      setloading(false);
       return setError("Please Fillout All The Fields");
     }
 
-    setLoading(true);
 
     signUpUser({
       variables: {
@@ -49,24 +73,28 @@ function SignUp() {
     })
       .then((user) => {
         console.log("user:", user);
-        setLoading(false);
         // Handle success or navigation here
-        if (!user.data) {
+        if (!user || !user.data) {
+          setloading(false);
           return setError(user.errors.message || "Internal Server Error");
         }
-        else
-          navigate("/login");
+
+        const { id, email, firstName, lastName, mobileNum, username, role } = user.data.createUser;
+        dispatch(LoginUser({
+          id, email, firstName, lastName, mobileNum, username, role
+        }));
+        // localStorage.se
+        setloading(false);
+        return navigate("/");
       })
       .catch((catchError) => {
         console.log("Error in signUpUser catch block:", catchError);
-        setLoading(false);
-        return  setError(catchError);
+        setloading(false);
+        return setError(catchError);
       });
   };
 
-
   if (loading) return <Loader />;
-
   return (
     <div className="min-h-screen mt-20 ">
       <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5">
@@ -167,7 +195,8 @@ function SignUp() {
         </div>
       </div>
     </div>
-  );
-}
+  )
+
+};
 
 export default SignUp;
