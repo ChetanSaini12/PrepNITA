@@ -5,7 +5,7 @@ import OAuth from "../Components/OAuth";
 import { useMutation } from "@apollo/client";
 import { REGISTER_USER } from "../gqlOperatons/mutations";
 import { Loader } from "./Loader";
-import { useDispatch} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { LoginUser, setLoading } from "../app/user/userSlice";
 import { VerifyToken } from "../utils/verifyToken";
 
@@ -13,10 +13,9 @@ function SignUp() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({});
-  const [loading, setloading] = useState(false);
   const [error, setError] = useState(null);
 
-  // const { loggedIn } = useSelector((state) => state.user);
+  const { loggedIn, isLoading } = useSelector((state) => state.user);
 
   useEffect(() => {
     const checkToken = async () => {
@@ -34,7 +33,7 @@ function SignUp() {
     };
 
     checkToken();
-  }); // Added dependencies for useEffect
+  },[]); // Added dependencies for useEffect
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -43,18 +42,18 @@ function SignUp() {
   const [signUpUser] = useMutation(REGISTER_USER, {
     onError: (mutationError) => {
       console.log("Error in signUpUser mutation:", mutationError.message);
-      setloading(false);
+      dispatch(setLoading(false));
       return setError(mutationError.message);
     },
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setloading(true);
+    dispatch(setLoading(false));
     const { username, password, email, firstName, lastName, mobileNum } = formData;
 
     if (!username || !firstName || !email || !password || !mobileNum) {
-      setloading(false);
+      dispatch(setLoading(false));
       return setError("Please Fillout All The Fields");
     }
 
@@ -72,10 +71,10 @@ function SignUp() {
       },
     })
       .then((user) => {
-        console.log("user:", user);
+        console.log("signUp user form backend :", user);
         // Handle success or navigation here
         if (!user || !user.data) {
-          setloading(false);
+          dispatch(setLoading(false));
           return setError(user.errors.message || "Internal Server Error");
         }
 
@@ -84,17 +83,17 @@ function SignUp() {
           id, email, firstName, lastName, mobileNum, username, role
         }));
         // localStorage.se
-        setloading(false);
+        dispatch(setLoading(false));
         return navigate("/");
       })
       .catch((catchError) => {
         console.log("Error in signUpUser catch block:", catchError);
-        setloading(false);
+        dispatch(setLoading(false));
         return setError(catchError);
       });
   };
 
-  if (loading) return <Loader />;
+  if (isLoading) return <Loader />;
   return (
     <div className="min-h-screen mt-20 ">
       <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5">
@@ -168,9 +167,9 @@ function SignUp() {
             <Button
               gradientDuoTone="purpleToPink"
               type="submit"
-              disabled={loading}
+              disabled={isLoading}
             >
-              {loading ? (
+              {isLoading ? (
                 <>
                   <Spinner size="sm"></Spinner>
                   <span>Loading...</span>
