@@ -11,6 +11,7 @@ import FooterCom from "./Components/Footer";
 import AllUsers from "./Pages/AllUsers";
 import Interviews from "./Pages/Interview";
 import { Profile } from "./Pages/Profile";
+import Question from "./Pages/Question";
 
 
 function App() {
@@ -27,6 +28,8 @@ function App() {
         <Route path="/register" element={<SignUp></SignUp>}></Route>
         <Route path="/interview" element={<Interviews />}></Route>
         <Route path="/profile" element={<Profile />}></Route>
+        <Route path="/questions" element={<Question/>}></Route>
+
       </Routes>
       <FooterCom></FooterCom>
     </BrowserRouter>
