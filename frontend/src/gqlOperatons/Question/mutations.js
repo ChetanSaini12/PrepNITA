@@ -2,16 +2,21 @@ import { gql } from '@apollo/client';
 export const CREATE_QUESTION = gql`
     mutation createQuestionMutation($Question: QuestionInput){
         createQuestion(Question: $Question){
-            id : Int
-            title : String
-            description : String
-            answer : String
-            postedBy : Int
-            tags : [String]
-            links : [QueAddOnLink]
-            isApproved : Boolean
-            upvotes : Int
-            downvotes : Int
+            id 
+            title
+            description
+            answer
+            postedBy 
+            tags 
+            links {
+                id
+                title
+                url
+                questionId
+              }
+            isApproved 
+            upvotes 
+            downvotes
         }
     }
 `;
@@ -19,16 +24,21 @@ export const CREATE_QUESTION = gql`
 export const GET_QUESTION_BY_ID = gql`
     mutation getQuestionByIdMutation($QuestionId:Int!){
         getQuestionById(QuestionId:$QuestionId){
-            id : Int
-            title : String
-            description : String
-            answer : String
-            postedBy : Int
-            tags : [String]
-            links : [QueAddOnLink]
-            isApproved : Boolean
-            upvotes : Int
-            downvotes : Int
+            id 
+            title
+            description
+            answer
+            postedBy 
+            tags 
+            links {
+                id
+                title
+                url
+                questionId
+              }
+            isApproved 
+            upvotes 
+            downvotes
         }
     }
 `;
@@ -36,16 +46,21 @@ export const GET_QUESTION_BY_ID = gql`
 export const UP_VOTE_QUESTION = gql`
     mutation upVoteQuestionMutation($QuestionId:Int!){
         upVoteQuestion(QuestionId:$QuestionId){
-            id : Int
-            title : String
-            description : String
-            answer : String
-            postedBy : Int
-            tags : [String]
-            links : [QueAddOnLink]
-            isApproved : Boolean
-            upvotes : Int
-            downvotes : Int
+            id 
+            title
+            description
+            answer
+            postedBy 
+            tags 
+            links {
+                id
+                title
+                url
+                questionId
+              }
+            isApproved 
+            upvotes 
+            downvotes
         }
     }
 `;
@@ -53,16 +68,21 @@ export const UP_VOTE_QUESTION = gql`
 export const DOWN_VOTE_QUESTION = gql`
     mutation downVoteQuestionMutation($QuestionId:Int!){
         downVoteQuestion(QuestionId:$QuestionId){
-            id : Int
-            title : String
-            description : String
-            answer : String
-            postedBy : Int
-            tags : [String]
-            links : [QueAddOnLink]
-            isApproved : Boolean
-            upvotes : Int
-            downvotes : Int
+            id 
+            title
+            description
+            answer
+            postedBy 
+            tags 
+            links {
+                id
+                title
+                url
+                questionId
+              }
+            isApproved 
+            upvotes 
+            downvotes
         }
     }
 `;
@@ -71,16 +91,21 @@ export const DOWN_VOTE_QUESTION = gql`
 export const CHANGE_APPROVE_STATUS_OF_QUE = gql`
     mutation changeApproveStatusOfQueMutation($QuestionId:Int!){
         changeApproveStatusOfQue(QuestionId:$QuestionId){
-            id : Int
-            title : String
-            description : String
-            answer : String
-            postedBy : Int
-            tags : [String]
-            links : [QueAddOnLink]
-            isApproved : Boolean
-            upvotes : Int
-            downvotes : Int
+            id 
+            title
+            description
+            answer
+            postedBy 
+            tags 
+            links {
+                id
+                title
+                url
+                questionId
+              }
+            isApproved 
+            upvotes 
+            downvotes
         }
     }
 `;
@@ -96,16 +121,21 @@ export const DELETE_QUESTION = gql`
 export const UPDATE_QUESTION = gql`
     mutation updateQuestionMutation($QuestionId:Int!,$Question:QuestionInput){
         updateQuestion(QuestionId:$QuestionId,Question:$Question){
-            id : Int
-            title : String
-            description : String
-            answer : String
-            postedBy : Int
-            tags : [String]
-            links : [QueAddOnLink]
-            isApproved : Boolean
-            upvotes : Int
-            downvotes : Int
+            id 
+            title
+            description
+            answer
+            postedBy 
+            tags 
+            links {
+                id
+                title
+                url
+                questionId
+              }
+            isApproved 
+            upvotes 
+            downvotes
         }
     }
 `;

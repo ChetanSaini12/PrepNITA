@@ -1,33 +1,94 @@
-import React from 'react';
-import { useQuery } from '@apollo/client';
+import React, { useState } from 'react';
+import { useMutation, useQuery } from '@apollo/client';
 import { GET_ALL_QUESTIONS } from '../gqlOperatons/Question/queries';
+import { CHANGE_APPROVE_STATUS_OF_QUE, DOWN_VOTE_QUESTION, UP_VOTE_QUESTION } from '../gqlOperatons/Question/mutations';
+import { Button } from 'flowbite-react';
+
+
 
 
 const Question = () => {
-
+    const [Error, setError] = useState(null);
     const { data, loading: queryLoading, error: queryError } = useQuery(GET_ALL_QUESTIONS);
+    if (queryError) {
+        setError(queryError.message);
+    }
+    const [changeStatus] = useMutation(CHANGE_APPROVE_STATUS_OF_QUE, {
+        onError: (error) => {
+            console.log("error from changeStatus ", error);
+            setError(error.message);
+        }
+    });
+
+    const [downVote] = useMutation(DOWN_VOTE_QUESTION, {
+        onError: (error) => {
+            console.log("error from downVote ", error);
+            setError(error.message);
+        }
+    });
+    const [upVote] = useMutation(UP_VOTE_QUESTION, {
+        onError: (error) => {
+            console.log("error from downVote ", error);
+            setError(error.message);
+        }
+    });
+
     console.log("data from questions page ", data);
-    console.log("error ", queryError);
+    const updateQuestionStatus = (Q_id) => {
+        changeStatus({
+            variables: {
+                QuestionId: Q_id,
+            },
+            // Headers:{
+            //     authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIsImlhdCI6MTcwNzg1ODIyMywiZXhwIjoxNzE2NDk4MjIzfQ.m7vATj6uzD6Id0LaGhlYCf-MKAsaKakBLphwlfNdQdY"
+            // }
+        })
+    };
+    const downVoteQuestion = (Q_id) => {
+        downVote({
+            variables: {
+                QuestionId: Q_id,
+            },
+        })
+    };
+    const upVoteQuestion = (Q_id) => {
+        upVote({
+            variables: {
+                QuestionId: Q_id,
+            },
+        })
+    };
+
 
     return (
         <div className='bg-slate-600 w-screen h-screen border-spacing-0 text-white' >
-            <h1> QUESTIONS PAGE </h1>
-            {/* {data && (
+            <h1 className='text-4xl mb-4'> QUESTIONS PAGE </h1>
+            {data && (
                 <>
-                    {data.getAllQuestions.map((question) => (
+                    {data.getQuestions.map((question) => (
                         <div key={question.id}>
-                            <div>QUESTION : {question.question}</div>
-                            <div>OPTION1 : {question.option1}</div>
-                            <div>OPTION2 : {question.option2}</div>
-                            <div>OPTION3 : {question.option3}</div>
-                            <div>OPTION4 : {question.option4}</div>
-                            <div>ANSWER : {question.answer}</div>
+                            <div>TITLE : {question.title}</div>
+                            <div>QUESTION : {question.description}</div>
+                            <div>ANS : {question.answer}</div>
+                            <div>UpVotes : {question.upvotes}</div>
+                            <div>DownVotes : {question.downvotes}</div>
+                            <div>Approved : {question.isApproved ? "YES" : "NO"}</div>
+                            <div>Author : {question.postedBy}</div>
+                            <Button onClick={() => { updateQuestionStatus(question.id) }} gradientDuoTone="purpleToPink" className='mb-2' >
+                                Update status
+                            </Button>
+                            <Button onClick={() => { upVoteQuestion(question.id) }} gradientDuoTone="purpleToPink"className='mb-2' >
+                                Upvote
+                            </Button>
+                            <Button onClick={() => { downVoteQuestion(question.id) }} gradientDuoTone="purpleToPink" className='mb-2'>
+                                DownVote
+                            </Button>
                         </div>
                     ))}
                 </>
             )}
             {queryLoading && <div>Loading...</div>}
-            {queryError && <div>{queryError.message}</div>} */}
+            {Error && <div>{Error}</div>}
 
         </div>
 

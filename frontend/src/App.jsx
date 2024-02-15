@@ -12,6 +12,7 @@ import AllUsers from "./Pages/AllUsers";
 import Interviews from "./Pages/Interview";
 import { Profile } from "./Pages/Profile";
 import Question from "./Pages/Question";
+import DisplayUsers from "./Pages/DisplayUsers";
 
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
         <Route path="/interview" element={<Interviews />}></Route>
         <Route path="/profile" element={<Profile />}></Route>
         <Route path="/questions" element={<Question/>}></Route>
+        <Route path="/students" element={<DisplayUsers/>}></Route>
 
       </Routes>
       <FooterCom></FooterCom>
