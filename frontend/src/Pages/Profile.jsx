@@ -25,7 +25,7 @@ export const Profile = () => {
   if (isLoading) return <Loader />;
 
   return (
-    <div className='bg-slate-600 w-screen h-screen flex flex-col justify-center items-center'>
+    <div className=' w-screen h-screen flex flex-col justify-center items-center'>
       <h1 className='text-white text-4xl mt-2'>
         Welcome {username} to your profile page. You are a {role}.
       </h1>
