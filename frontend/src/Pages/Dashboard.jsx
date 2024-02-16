@@ -66,37 +66,37 @@ function Sidebar({ openSidebarToggle, OpenSidebar }) {
       </div>
 
       <ul className="sidebar-list">
-        <li className="sidebar-list-item">
+        <li className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 sidebar-list-item">
           <a href="">
             <BsGrid1X2Fill className="icon" /> Profile
           </a>
         </li>
-        <li className="sidebar-list-item">
+        <li className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2  sidebar-list-item">
           <a href="">
             <BsFillArchiveFill className="icon" /> Content
           </a>
         </li>
-        <li className="sidebar-list-item">
+        <li className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2  sidebar-list-item">
           <a href="">
             <BsFillGrid3X3GapFill className="icon" /> Subjects
           </a>
         </li>
-        <li className="sidebar-list-item">
+        <li className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2  sidebar-list-item">
           <a href="">
             <BsPeopleFill className="icon" /> History
           </a>
         </li>
-        <li className="sidebar-list-item">
+        <li className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2  sidebar-list-item">
           <a href="">
             <BsListCheck className="icon" /> Extra
           </a>
         </li>
-        <li className="sidebar-list-item">
+        <li className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2  sidebar-list-item">
           <a href="">
             <BsMenuButtonWideFill className="icon" /> Records
           </a>
         </li>
-        <li className="sidebar-list-item">
+        <li className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 sidebar-list-item">
           <a href="">
             <BsFillGearFill className="icon" /> Settings
           </a>
@@ -124,28 +124,28 @@ function Home() {
       </div>
 
       <div className="main-cards">
-        <div className="card">
+        <div className='text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2'>
           <div className="card-inner">
             <h3>TOPICS</h3>
             <BsFillArchiveFill className="card_icon" />
           </div>
           <h1>300</h1>
         </div>
-        <div className="card">
+        <div className="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
           <div className="card-inner">
             <h3>DOMAINS</h3>
             <BsFillGrid3X3GapFill className="card_icon" />
           </div>
           <h1>12</h1>
         </div>
-        <div className="card">
+        <div className="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
           <div className="card-inner">
             <h3>INSTITUTE RANK</h3>
             <BsPeopleFill className="card_icon" />
           </div>
           <h1>33</h1>
         </div>
-        <div className="card">
+        <div className="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
           <div className="card-inner">
             <h3>OVERALL RATING</h3>
             <BsFillBellFill className="card_icon" />
