@@ -8,6 +8,8 @@ import { Loader } from "./Loader";
 import { useDispatch, useSelector } from "react-redux";
 import { LoginUser, setLoading } from "../app/user/userSlice";
 import { VerifyToken } from "../utils/verifyToken";
+import Lottie from 'react-lottie';
+import animationData from '../../src/lotties/startup.json';
 
 function SignUp() {
   const navigate = useNavigate();
@@ -93,15 +95,31 @@ function SignUp() {
       });
   };
 
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animationData,
+    
+};
+
+
   if (isLoading) return <Loader />;
   return (
     <div className="min-h-screen mt-20 ">
       <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5">
         <div className="flex-1">
           <Link to="/" className="font-bold dark:text-white text-4xl">
+          <div className='w-0 justify-items-start'>
+                <Lottie 
+            options={defaultOptions}
+            height={100}
+            width={100}
+        />
+                </div>
             <span className="px-2 py-1 bg-gradient-to-r from from-indigo-500  via-purple-500 to-pink-500 rounded-lg text-white">
-              MindSet
+              PreP
             </span>
+            NITA
           </Link>
           <p className="text-sm mt-5 ">
             This is a demo project. You can Sign Up with your email and
@@ -150,7 +168,7 @@ function SignUp() {
               <Label value="Your Mobile Number"></Label>
               <TextInput
                 type="text"
-                placeholder="1234567890"
+                placeholder="+91-0000000000"
                 id="mobileNum"
                 onChange={handleChange}
               ></TextInput>

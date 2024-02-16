@@ -1,12 +1,13 @@
 import { Navbar, Button } from 'flowbite-react'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Link, useLocation, useNavigate } from "react-router-dom"
-import { AiOutlineSearch } from "react-icons/ai"
 import { FaMoon, FaSun } from "react-icons/fa"
 import { useDispatch, useSelector } from 'react-redux'
 import { toggleTheme } from '../app/theme/themSlice'
-// import '../CSS/header.css'
-import { LogoutUser,setLoading} from '../app/user/userSlice'
+import Lottie from 'react-lottie';
+import animationData from '../../src/lotties/startup.json';
+import { LogoutUser} from '../app/user/userSlice'
+
 
 function Header() {
     const path = useLocation().pathname;
@@ -19,11 +20,26 @@ function Header() {
         dispatch(LogoutUser());
         return navigate('/login');
     };
+    const defaultOptions = {
+        loop: true,
+        autoplay: true,
+        animationData: animationData,
+        
+    };
+
 
     return (
-        <Navbar className='navbar'>
-            <Link to="/" className='nav-logo'>
-                <span className='nav-logo-name'>MindSet</span>
+        <Navbar>
+            <Link to="/" className='font-bold text-lg flex-col '>
+                <div className='w-0 justify-items-start'>
+                <Lottie 
+            options={defaultOptions}
+            height={45}
+            width={45}
+        />
+                </div>
+            
+                <span className='px-2 py-1 bg-gradient-to-r from from-indigo-500  via-purple-500 to-pink-500 rounded-lg text-white text-lg font-bold ab'>PreP</span> NITA
             </Link>
             <div className='flex gap-2 md:order-2'>
                 <Button className='w-12 h-10 border-spacing-2 sm:inline' color='grey' pill onClick={() => {
