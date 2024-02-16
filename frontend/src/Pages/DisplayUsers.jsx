@@ -12,6 +12,7 @@ function DisplayUsers() {
     const [text, setText] = useState("");
     const search_options = ["Id", "Name", "Email"];
     const navigate = useNavigate();
+    
 
 
     const dummyData = [
@@ -49,7 +50,8 @@ function DisplayUsers() {
         },
     ];
     const [filteredResult, setFilteredResult] = useState(dummyData);
-    const handleClickSearch = () => {
+    const handleClickSearch = (props) => {
+        // console.log("props",props);
         // console.log("text ", text,typeof(text ),filter);
         if (text.length == 0) {
             setTableActive(true);
@@ -87,10 +89,6 @@ function DisplayUsers() {
             setFilteredResult(tempData);
         }
     };
-    // useEffect(() => {
-    //     // setFilteredResult(tempData);
-    //     console.log("filtered result", filteredResult);
-    // }, [filteredResult]);
     return (
         <div className="flex h-screen items-center flex-col">
             {/* <div> */}

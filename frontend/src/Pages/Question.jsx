@@ -5,8 +5,6 @@ import { CHANGE_APPROVE_STATUS_OF_QUE, DOWN_VOTE_QUESTION, UP_VOTE_QUESTION } fr
 import { Button } from 'flowbite-react';
 
 
-
-
 const Question = () => {
     const [Error, setError] = useState(null);
     const { data, loading: queryLoading, error: queryError } = useQuery(GET_ALL_QUESTIONS);

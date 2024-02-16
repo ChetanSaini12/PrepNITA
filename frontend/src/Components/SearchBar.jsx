@@ -38,7 +38,7 @@ function SearchBar(prop) {
             ></input>
           </div>
           <div>
-            <Button onClick={props.handleClickSearch} gradientDuoTone="purpleToPink" className='mb-2 mt-2' >
+            <Button onClick={()=>{props.handleClickSearch(props.filter)}} gradientDuoTone="purpleToPink" className='mb-2 mt-2' >
               Search
             </Button>
           </div>
