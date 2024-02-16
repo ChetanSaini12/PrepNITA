@@ -9,7 +9,7 @@ export default function FooterCom(){
             <div className="grid w-full justify-between sm:flex md:grid-cols-1">
                 <div className="mt-5">
                 <Link to="/" className='font-bold dark:text-white text-4xl'>
-                  <span className='px-2 py-1 bg-gradient-to-r from from-indigo-500  via-purple-500 to-pink-500 rounded-lg text-white'>Mind_Set</span>
+                  <span className='px-2 py-1 bg-gradient-to-r from from-indigo-500  via-purple-500 to-pink-500 rounded-lg text-white'>PreP</span>NITA
                 </Link>
                 </div>
                 <div className='grid grid-cols-2 gap-8  mt-4 sm:grid-cols-3 sm:gap-6'>
@@ -48,7 +48,7 @@ export default function FooterCom(){
             </div>
             <Footer.Divider></Footer.Divider>
             <div className='w-full sm:flex sm:items-center sm:justify-between'>
-                <Footer.Copyright href='#' by="Mind_Set" year={new Date().getFullYear()}></Footer.Copyright>
+                <Footer.Copyright href='#' by="PreP_NITA" year={new Date().getFullYear()}></Footer.Copyright>
             </div>
             <div className='flex gap-6 sm:mt-0 mt-4 sm:justify-center'>
                 <Footer.Icon href='#' icon={BsFacebook}></Footer.Icon>
