@@ -61,7 +61,7 @@ const Question = () => {
 
 
     return (
-        <div className='bg-slate-600 w-screen h-screen border-spacing-0 text-white' >
+        <div className=' w-screen h-screen border-spacing-0 text-white' >
             <h1 className='text-4xl mb-4'> QUESTIONS PAGE </h1>
             {data && (
                 <>

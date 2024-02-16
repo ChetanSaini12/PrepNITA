@@ -29,9 +29,3 @@
     --border-width: 1px;
 }
 
-body {
-    background-color: var(--primary-color);
-    font-family: var(--main-font-family);
-    padding: var(--default-padding);
-    color:white;
-}

@@ -1,11 +1,11 @@
-import { Navbar, TextInput, Button } from 'flowbite-react'
+import { Navbar, Button } from 'flowbite-react'
 import React, { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import { AiOutlineSearch } from "react-icons/ai"
 import { FaMoon, FaSun } from "react-icons/fa"
 import { useDispatch, useSelector } from 'react-redux'
 import { toggleTheme } from '../app/theme/themSlice'
-import '../CSS/header.css'
+// import '../CSS/header.css'
 import { LogoutUser,setLoading} from '../app/user/userSlice'
 
 function Header() {
@@ -25,29 +25,15 @@ function Header() {
             <Link to="/" className='nav-logo'>
                 <span className='nav-logo-name'>MindSet</span>
             </Link>
-            {/* <form >
-              <TextInput
-                  type='text'
-                  placeholder='Search...'
-                  rightIcon={AiOutlineSearch}
-                  className='hidden lg:inline bg-slate-600'
-              >
-  
-              </TextInput>
-  
-          </form> */}
-            {/* <Button className='w-10 h-10' color='gray' pill>
-              <AiOutlineSearch></AiOutlineSearch>
-          </Button> */}
             <div className='flex gap-2 md:order-2'>
-                <Button className='w-12 h-10 sm:inline' color='grey' pill onClick={() => {
+                <Button className='w-12 h-10 border-spacing-2 sm:inline' color='grey' pill onClick={() => {
                     dispatch(toggleTheme())
                 }}>
                     {
                         theme === 'light' ? <FaMoon></FaMoon> : <FaSun></FaSun>
                     }
                 </Button>
-                <Button className='w-12 h-10 text-2xl sm:inline' pill><FaMoon /></Button>
+                
 
                 {!loggedIn && (
                     <Link to='/register' >
