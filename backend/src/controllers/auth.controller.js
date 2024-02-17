@@ -14,9 +14,7 @@ const createUserInDB = async (_, payload) => {
   console.log('Creating user', payload)
 
   const existingUser = await prisma.user.findFirst({
-    where: {
-      OR: [{ email: payload.User.email }, { username: payload.User.username }],
-    },
+    where: { email: payload.User.email }
   })
 
   if (existingUser) {
@@ -46,6 +44,44 @@ const createUserInDB = async (_, payload) => {
 
   return loginUserWithJWT;
 }
+
+
+// const createUserInDB = async (_, payload) => {
+//   console.log('Creating user', payload)
+
+//   const existingUser = await prisma.user.findFirst({
+//     where: {
+//       OR: [{ email: payload.User.email }, { username: payload.User.username }],
+//     },
+//   })
+
+//   if (existingUser) {
+//     console.log('User already exist : ', existingUser)
+//     throw new GraphQLError('User already exist ', {
+//       extensions: {
+//         code: 'USER_ALREADY_EXISTS',
+//       },
+//     })
+//   }
+
+//   const hashedPassword = await bcrypt.hash(payload.User.password, 10)
+//   payload.User.password = hashedPassword
+
+//   const user = await prisma.user.create({
+//     data: payload.User,
+//   })
+
+//   const token = generateJwtToken(user.id);
+
+//   console.log('TOKEN', token)
+
+//   const loginUserWithJWT = {
+//     token,
+//     user
+//   }
+
+//   return loginUserWithJWT;
+// }
 
 const loginUser = async (_, payload) => {
   console.log('Logging in user', payload)
