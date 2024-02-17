@@ -10,6 +10,8 @@ import { LOGIN_USER } from '../gqlOperatons/mutations';
 import { useDispatch, useSelector } from "react-redux";
 import { LoginUser, setLoading } from '../app/user/userSlice'
 import { VerifyToken } from '../utils/verifyToken'
+import Lottie from 'react-lottie';
+import animationData from '../../src/lotties/startup.json';
 
 
 function SignIn() {
@@ -85,6 +87,13 @@ function SignIn() {
     }
 
   };
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animationData,
+    
+};
+
 
   if (isLoading) return <Loader />;
   return (
@@ -92,6 +101,13 @@ function SignIn() {
       <div className='flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5'>
         <div className='flex-1'>
           <Link to="/" className='font-bold dark:text-white text-4xl'>
+          <div className='w-0 justify-items-start'>
+                <Lottie 
+            options={defaultOptions}
+            height={100}
+            width={100}
+        />
+                </div>
             <span className='px-2 py-1 bg-gradient-to-r from from-indigo-500  via-purple-500 to-pink-500 rounded-lg text-white'>MindSet</span>
           </Link>
           <p className='text-sm mt-5 '>
