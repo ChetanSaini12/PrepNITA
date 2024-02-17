@@ -3,7 +3,7 @@ import { prisma } from '../../prisma/index.js'
 
 const getAllUserData = async () => {
   console.log('Get All User Data')
-  const users = await prisma.$queryRaw`SELECT * FROM "User"`
+  const users = await prisma.user.findMany();
   console.log(users)
   return users
 }
