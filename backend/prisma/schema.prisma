@@ -11,15 +11,41 @@ datasource db {
 }
 
 model User {
-  id          Int       @id @default(autoincrement())
-  email       String    @unique
-  username    String    @unique
-  firstName   String
-  lastName    String?
-  password    String
-  mobileNum   String
-  role        Roles      @default(USER)
-  questions   Question[]
+  id                        Int         @id @default(autoincrement())
+  email                     String      @unique
+  username                  String?     @unique
+  name                      String?
+  password                  String
+  mobileNum                 String?
+  role                      Roles       @default(USER)
+  profilePic                String?
+  gender                    Gender?
+  college_id                String?
+  graduation_year           Int?
+  cgpa                      Float?
+  college                   String?
+  department                Department?
+  course                    Course?
+  state                     String?
+  hosteler                  Boolean?
+  leetcodeProfile           String?
+  codeforcesProfile         String?
+  linkedinProfile           String?
+  githubProfile             String?
+  questions                 Question[]
+  authentication            Authentication[]
+}
+
+model Authentication {
+  id                      Int       @id @default(autoincrement())
+  user                    User      @relation(fields: [userId], references: [id])
+  userId                  Int
+  otpForEmail             String?
+  otpEmailExpiry          DateTime?
+  otpForPasswordChange    String?
+  otpPasswordChangeExpiry DateTime?
+  isVerified              Boolean   @default(false)
+  isBoarded               Boolean   @default(false)
 }
 
 enum Roles {
@@ -27,6 +53,33 @@ enum Roles {
   ADMIN
   SUPERADMIN
   MANAGER
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  TRANSGENDER
+  PREFER_NOT_TO_SAY
+}
+
+enum Department {
+  COMPUTER_SCIENCE_AND_ENGINEERING
+  ELECTRONICS_AND_INSTRUMENTATION_ENGINEERING
+  ELECTRONICS_AND_COMMUNICATIONS_ENGINEERING
+  ELECTRICAL_ENGINEERING
+  MECHANICAL_ENGINEERING
+  CHEMICAL_ENGINEERING
+  CIVIL_ENGINEERING
+  PRODUCTION_ENGINEERING
+  BIO_TECH_AND_BIO_ENGINEERING
+}
+
+
+enum Course {
+  BTech
+  PhD
+  MCA
+  MTech
 }
 
 model Question {
