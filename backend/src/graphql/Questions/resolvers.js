@@ -1,4 +1,11 @@
-import { changeApproveStatusOfQue, createQuestion, deleteQuestion, downVoteQuestion, getQuestionById, getQuestions, upVoteQuestion, updateQuestion } from "../../controllers/question.controller.js"
+import { changeApproveStatusOfQue } from "../../controllers/Question/changeApproveStatusOfQue.js"
+import { createQuestion } from "../../controllers/Question/createQuestion.js"
+import { deleteQuestion } from "../../controllers/Question/deleteQuestion.js"
+import { downVoteQuestion } from "../../controllers/Question/downVoteQuestion.js"
+import { getQuestionById } from "../../controllers/Question/getQuestionById.js"
+import { getQuestions } from "../../controllers/Question/getQuestions.js"
+import { upVoteQuestion } from "../../controllers/Question/upVoteQuestion.js"
+import { updateQuestion } from "../../controllers/Question/updateQuestion.js"
 import { checkRole } from "../../middlewares/checkRole.js"
 
 const queries = {
@@ -10,7 +17,7 @@ const queries = {
 const mutations = {
     createQuestion : (_, payload, context) => checkRole({_, payload, context}, createQuestion),
 
-    getQuestionById : (_, payload, context) => checkRole({_, payload, context}, getQuestionById),
+    getQuestionById : (_, payload, context) => checkRole({_, payload, context}, getQuestionById), 
 
     upVoteQuestion : (_, payload, context) => checkRole({_, payload, context}, upVoteQuestion),
 
