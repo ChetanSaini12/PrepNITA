@@ -1,6 +1,6 @@
 export const mutations = `#graphql
 
-    regiserUser(email: String!, password: String!) : UserWithJWT
+    registerUser(email: String!, password: String!) : UserWithJWT
 
     sendVerifyMail(email: String!) : String
 

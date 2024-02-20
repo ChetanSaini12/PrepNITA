@@ -1,5 +1,5 @@
 import { GraphQLError } from "graphql"
-import { getUserById } from "./getUserById"
+import { getUserById } from "./getUserById.js"
 
 
 export const getCurrentUser = async (_, __, context) => {

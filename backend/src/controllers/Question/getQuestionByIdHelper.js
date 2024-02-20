@@ -1,5 +1,5 @@
 import { GraphQLError } from 'graphql'
-import { prisma } from '../../prisma/index.js'
+import { prisma } from '../../../prisma/index.js'
 
 export const getQuestionByIdHelper = async (id) => {
     const question = await prisma.question.findFirst({

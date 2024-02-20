@@ -1,4 +1,4 @@
-import { prisma } from '../../prisma/index.js'
+import { prisma } from '../../../prisma/index.js'
 import { GraphQLError } from 'graphql'
 import bcrypt from 'bcryptjs'
 import { generateJwtToken } from './generateJWT.js'
@@ -22,28 +22,30 @@ export const registerUser = async (_, payload) => {
       data: {
         email,
         password: await bcrypt.hash(payload.password, 10),
+        authentication: { create : {} }
       },
     })
+  }
+  else {
+    const isValid = await bcrypt.compare(payload.password, existingUser.password)
+    if(!isValid) {
+      throw new GraphQLError('Passwords do not match!!', {
+        extensions: {
+          code: 'PASSWORDS_DO_NOT_MATCH',
+        },
+      })
+    }
   }
 
   const user = await prisma.user.findFirst({
     where: { email },
-    select: {
-      id: true,
-      email: true,
-      username: true,
-      name: true,
-      role: true,
-      mobileNum: true,
-      authentications: {
-        select: {
-          isVerified: true,
-          isBoarded: true,
-        },
-      },
-    },
-  })
+    include: {
+      authentication: true,
+      questions: true
+    }
+  });
 
+  console.log("Registered User: ", user);
   const token = generateJwtToken(user.id)
 
   return {
