@@ -1,16 +1,21 @@
 import React, { useState } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
-import { GET_ALL_QUESTIONS } from '../gqlOperatons/Question/queries';
+import { GET_ALL_QUESTIONS, GET_TEMP_QUE } from '../gqlOperatons/Question/queries';
 import { CHANGE_APPROVE_STATUS_OF_QUE, DOWN_VOTE_QUESTION, UP_VOTE_QUESTION } from '../gqlOperatons/Question/mutations';
 import { Button } from 'flowbite-react';
 
 
 const Question = () => {
     const [Error, setError] = useState(null);
+    const [tempQ,setTempQ]=useState(null);
     const { data, loading: queryLoading, error: queryError } = useQuery(GET_ALL_QUESTIONS);
     if (queryError) {
         setError(queryError.message);
     }
+    // const { data2, loading: queryLoading2, error: queryError2 } = useQuery(GET_TEMP_QUE);
+    // if (queryError2) {
+    //     setError(queryError2.message);
+    // }
     const [changeStatus] = useMutation(CHANGE_APPROVE_STATUS_OF_QUE, {
         onError: (error) => {
             console.log("error from changeStatus ", error);
@@ -56,6 +61,7 @@ const Question = () => {
             },
         })
     };
+    
 
 
     return (
@@ -81,6 +87,17 @@ const Question = () => {
                             <Button onClick={() => { downVoteQuestion(question.id) }} gradientDuoTone="purpleToPink" className='mb-2'>
                                 DownVote
                             </Button>
+                            {/* <Button onClick={()=>{setTempQ(data.tempQueQr)}}  gradientDuoTone="purpleToPink" className='mb-2'>
+                                Get temp questio 
+                            </Button> */}
+                            {/* {
+                                tempQ && (
+                                    <div>
+                                        <h1>Your temp quesiton </h1>
+                                        {tempQ.tempQueQr.question}
+                                    </div>
+                                )
+                            } */}
                         </div>
                     ))}
                 </>
