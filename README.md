@@ -207,3 +207,14 @@
   - Headers: Authorisation : Token - (User JWT Token of the Question Creator)
   - Parameters: QuestionId : Int!, Question : QuestionInput - object containing updated details.
   - Response: Question - Updated Question object with the new details.
+
+
+
+/** FRONTEND PAGES ***/
+
+** User :- 
+1. SignIn
+2. SignUp
+3. Onboarding
+4. Profile Page
+5. All Students

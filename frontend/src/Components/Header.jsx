@@ -49,15 +49,11 @@ function Header() {
                         theme === 'light' ? <FaMoon></FaMoon> : <FaSun></FaSun>
                     }
                 </Button>
-                
-
                 {!loggedIn && (
                     <Link to='/register' >
                         <Button gradientDuoTone='purpleToBlue' outline >Login/Register</Button>
                     </Link>
                 )}
-
-
                 {loggedIn && (
                     <Button gradientDuoTone='purpleToBlue' outline onClick={logoutHandler} >Logout</Button>
                 )}
