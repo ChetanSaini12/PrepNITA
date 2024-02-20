@@ -13,7 +13,7 @@ export const Auth = ({ children }) => {
       try {
         console.log("Enter in Auth component");
 
-        if (!loggedIn&&localStorage.getItem("token")) {
+        if (!loggedIn && localStorage.getItem("token")) {
           const response = await VerifyToken(dispatch);
           console.log("response in Auth:", response);
 
@@ -25,9 +25,13 @@ export const Auth = ({ children }) => {
             dispatch(LogoutUser()); // Assuming you have a LogoutUser action
           }
         } 
+        else{
+          console.log("Token not present in local storage || already logged in ");
+        }
       } catch (error) {
         console.log("Error in Auth try catch:", error.message);
         dispatch(setLoading(false));
+        dispatch(LogoutUser());
       }
     };
 

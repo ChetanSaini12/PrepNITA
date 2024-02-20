@@ -1,12 +1,23 @@
 import React from 'react'
+import Lottie from 'react-lottie';
+import animationData from '../../src/lotties/loader.json';
 
 export const Loader = () => {
-    return (
 
+    const defaultOptions = {
+        loop: true,
+        autoplay: true,
+        animationData: animationData,
+
+    };
+
+    return (
         <div className='flex items-center justify-center  w-screen h-screen border-spacing-0' >
-           <h1 className="font-bold text-4xl -mt-10 ">
-            Loading...
-            </h1>
+            <Lottie
+                options={defaultOptions}
+                height={100}
+                width={200}
+            />
         </div >
 
     )

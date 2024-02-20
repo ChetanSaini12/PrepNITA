@@ -2,7 +2,7 @@ import { Button, Label, TextInput } from 'flowbite-react'
 import { Link, useNavigate } from "react-router-dom"
 import React, { useEffect, useState } from 'react'
 import { Alert } from 'flowbite-react'
-import OAuth from '../Components/OAuth'
+import  OAuth from '../Components/OAuth'
 import { Loader } from './Loader'
 import { useMutation } from '@apollo/client'
 import { LOGIN_USER } from '../gqlOperatons/mutations';
@@ -17,25 +17,28 @@ function SignIn() {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { isLoading } = useSelector((state) => state.user);
-
+  const { isLoading, loggedIn } = useSelector((state) => state.user);
 
   useEffect(() => {
-    const checkToken = async () => {
-      try {
-        const response = await VerifyToken(dispatch);
-        if (response.verified) {
+    if(loggedIn)return navigate('/');
+    if (localStorage.getItem("token") && !loggedIn) {
+      const checkToken = async () => {
+        dispatch(setLoading(true));
+        try {
+          const response = await VerifyToken(dispatch);
+          if (response.verified) {
+            dispatch(setLoading(false));
+            navigate('/');
+          }
+
+        } catch (error) {
+          console.log("Error in Auth try catch:", error.message);
           dispatch(setLoading(false));
-          navigate('/');
         }
-
-      } catch (error) {
-        console.log("Error in Auth try catch:", error.message);
-        dispatch(setLoading(false));
       }
-    };
+      checkToken();
+    }
 
-    checkToken();
   }, []); // Added dependencies for useEffect
 
 
@@ -57,6 +60,7 @@ function SignIn() {
     if (!username || !password) {
       return setError("Please Fillout All The Fields");
     }
+    dispatch(setLoading(true));
     try {
       const response = await loginUser({
         variables: {
@@ -67,6 +71,7 @@ function SignIn() {
       console.log("Response from backend for loginUser  ", response);
 
       if (!response || !response.data) {
+        dispatch(setLoading(false));
         return setError(response.errors.message || "Internal Server Error");
       }
       const token = response.data.loginUser.token;
@@ -81,6 +86,7 @@ function SignIn() {
       return navigate('/');
     } catch (err) {
       console.log("try catch block error in signIn page  : ", err);
+      dispatch(setLoading(false));
       return setError(err);
     }
 
