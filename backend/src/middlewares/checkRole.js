@@ -1,5 +1,5 @@
-import { getUserById } from '../controllers/user.controller.js'
 import { GraphQLError } from 'graphql'
+import { getUserById } from '../controllers/User/getUserById.js'
 
 const checkRole = async ({ _, payload, context }, next) => {
   console.log('CONTEXT WHILE CHECKING ROLE', context)

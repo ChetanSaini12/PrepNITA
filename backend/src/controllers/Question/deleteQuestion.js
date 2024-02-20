@@ -1,5 +1,5 @@
 import { GraphQLError } from 'graphql'
-import { prisma } from '../../prisma/index.js'
+import { prisma } from '../../../prisma/index.js'
 import { getQuestionByIdHelper } from './getQuestionByIdHelper.js';
 
 export const deleteQuestion = async (_, payload, context) => {

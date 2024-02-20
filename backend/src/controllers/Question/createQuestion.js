@@ -1,5 +1,5 @@
 import { GraphQLError } from 'graphql'
-import { prisma } from '../../prisma/index.js'
+import { prisma } from '../../../prisma/index.js'
 
 export const createQuestion = async (_, payload, context) => {
     console.log('CREATING QUESTION : ', payload)

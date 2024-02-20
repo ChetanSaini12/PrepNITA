@@ -1,6 +1,6 @@
 import moment from "moment"
-import { prisma } from "../../../prisma"
-import { generateJwtToken } from "./generateJWT"
+import { prisma } from "../../../prisma/index.js"
+import { generateJwtToken } from "./generateJWT.js"
 import { GraphQLError } from "graphql"
 
 export const checkOtpForEmail = async (_, payload) => {

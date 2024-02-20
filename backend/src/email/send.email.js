@@ -23,13 +23,4 @@ async function sendEmail(receiver, message) {
   }
 }
 
-const tempRecevr = 'chetansaini1241@gmail.com'
-const tempMessage = {
-  subjest: 'test',
-  template: 'test',
-  context: 'test',
-}
-
-sendEmail(tempRecevr, tempMessage)
-
 export default sendEmail

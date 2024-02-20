@@ -23,15 +23,16 @@ export const sendVerificationMail = async (_, payload) => {
       lowerCaseAlphabets: false,
       upperCaseAlphabets: false,
       specialChars: false,
-    })
+    }).toString()
   
     // Calculate expiry time as 10 minutes from current time
-    const expiryTime = moment().add(5, 'minutes')
+    const expiryTime = moment().add(5, 'minutes').format()
   
     // Set OTP and OtpExpiry in user
+    console.log("OTP : ", otp, " Expiry time: ", expiryTime);
   
-    await prisma.user.update({
-      where: { email },
+    await prisma.authentication.update({
+      where: { userId: existingUser.id },
       data: {
         otpForEmail: otp,
         otpEmailExpiry: expiryTime,

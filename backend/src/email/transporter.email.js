@@ -50,10 +50,10 @@ async function createTransporter() {
   const options = {
     viewEngine: {
       extName: '.handlebars',
-      partialsDir: path.resolve('./templates/emailTemplates'),
+      partialsDir: path.resolve('../templates/emailTemplates'),
       defaultLayout: false,
     },
-    viewPath: path.resolve('./templates'),
+    viewPath: path.resolve('../templates'),
     extName: '.handlebars',
   }
 

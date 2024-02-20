@@ -13,7 +13,7 @@ const queries = {
 }
 
 const mutations = {
-  regiserUser: (_, payload) => registerUser(_, payload),
+  registerUser: (_, payload) => registerUser(_, payload),
   sendVerifyMail: (_, payload) => sendVerificationMail(_, payload),
   checkOTPForEmail: (_, payload) => checkOtpForEmail(_, payload),
   updateUserRole: (_, payload, context) => checkRole({_, payload, context}, updateUserRole),
