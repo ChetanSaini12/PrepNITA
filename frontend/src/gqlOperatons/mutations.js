@@ -8,8 +8,6 @@ export const REGISTER_USER = gql`
       user {
         id
         email
-        firstName
-        lastName
         mobileNum
         username
         role
@@ -26,8 +24,6 @@ export const LOGIN_USER=gql`
       user {
         id
         email
-        firstName
-        lastName
         mobileNum
         username
         role

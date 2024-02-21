@@ -74,8 +74,6 @@ export const typeDefs = `#graphql
     }
 
     input UserInput {
-        firstName               : String!
-        lastName                : String
         email                   : String!
         mobileNum               : String!
         password                : String!
