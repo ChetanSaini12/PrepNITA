@@ -5,6 +5,8 @@ export const mutations = `#graphql
     sendVerifyMail(email: String!) : String
 
     checkOTPForEmail(email: String!, otp: String!) : UserWithJWT
+
+    onboardUser(user : UserInput) : User
     
     updateUserRole(id : Int!, role : UserRole!) : String
     

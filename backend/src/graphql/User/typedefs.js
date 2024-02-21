@@ -74,20 +74,23 @@ export const typeDefs = `#graphql
     }
 
     input UserInput {
-        firstName               : String!
-        lastName                : String
-        email                   : String!
-        mobileNum               : String!
-        password                : String!
         username                : String!
-    }
-
-    input AddressInput {
-        street                  : String!
-        city                    : String!
+        name                    : String!
+        mobileNum               : String!
+        profilePic              : String
+        gender                  : Gender!
+        college_id              : String!
+        graduation_year         : Int!
+        cgpa                    : Float!
+        college                 : String!
+        department              : Department!
+        course                  : Course!
         state                   : String!
-        zip                     : String!
-        country                 : String!
+        hosteler                : Boolean!
+        leetcodeProfile         : String
+        codeforcesProfile       : String
+        linkedinProfile         : String
+        githubProfile           : String
     }
 
 `

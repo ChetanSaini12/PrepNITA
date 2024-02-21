@@ -1,21 +1,22 @@
-import moment from "moment"
-import { prisma } from "../../../prisma/index.js"
-import { generateJwtToken } from "./generateJWT.js"
-import { GraphQLError } from "graphql"
+import moment from 'moment'
+import { prisma } from '../../../prisma/index.js'
+import { generateJwtToken } from './generateJWT.js'
+import { GraphQLError } from 'graphql'
 
 export const checkOtpForEmail = async (_, payload) => {
-    const { email, otp } = payload
-  
-    const existingUser = await prisma.user.findFirst({
-      where: { email },
-      include: {
-        authentication: true,
-      }
-    })
+  const { email, otp } = payload
 
-    console.log('existingUser for otp verification : ', existingUser);
-  
-    if (existingUser) {
+  const existingUser = await prisma.user.findFirst({
+    where: { email },
+    include: {
+      authentication: true,
+    },
+  })
+
+  console.log('existingUser for otp verification : ', existingUser)
+
+  if (existingUser) {
+    if (!existingUser.authentication.isVerified) {
       if (existingUser.authentication.otpForEmail) {
         if (existingUser.authentication.otpEmailExpiry >= moment()) {
           if (existingUser.authentication.otpForEmail === otp) {
@@ -27,14 +28,14 @@ export const checkOtpForEmail = async (_, payload) => {
                 otpEmailExpiry: null,
               },
             })
-            console.log('Authenctication UPD Done');
+            console.log('Authenctication UPD Done')
             const user = await prisma.user.findFirst({
-              where: { id : existingUser.id },
+              where: { id: existingUser.id },
               include: {
                 authentication: true,
-              }
-            });
-  
+              },
+            })
+
             const token = generateJwtToken(user.id)
             return {
               token,
@@ -62,10 +63,17 @@ export const checkOtpForEmail = async (_, payload) => {
         })
       }
     } else {
-      throw new GraphQLError('User not found!!', {
+      throw new GraphQLError('You are already verified!!', {
         extensions: {
-          code: 'USER_NOT_FOUND',
+          code: 'ALREADY_VERIFIED',
         },
       })
     }
+  } else {
+    throw new GraphQLError('User not found!!', {
+      extensions: {
+        code: 'USER_NOT_FOUND',
+      },
+    })
   }
+}
