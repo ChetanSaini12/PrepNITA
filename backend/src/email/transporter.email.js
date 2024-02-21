@@ -10,7 +10,7 @@ function createGmailTransporter(email, password) {
     service: 'gmail',
     auth: {
       user: email,
-      pass: password, 
+      pass: password,
     },
   })
 
@@ -39,7 +39,7 @@ async function createTransporter() {
   const email = process.env.EMAIL
   const password = process.env.EMAIL_PASSWORD
 
-  console.log(`EMAIL : ${email} and PASSWORD : ${password}`);
+  console.log(`EMAIL : ${email} and PASSWORD : ${password}`)
   var transporter
   const domain = email.split('@')[1]
 
@@ -50,16 +50,16 @@ async function createTransporter() {
   const options = {
     viewEngine: {
       extName: '.handlebars',
-      partialsDir: path.resolve('../templates/emailTemplates'),
+      partialsDir: path.resolve('./src/templates/emailTemplates'),
       defaultLayout: false,
     },
-    viewPath: path.resolve('../templates'),
+    viewPath: path.resolve('./src/templates/emailTemplates'),
     extName: '.handlebars',
   }
 
-  transporter.use('complie', hbs(options))
+  transporter.use('compile', hbs(options))
 
-  return {transporter : transporter, email : email}
+  return { transporter: transporter, email: email }
 }
 
 export default createTransporter
