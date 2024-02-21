@@ -26,6 +26,7 @@
     "nodemailer": "^6.9.9",
     "nodemailer-express-handlebars": "^6.1.2",
     "otp-generator": "^4.0.1",
+    "path": "^0.12.7",
     "pg": "^8.11.3"
   },
   "devDependencies": {

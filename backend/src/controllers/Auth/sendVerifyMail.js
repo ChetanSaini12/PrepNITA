@@ -54,7 +54,8 @@ export const sendVerificationMail = async (_, payload) => {
   
       return 'Email Sent successfully!!'
     } catch (error) {
-      throw new GraphQLError('Error sending email', {
+      console.log('Error while sending email', error);
+      throw new GraphQLError('Error  while sending email', {
         extensions: {
           code: 'Email_For_Verification_Failed',
         },
