@@ -33,7 +33,7 @@ model User {
   linkedinProfile           String?
   githubProfile             String?
   questions                 Question[]
-  authentication            Authentication[]
+  authentication            Authentication?
 }
 
 model Authentication {

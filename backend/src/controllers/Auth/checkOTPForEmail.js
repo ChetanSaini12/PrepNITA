@@ -8,12 +8,17 @@ export const checkOtpForEmail = async (_, payload) => {
   
     const existingUser = await prisma.user.findFirst({
       where: { email },
+      include: {
+        authentication: true,
+      }
     })
+
+    console.log('existingUser for otp verification : ', existingUser);
   
     if (existingUser) {
-      if (existingUser.otpForEmail) {
-        if (existingUser.otpEmailExpiry >= moment()) {
-          if (existingUser.otpForEmail === otp) {
+      if (existingUser.authentication.otpForEmail) {
+        if (existingUser.authentication.otpEmailExpiry >= moment()) {
+          if (existingUser.authentication.otpForEmail === otp) {
             await prisma.authentication.update({
               where: { userId: existingUser.id },
               data: {
@@ -22,23 +27,13 @@ export const checkOtpForEmail = async (_, payload) => {
                 otpEmailExpiry: null,
               },
             })
+            console.log('Authenctication UPD Done');
             const user = await prisma.user.findFirst({
-              where: { userId: existingUser.id },
-              select: {
-                id: true,
-                email: true,
-                username: true,
-                name: true,
-                role: true,
-                mobileNum: true,
-                authentications: {
-                  select: {
-                    isVerified: true,
-                    isBoarded: true,
-                  },
-                },
-              },
-            })
+              where: { id : existingUser.id },
+              include: {
+                authentication: true,
+              }
+            });
   
             const token = generateJwtToken(user.id)
             return {
