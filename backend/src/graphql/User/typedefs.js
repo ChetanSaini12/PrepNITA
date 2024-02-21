@@ -21,7 +21,7 @@ export const typeDefs = `#graphql
         linkedinProfile         : String
         githubProfile           : String
         question                : [Question]
-        authentication          : [Authentication]
+        authentication          : Authentication
     }
 
     enum UserRole {
