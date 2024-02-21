@@ -9,12 +9,23 @@ export const sendVerificationMail = async (_, payload) => {
     const email = payload.email
     const existingUser = await prisma.user.findFirst({
       where: { email },
+      include: {
+        authentication: true,
+      }
     })
     if (!existingUser) {
       throw new GraphQLError('User is not found!!', {
         extensions: {
           code: 'USER_NOT_FOUND',
         },
+      })
+    }
+
+    if(existingUser.authentication.isVerified) {
+      throw new GraphQLError('You are already verified!!', {
+        extensions : {
+          code : 'ALREADY_VERIFIED',
+        }
       })
     }
   
