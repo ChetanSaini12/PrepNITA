@@ -34,18 +34,18 @@ export const VerifyToken = async (dispatch) => {
             }
             else {
                 console.log("waiting at verifyToken ");
-                dispatch(setLoading(false));
+                // dispatch(setLoading(false));
             }
         } catch (error) {
             console.log("Error in verifyToken try catch :", error.message);
-            // dispatch(setLoading(false));
+            dispatch(setLoading(false));
             dispatch(LogoutUser());
             response.verified = false;
         }
     }
     else {
         dispatch(setLoading(false));
-        dispatch(LogoutUser);
+        dispatch(LogoutUser());
         console.log("token not present at verifyToken ");
     }
 
