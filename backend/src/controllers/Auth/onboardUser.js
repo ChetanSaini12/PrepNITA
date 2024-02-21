@@ -6,7 +6,14 @@ export const onboardUser = async (_, payload, context) => {
     console.log('UserInput for Onboarding: ' + JSON.stringify(payload.user))
     const user = await prisma.user.update({
       where: { id: context.userId },
-      data: { ...payload.user },
+      data: {
+        authentication: {
+          update: {
+            isBoarded: true,
+          },
+        },
+        ...payload.user,
+      },
     })
 
     return user
