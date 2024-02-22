@@ -1,19 +1,25 @@
-import moment from "moment"
-import { prisma } from "../../../prisma/index.js"
-import { generateJwtToken } from "./generateJWT.js"
-import { GraphQLError } from "graphql"
+import moment from 'moment'
+import { prisma } from '../../../prisma/index.js'
+import { generateJwtToken } from './generateJWT.js'
+import { GraphQLError } from 'graphql'
 
 export const checkOtpForEmail = async (_, payload) => {
-    const { email, otp } = payload
-  
-    const existingUser = await prisma.user.findFirst({
-      where: { email },
-    })
-  
-    if (existingUser) {
-      if (existingUser.otpForEmail) {
-        if (existingUser.otpEmailExpiry >= moment()) {
-          if (existingUser.otpForEmail === otp) {
+  const { email, otp } = payload
+
+  const existingUser = await prisma.user.findFirst({
+    where: { email },
+    include: {
+      authentication: true,
+    },
+  })
+
+  console.log('existingUser for otp verification : ', existingUser)
+
+  if (existingUser) {
+    if (!existingUser.authentication.isVerified) {
+      if (existingUser.authentication.otpForEmail) {
+        if (existingUser.authentication.otpEmailExpiry >= moment()) {
+          if (existingUser.authentication.otpForEmail === otp) {
             await prisma.authentication.update({
               where: { userId: existingUser.id },
               data: {
@@ -22,24 +28,14 @@ export const checkOtpForEmail = async (_, payload) => {
                 otpEmailExpiry: null,
               },
             })
+            console.log('Authenctication UPD Done')
             const user = await prisma.user.findFirst({
-              where: { userId: existingUser.id },
-              select: {
-                id: true,
-                email: true,
-                username: true,
-                name: true,
-                role: true,
-                mobileNum: true,
-                authentications: {
-                  select: {
-                    isVerified: true,
-                    isBoarded: true,
-                  },
-                },
+              where: { id: existingUser.id },
+              include: {
+                authentication: true,
               },
             })
-  
+
             const token = generateJwtToken(user.id)
             return {
               token,
@@ -67,10 +63,17 @@ export const checkOtpForEmail = async (_, payload) => {
         })
       }
     } else {
-      throw new GraphQLError('User not found!!', {
+      throw new GraphQLError('You are already verified!!', {
         extensions: {
-          code: 'USER_NOT_FOUND',
+          code: 'ALREADY_VERIFIED',
         },
       })
     }
+  } else {
+    throw new GraphQLError('User not found!!', {
+      extensions: {
+        code: 'USER_NOT_FOUND',
+      },
+    })
   }
+}

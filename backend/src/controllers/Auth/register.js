@@ -40,8 +40,7 @@ export const registerUser = async (_, payload) => {
   const user = await prisma.user.findFirst({
     where: { email },
     include: {
-      authentication: true,
-      questions: true
+      authentication: true
     }
   });
 
