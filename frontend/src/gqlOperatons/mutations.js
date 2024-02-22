@@ -2,15 +2,18 @@
 import { gql } from "@apollo/client";
 
 export const REGISTER_USER = gql`
-  mutation createUserMutation($user: UserInput) {
-    createUser(User: $user) {
+  mutation createUserMutation($email:String!,$password:String!){
+    registerUser(email: $email,password: $password) {
       token
       user {
         id
         email
-        mobileNum
         username
         role
+        authentication {
+          isVerified
+          isBoarded
+        }
       }
     }
   }
@@ -28,6 +31,24 @@ export const LOGIN_USER=gql`
         username
         role
       }
+    }
+  }
+`;
+
+export const VERIFY_EMAIL=gql`
+  mutation verifyEmailMutation($email:String!,$otp:String!){
+    checkOTPForEmail(email: $email, otp: $otp) {
+      token
+     user{
+      id
+      email
+      username
+      role
+      authentication {
+        isVerified
+        isBoarded
+      }
+     }
     }
   }
 `;
