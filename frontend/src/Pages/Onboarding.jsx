@@ -11,7 +11,7 @@ import { VerifyToken } from "../utils/verifyToken";
 import Lottie from 'react-lottie';
 import animationData from '../../src/lotties/startup.json';
 
-function SignUp() {
+function Onboarding() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({});
@@ -35,7 +35,7 @@ function SignUp() {
     };
 
     checkToken();
-  }, []); // Added dependencies for useEffect
+  },[]); // Added dependencies for useEffect
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -52,9 +52,9 @@ function SignUp() {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(setLoading(false));
-    const { password, email } = formData;
+    const { username, password, email, firstName, lastName, mobileNum } = formData;
 
-    if (!email || !password) {
+    if (!username || !firstName || !email || !password || !mobileNum) {
       dispatch(setLoading(false));
       return setError("Please Fillout All The Fields");
     }
@@ -62,40 +62,31 @@ function SignUp() {
 
     signUpUser({
       variables: {
-        email,
-        password,
+        user: {
+          username,
+          password,
+          email,
+          firstName,
+          lastName,
+          mobileNum,
+        },
       },
     })
       .then((user) => {
-        // const token = response.data.loginUser.token;
-        // localStorage.setItem("token", token);
-        // console.log("token for login ", token);
-        // const { id, role } = response.data.loginUser.user;
-        console.log("signUp user form backend :", user.data);
+        console.log("signUp user form backend :", user);
         // Handle success or navigation here
         if (!user || !user.data) {
           dispatch(setLoading(false));
           return setError(user.errors.message || "Internal Server Error");
         }
 
-        const { isVerified, isBoarded } = user.data.registerUser.user.authentication;
-        if (!isVerified) {
-          dispatch(setLoading(false));
-          return setError("Email not verified!!");
-        };
-        if (!isBoarded) {
-          dispatch(setLoading(false));
-          return navigate('/onboarding');
-        };
-
-        // const {id,username,role}= user.data.createUser;
-
-        // dispatch(LoginUser({
-        //   id, email,username, role
-        // }));
-        // // localStorage.se
-        // dispatch(setLoading(false));
-        // return navigate("/");
+        const { id, email, firstName, lastName, mobileNum, username, role } = user.data.createUser;
+        dispatch(LoginUser({
+          id, email, firstName, lastName, mobileNum, username, role
+        }));
+        // localStorage.se
+        dispatch(setLoading(false));
+        return navigate("/");
       })
       .catch((catchError) => {
         console.log("Error in signUpUser catch block:", catchError);
@@ -108,8 +99,8 @@ function SignUp() {
     loop: true,
     autoplay: true,
     animationData: animationData,
-
-  };
+    
+};
 
 
   if (isLoading) return <Loader />;
@@ -118,13 +109,13 @@ function SignUp() {
       <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5">
         <div className="flex-1">
           <Link to="/" className="font-bold dark:text-white text-4xl">
-            <div className='w-0 justify-items-start'>
-              <Lottie
-                options={defaultOptions}
-                height={100}
-                width={100}
-              />
-            </div>
+          <div className='w-0 justify-items-start'>
+                <Lottie 
+            options={defaultOptions}
+            height={100}
+            width={100}
+        />
+                </div>
             <span className="px-2 py-1 bg-gradient-to-r from from-indigo-500  via-purple-500 to-pink-500 rounded-lg text-white">
               PreP
             </span>
@@ -135,10 +126,9 @@ function SignUp() {
             password. Or with Google.
           </p>
         </div>
-        {/* ................................FORM................................................... */}
         <div className="flex-1">
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-            {/* <div>
+            <div>
               <Label value="Your Username"></Label>
               <TextInput
                 type="text"
@@ -146,8 +136,8 @@ function SignUp() {
                 id="username"
                 onChange={handleChange}
               ></TextInput>
-            </div> */}
-            {/* <div>
+            </div>
+            <div>
               <Label value="First Name"></Label>
               <TextInput
                 type="text"
@@ -155,8 +145,8 @@ function SignUp() {
                 id="firstName"
                 onChange={handleChange}
               ></TextInput>
-            </div> */}
-            {/* <div>
+            </div>
+            <div>
               <Label value="Last Name"></Label>
               <TextInput
                 type="text"
@@ -164,7 +154,7 @@ function SignUp() {
                 id="lastName"
                 onChange={handleChange}
               ></TextInput>
-            </div> */}
+            </div>
             <div>
               <Label value="Your Email"></Label>
               <TextInput
@@ -174,7 +164,7 @@ function SignUp() {
                 onChange={handleChange}
               ></TextInput>
             </div>
-            {/* <div>
+            <div>
               <Label value="Your Mobile Number"></Label>
               <TextInput
                 type="text"
@@ -182,7 +172,7 @@ function SignUp() {
                 id="mobileNum"
                 onChange={handleChange}
               ></TextInput>
-            </div> */}
+            </div>
             <div>
               <Label value="Your Password"></Label>
               <TextInput
@@ -203,7 +193,7 @@ function SignUp() {
                   <span>Loading...</span>
                 </>
               ) : (
-                "Submit"
+                "Register"
               )}
             </Button>
             <OAuth></OAuth>
@@ -213,14 +203,6 @@ function SignUp() {
             <Link to={"/login"} className="text-blue-500">
               Login
             </Link>
-          </div>
-          <div className="flex gap-2 text-sm mt-5">
-            <button>
-              Verify Email
-            </button>
-            <button >
-              Forgot Password
-            </button>
           </div>
           {error && (
             <Alert className="mt-5" color="failure">
@@ -234,4 +216,4 @@ function SignUp() {
 
 };
 
-export default SignUp;
+export default Onboarding;

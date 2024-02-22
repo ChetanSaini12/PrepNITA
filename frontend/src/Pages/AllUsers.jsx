@@ -16,8 +16,6 @@ function AllUsers() {
           {data.getAllUser.map((user) => (
             <div key={user.id}>
               <div>USERNAME : {user.username}</div>
-              <div>FIRSTNAME : {user.firstName}</div>
-              <div>LASTNAME : {user.lastName}</div>
               <div>EMAIL : {user.email}</div>
               <div>MOBILENUM : {user.mobileNum}</div>
             </div>

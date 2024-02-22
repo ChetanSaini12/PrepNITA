@@ -6,8 +6,7 @@ export const ALL_USER = gql`
         getAllUser {
             id
             username
-            firstName
-            lastName
+           
             email
             mobileNum
             role
@@ -19,8 +18,7 @@ export const GET_USER_STATUS = gql`
         getMe{
             id
             email
-            firstName
-            lastName
+           
             mobileNum
             username
             role
