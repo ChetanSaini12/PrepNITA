@@ -10,7 +10,6 @@ import { updateUserProfile } from '../../controllers/User/updateUserProfile.js'
 
 
 const queries = {
-  getAllUser: () => getAllUserData(),
   getMe: (_,__, context) => getCurrentUser(_, __, context),
 }
 
@@ -21,7 +20,8 @@ const mutations = {
   onboardUser: (_, payload, context) => onboardUser(_, payload, context),
   updateUserProfile: (_, payload, context) => updateUserProfile(_, payload, context),
   updateUserRole: (_, payload, context) => checkRole({_, payload, context}, updateUserRole),
-  getUserById: (_, payload) => getUserById(_, payload.id)
+  getUserById: (_, payload) => getUserById(_, payload.id),
+  getAllUser: (_, payload) => getAllUserData(_, payload)
 } 
 
 export const resolvers = { queries, mutations }

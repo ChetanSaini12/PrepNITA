@@ -5,6 +5,19 @@ export const onboardUser = async (_, payload, context) => {
   try {
     if (context && context.userId) {
       console.log('UserInput for Onboarding: ' + JSON.stringify(payload.user))
+
+      const usernameExist = await prisma.user.findFirst({
+        where : { username: payload.user.username}
+      })
+
+      if(usernameExist) {
+        throw new GraphQLError('Username already exist', {
+          extensions: {
+            code: 'USERNAME_ALREADY_EXISTS',
+          },
+        })
+      }
+
       const user = await prisma.user.update({
         where: { id: context.userId },
         data: {
