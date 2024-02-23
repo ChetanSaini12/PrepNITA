@@ -4,52 +4,61 @@ import bcrypt from 'bcryptjs'
 import { generateJwtToken } from './generateJWT.js'
 
 export const registerUser = async (_, payload) => {
-  const email = payload.email
-  const existingUser = await prisma.user.findFirst({
-    where: { email },
-  })
-
-  if (!existingUser) {
-    if (!(email.includes('@') && email.includes('.', email.indexOf('@')))) {
-      throw new GraphQLError('Invalid Email!!', {
-        extensions: {
-          code: 'INVALID_EMAIL',
+  try {
+    const email = payload.email
+    const existingUser = await prisma.user.findFirst({
+      where: { email },
+    })
+  
+    if (!existingUser) {
+      if (!(email.includes('@') && email.includes('.', email.indexOf('@')))) {
+        throw new GraphQLError('Invalid Email!!', {
+          extensions: {
+            code: 'INVALID_EMAIL',
+          },
+        })
+      }
+  
+      await prisma.user.create({
+        data: {
+          email,
+          password: await bcrypt.hash(payload.password, 10),
+          authentication: { create : {} }
         },
       })
     }
-
-    await prisma.user.create({
-      data: {
-        email,
-        password: await bcrypt.hash(payload.password, 10),
-        authentication: { create : {} }
+    else {
+      const isValid = await bcrypt.compare(payload.password, existingUser.password)
+      if(!isValid) {
+        throw new GraphQLError('Passwords do not match!!', {
+          extensions: {
+            code: 'PASSWORDS_DO_NOT_MATCH',
+          },
+        })
+      }
+    }
+  
+    const user = await prisma.user.findFirst({
+      where: { email },
+      include: {
+        authentication: true
+      }
+    });
+  
+    console.log("Registered User: ", user);
+    const token = generateJwtToken(user.id)
+  
+    return {
+      token,
+      user,
+    }
+  } catch (error) {
+    console.log('Error while registering user : ', error);
+    throw new GraphQLError('Error while registering user', {
+      extensions: {
+        code: 'REGISTRATION_FAILED',
       },
     })
-  }
-  else {
-    const isValid = await bcrypt.compare(payload.password, existingUser.password)
-    if(!isValid) {
-      throw new GraphQLError('Passwords do not match!!', {
-        extensions: {
-          code: 'PASSWORDS_DO_NOT_MATCH',
-        },
-      })
-    }
-  }
-
-  const user = await prisma.user.findFirst({
-    where: { email },
-    include: {
-      authentication: true
-    }
-  });
-
-  console.log("Registered User: ", user);
-  const token = generateJwtToken(user.id)
-
-  return {
-    token,
-    user,
   }
 }
 
