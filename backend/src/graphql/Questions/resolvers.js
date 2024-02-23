@@ -10,14 +10,14 @@ import { checkRole } from "../../middlewares/checkRole.js"
 
 const queries = {
     tempQueQr : () => {return "RADHE"},
-    
-    getQuestions : () => getQuestions()
 }
 
 const mutations = {
     createQuestion : (_, payload, context) => checkRole({_, payload, context}, createQuestion),
 
-    getQuestionById : (_, payload, context) => checkRole({_, payload, context}, getQuestionById), 
+    getQuestionById : (_, payload, context) => checkRole({_, payload, context}, getQuestionById),
+    
+    getQuestions : (_, payload) => getQuestions(_, payload), 
 
     upVoteQuestion : (_, payload, context) => checkRole({_, payload, context}, upVoteQuestion),
 
