@@ -15,64 +15,73 @@ export const checkOtpForEmail = async (_, payload) => {
 
   console.log('existingUser for otp verification : ', existingUser)
 
-  if (existingUser) {
-    if (!existingUser.authentication.isVerified) {
-      if (existingUser.authentication.otpForEmail) {
-        if (existingUser.authentication.otpEmailExpiry >= moment()) {
-          if (existingUser.authentication.otpForEmail === otp) {
-            await prisma.authentication.update({
-              where: { userId: existingUser.id },
-              data: {
-                isVerified: true,
-                otpForEmail: null,
-                otpEmailExpiry: null,
-              },
-            })
-            console.log('Authenctication UPD Done')
-            const user = await prisma.user.findFirst({
-              where: { id: existingUser.id },
-              include: {
-                authentication: true,
-              },
-            })
-
-            const token = generateJwtToken(user.id)
-            return {
-              token,
-              user,
+  try {
+    if (existingUser) {
+      if (!existingUser.authentication.isVerified) {
+        if (existingUser.authentication.otpForEmail) {
+          if (existingUser.authentication.otpEmailExpiry >= moment()) {
+            if (existingUser.authentication.otpForEmail === otp) {
+              await prisma.authentication.update({
+                where: { userId: existingUser.id },
+                data: {
+                  isVerified: true,
+                  otpForEmail: null,
+                  otpEmailExpiry: null,
+                },
+              })
+              console.log('Authenctication UPD Done')
+              const user = await prisma.user.findFirst({
+                where: { id: existingUser.id },
+                include: {
+                  authentication: true,
+                },
+              })
+  
+              const token = generateJwtToken(user.id)
+              return {
+                token,
+                user,
+              }
+            } else {
+              throw new GraphQLError('Invalid OTP!!', {
+                extensions: {
+                  code: 'INVALID_OTP',
+                },
+              })
             }
           } else {
-            throw new GraphQLError('Invalid OTP!!', {
+            throw new GraphQLError('OTP Expired!!', {
               extensions: {
-                code: 'INVALID_OTP',
+                code: 'OTP_EXPIRED',
               },
             })
           }
         } else {
-          throw new GraphQLError('OTP Expired!!', {
+          throw new GraphQLError('OTP not sent!!', {
             extensions: {
-              code: 'OTP_EXPIRED',
+              code: 'OTP_NOT_SENT',
             },
           })
         }
       } else {
-        throw new GraphQLError('OTP not sent!!', {
+        throw new GraphQLError('You are already verified!!', {
           extensions: {
-            code: 'OTP_NOT_SENT',
+            code: 'ALREADY_VERIFIED',
           },
         })
       }
     } else {
-      throw new GraphQLError('You are already verified!!', {
+      throw new GraphQLError('User not found!!', {
         extensions: {
-          code: 'ALREADY_VERIFIED',
+          code: 'USER_NOT_FOUND',
         },
       })
     }
-  } else {
-    throw new GraphQLError('User not found!!', {
+  } catch (error) {
+    console.log('Error while checking otp for email : ', error);
+    throw new GraphQLError('Error while checking otp for email', {
       extensions: {
-        code: 'USER_NOT_FOUND',
+        code: 'OTP_VERIFICATION_FAILED',
       },
     })
   }

@@ -93,4 +93,24 @@ export const typeDefs = `#graphql
         githubProfile           : String
     }
 
+    input UserInputOptional {
+        username                : String
+        name                    : String
+        mobileNum               : String
+        profilePic              : String
+        gender                  : Gender
+        college_id              : String
+        graduation_year         : Int
+        cgpa                    : Float
+        college                 : String
+        department              : Department
+        course                  : Course
+        state                   : String
+        hosteler                : Boolean
+        leetcodeProfile         : String
+        codeforcesProfile       : String
+        linkedinProfile         : String
+        githubProfile           : String
+    }
+
 `
