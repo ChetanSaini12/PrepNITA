@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import OAuth from "../Components/OAuth";
 import { useMutation } from "@apollo/client";
-import { REGISTER_USER } from "../gqlOperatons/mutations";
+import { REGISTER_USER, SEND_VERIFY_EMAIL, VERIFY_EMAIL } from "../gqlOperatons/mutations";
 import { Loader } from "./Loader";
 import { useDispatch, useSelector } from "react-redux";
 import { LoginUser, setLoading } from "../app/user/userSlice";
@@ -16,6 +16,9 @@ function SignUp() {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({});
   const [error, setError] = useState(null);
+
+  const [emailModel, setEmailModel] = useState(false);
+  const [otpModel, setOtpModel] = useState(false);
 
   const { loggedIn, isLoading } = useSelector((state) => state.user);
 
@@ -43,13 +46,29 @@ function SignUp() {
 
   const [signUpUser] = useMutation(REGISTER_USER, {
     onError: (mutationError) => {
-      console.log("Error in signUpUser mutation:", mutationError.message);
+      console.log("Error in signUpUser mutation 1:", mutationError.message);
       dispatch(setLoading(false));
       return setError(mutationError.message);
     },
   });
 
-  const handleSubmit = (e) => {
+  const [verifyOtp] = useMutation(VERIFY_EMAIL, {
+    onError: (mutationError) => {
+      console.log("Error in signUpUser mutation 2:", mutationError.message);
+      dispatch(setLoading(false));
+      return setError(mutationError.message);
+    },
+  });
+
+  const [sendVerifyEmail] = useMutation(SEND_VERIFY_EMAIL, {
+    onError: (mutationError) => {
+      console.log("Error in signUpUser mutation 3:", mutationError.message);
+      dispatch(setLoading(false));
+      return setError(mutationError.message);
+    },
+  });
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch(setLoading(false));
     const { password, email } = formData;
@@ -58,51 +77,133 @@ function SignUp() {
       dispatch(setLoading(false));
       return setError("Please Fillout All The Fields");
     }
+    try {
+      const user = await signUpUser({
+        variables: {
+          email,
+          password,
+        },
+      });
+      // const token = response.data.loginUser.token;
+      // localStorage.setItem("token", token);
+      // console.log("token for login ", token);
+      // const { id, role } = response.data.loginUser.user;
+      console.log("signUp user form backend :", user);
+      // Handle success or navigation here
+      if (!user || !user.data) {
+        dispatch(setLoading(false));
+        console.log("user not found ");
+        return setError(user.errors.message || "Internal Server Error");
+      }
 
+      const { isVerified, isBoarded,
+        otpForEmail, otpEmailExpiry } = user.data.registerUser.user.authentication;
+      // if (!otpForEmail) {
+      //   try {
+      //     const response = await sendVerifyEmail({
+      //       variables: {
+      //         email
+      //       }
+      //     })
+      //     console.log("Response from sendVerifyEmail at register  :", response.data);
+      //     return setError(response.data.sendVerifyMail);
 
-    signUpUser({
-      variables: {
-        email,
-        password,
-      },
-    })
-      .then((user) => {
-        // const token = response.data.loginUser.token;
-        // localStorage.setItem("token", token);
-        // console.log("token for login ", token);
-        // const { id, role } = response.data.loginUser.user;
-        console.log("signUp user form backend :", user.data);
-        // Handle success or navigation here
-        if (!user || !user.data) {
-          dispatch(setLoading(false));
-          return setError(user.errors.message || "Internal Server Error");
+      //   } catch (catchError) {
+      //     console.log("Error in sendVerifyEmail catch block:", catchError);
+      //     dispatch(setLoading(false));
+      //     return setError(catchError);
+      //   };
+      // }
+      if (!isVerified) {
+        dispatch(setLoading(false));
+        console.log("Email not verified! Please verify your Email");
+        return setError("Email not verified! Please verify your Email");
+      }
+      else if (!isBoarded) {
+        const { id, username, role } = user.data.registerUser.user;
+        console.log("User not onboarded! Please onboard your account");
+        localStorage.setItem("token", user.data.registerUser.token);
+        dispatch(LoginUser({
+          id, email, username, role
+        }));
+        // localStorage.se
+        dispatch(setLoading(false));
+        return navigate('/onboarding');
+      }
+      else {
+
+        const { id, username, role } = user.data.registerUser;
+
+        dispatch(LoginUser({
+          id, email, username, role
+        }));
+        // localStorage.se
+        dispatch(setLoading(false));
+        return navigate("/");
+      }
+    } catch (catchError) {
+      console.log("Error in signUpUser catch block:", catchError);
+      dispatch(setLoading(false));
+      return setError(catchError);
+    };
+  };
+
+  const handleOtpModel = async (e) => {
+    e.preventDefault();
+    dispatch(setLoading(false));
+    const { otp, email } = formData;
+
+    if (!email || !otp) {
+      dispatch(setLoading(false));
+      return setError("Please Fillout All The Fields");
+    }
+
+    try {
+      const user = await verifyOtp({
+        variables: {
+          email,
+          otp,
+        },
+      });
+
+      console.log("res of verifyEMail  form backend :", user.data);
+      if (!user || !user.data) {
+        dispatch(setLoading(false));
+        console.log("user not found ");
+        return setError(user.errors.message || "Internal Server Error");
+      }
+      else {
+        return setError("Email Verified Successfully ! You can Login Now ");
+      }
+    } catch (catchError) {
+      console.log("Error in signUpUser catch block:", catchError);
+      dispatch(setLoading(false));
+      return setError(catchError);
+    };
+  };
+
+  const handleEmailModel = (e) => {
+    e.preventDefault();
+    dispatch(setLoading(false));
+    const { email } = formData;
+    if (!email) return setError("Please Fillout All The Fields")
+    else {
+      sendVerifyEmail({
+        variables: {
+          email
         }
+      }).then((response) => {
+        console.log("Response from sendVerifyEmail :", response.data);
+        return setError(response.data.sendVerifyMail);
 
-        const { isVerified, isBoarded } = user.data.registerUser.user.authentication;
-        if (!isVerified) {
-          dispatch(setLoading(false));
-          return setError("Email not verified!!");
-        };
-        if (!isBoarded) {
-          dispatch(setLoading(false));
-          return navigate('/onboarding');
-        };
-
-        // const {id,username,role}= user.data.createUser;
-
-        // dispatch(LoginUser({
-        //   id, email,username, role
-        // }));
-        // // localStorage.se
-        // dispatch(setLoading(false));
-        // return navigate("/");
-      })
-      .catch((catchError) => {
-        console.log("Error in signUpUser catch block:", catchError);
+      }).catch((catchError) => {
+        console.log("Error in sendVerifyEmail catch block:", catchError);
         dispatch(setLoading(false));
         return setError(catchError);
       });
+    };
   };
+
 
   const defaultOptions = {
     loop: true,
@@ -112,8 +213,108 @@ function SignUp() {
   };
 
 
-  if (isLoading) return <Loader />;
-  return (
+  if (isLoading) return <Loader />
+  else if (emailModel) return (
+    // <div className="min-h-screen mt-20 "></div>
+    <div className="min-h-screen flex p-3 max-w-2xl mx-auto items-center justify-center gap-5">
+      <div className="flex-1 flex-col shadow-lg shadow-black p-10 pt-20 -mt-20">
+        <h1 className="flex items-center justify-center mb-10 font-bold text-2xl" >Enter Your Email for OTP </h1>
+        <form className="flex flex-col gap-4" onSubmit={handleEmailModel}>
+          <div className="">
+            {/* <Label value="Your Email"></Label> */}
+            <TextInput
+              type="email"
+              placeholder="name@company.com"
+              id="email"
+              onChange={handleChange}
+              className="min-w-2xl mx-auto items-center justify-center gap-5"
+            ></TextInput>
+          </div>
+          <Button
+            gradientDuoTone="purpleToPink"
+            type="submit"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <>
+                <Spinner size="sm"></Spinner>
+                <span>Loading...</span>
+              </>
+            ) : (
+              "Submit"
+            )}
+          </Button>
+        </form>
+        <div className="flex items-center justify-center text-md mt-5">
+          <button className="bg-blue-200 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={() => { setEmailModel(false); setOtpModel(false); setError(null) }}>
+            Back
+          </button>
+        </div>
+        {error && (
+          <Alert className="mt-5" color="failure">
+            {error}
+          </Alert>
+        )}
+      </div>
+    </div>
+  )
+  else if (otpModel) return (
+    <div className="min-h-screen flex p-3 max-w-2xl mx-auto items-center justify-center gap-5">
+      <div className="flex-1 flex-col  shadow-lg shadow-black   p-10 pt-20 -mt-20">
+        <h1 className="flex items-center justify-center mb-10 font-bold text-2xl" >Enter Your Email for OTP </h1>
+        <form className="flex flex-col gap-4" onSubmit={handleOtpModel}>
+          <div className="">
+            {/* <Label value="Your Email"></Label> */}
+            <TextInput
+              type="email"
+              placeholder="name@company.com"
+              id="email"
+              onChange={handleChange}
+              className="min-w-2xl mx-auto items-center justify-center gap-5"
+            ></TextInput>
+          </div>
+          <div>
+            <Label value="Your Otp"></Label>
+            <TextInput
+              type="text"
+              placeholder="Otp"
+              id="otp"
+              onChange={handleChange}
+            ></TextInput>
+          </div>
+          <Button
+            gradientDuoTone="purpleToPink"
+            type="submit"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <>
+                <Spinner size="sm"></Spinner>
+                <span>Loading...</span>
+              </>
+            ) : (
+              "Submit"
+            )}
+          </Button>
+        </form>
+        <div className="flex items-center justify-center text-md mt-5">
+          <button className="bg-blue-200 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={() => { setEmailModel(false); setOtpModel(false); setError(null) }}>
+            Back
+          </button>
+        </div>
+        {error && (
+          <Alert className="mt-5" color="failure">
+            {error}
+          </Alert>
+        )}
+      </div>
+    </div>
+
+
+  )
+  else return (
     <div className="min-h-screen mt-20 ">
       <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5">
         <div className="flex-1">
@@ -138,33 +339,6 @@ function SignUp() {
         {/* ................................FORM................................................... */}
         <div className="flex-1">
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-            {/* <div>
-              <Label value="Your Username"></Label>
-              <TextInput
-                type="text"
-                placeholder="Username"
-                id="username"
-                onChange={handleChange}
-              ></TextInput>
-            </div> */}
-            {/* <div>
-              <Label value="First Name"></Label>
-              <TextInput
-                type="text"
-                placeholder="John"
-                id="firstName"
-                onChange={handleChange}
-              ></TextInput>
-            </div> */}
-            {/* <div>
-              <Label value="Last Name"></Label>
-              <TextInput
-                type="text"
-                placeholder="Doe"
-                id="lastName"
-                onChange={handleChange}
-              ></TextInput>
-            </div> */}
             <div>
               <Label value="Your Email"></Label>
               <TextInput
@@ -174,15 +348,6 @@ function SignUp() {
                 onChange={handleChange}
               ></TextInput>
             </div>
-            {/* <div>
-              <Label value="Your Mobile Number"></Label>
-              <TextInput
-                type="text"
-                placeholder="+91-0000000000"
-                id="mobileNum"
-                onChange={handleChange}
-              ></TextInput>
-            </div> */}
             <div>
               <Label value="Your Password"></Label>
               <TextInput
@@ -209,17 +374,20 @@ function SignUp() {
             <OAuth></OAuth>
           </form>
           <div className="flex gap-2 text-sm mt-5">
-            <span>Already Have an Account ?</span>
-            <Link to={"/login"} className="text-blue-500">
-              Login
-            </Link>
-          </div>
-          <div className="flex gap-2 text-sm mt-5">
-            <button>
-              Verify Email
+            <button onClick={() => { setOtpModel(true) }}>
+              {/* <Link to={"/verifyEmail"} className="text-blue-500"> */}
+              Verify Otp
+              {/* </Link> */}
             </button>
             <button >
+              {/* <Link to={"/onBoarding"} className="text-blue-500"> */}
               Forgot Password
+              {/* </Link> */}
+            </button>
+            <button onClick={() => { setEmailModel(true) }}>
+              {/* <Link to={"/onBoarding"} className="text-blue-500"> */}
+              Resend Otp
+              {/* </Link> */}
             </button>
           </div>
           {error && (

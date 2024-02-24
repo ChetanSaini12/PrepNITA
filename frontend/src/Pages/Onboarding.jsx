@@ -1,9 +1,10 @@
-import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
+import { Alert, Button, Label, Spinner, TextInput, Select } from "flowbite-react";
+// import Select from 'flow-bite-react-select-library';
 import { Link, useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import OAuth from "../Components/OAuth";
 import { useMutation } from "@apollo/client";
-import { REGISTER_USER } from "../gqlOperatons/mutations";
+import { ONBOARD_USER, REGISTER_USER } from "../gqlOperatons/mutations";
 import { Loader } from "./Loader";
 import { useDispatch, useSelector } from "react-redux";
 import { LoginUser, setLoading } from "../app/user/userSlice";
@@ -19,31 +20,32 @@ function Onboarding() {
 
   const { loggedIn, isLoading } = useSelector((state) => state.user);
 
-  useEffect(() => {
-    const checkToken = async () => {
-      try {
-        const response = await VerifyToken(dispatch);
-        if (response.verified) {
-          dispatch(setLoading(false));
-          navigate('/');
-        }
 
-      } catch (error) {
-        console.log("Error in Auth try catch:", error.message);
-        dispatch(setLoading(false));
-      }
-    };
+  // useEffect(() => {
+  //   const checkToken = async () => {
+  //     try {
+  //       const response = await VerifyToken(dispatch);
+  //       if (response.verified) {
+  //         dispatch(setLoading(false));
+  //         navigate('/');
+  //       }
 
-    checkToken();
-  },[]); // Added dependencies for useEffect
+  //     } catch (error) {
+  //       console.log("Error in Auth try catch:", error.message);
+  //       dispatch(setLoading(false));
+  //     }
+  //   };
+
+  //   checkToken();
+  // }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
-  const [signUpUser] = useMutation(REGISTER_USER, {
+  const [onBoardUser] = useMutation(ONBOARD_USER, {
     onError: (mutationError) => {
-      console.log("Error in signUpUser mutation:", mutationError.message);
+      console.log("Error in onBoardUser mutation:", mutationError.message);
       dispatch(setLoading(false));
       return setError(mutationError.message);
     },
@@ -52,41 +54,36 @@ function Onboarding() {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(setLoading(false));
-    const { username, password, email, firstName, lastName, mobileNum } = formData;
+    const { name, username, mobileNum, gender, college_id, graduation_year, cgpa, college,
+      department, course, state, hosteler } = formData;
 
-    if (!username || !firstName || !email || !password || !mobileNum) {
-      dispatch(setLoading(false));
-      return setError("Please Fillout All The Fields");
-    }
+    const leetcodeProfile = formData.leetcodeProfile || ""; const codeforcesProfile = formData.codeforcesProfile || ""; const linkedinProfile = formData.linkedinProfile || ""; const githubProfile = formData.githubProfile || "";
 
-
-    signUpUser({
+    onBoardUser({
       variables: {
         user: {
-          username,
-          password,
-          email,
-          firstName,
-          lastName,
-          mobileNum,
-        },
-      },
+          name, username, mobileNum, gender, college_id, graduation_year:parseInt(graduation_year,10), cgpa:parseFloat(cgpa), college,
+          department, course, state, hosteler:hosteler==='true', leetcodeProfile, codeforcesProfile, linkedinProfile, githubProfile
+        }
+      }
     })
       .then((user) => {
-        console.log("signUp user form backend :", user);
+        console.log("onBoard user form backend :", user);
         // Handle success or navigation here
         if (!user || !user.data) {
+          console.log("Error in onBoardUser user:", user.errors.message || "Internal Server Error");
           dispatch(setLoading(false));
           return setError(user.errors.message || "Internal Server Error");
         }
-
-        const { id, email, firstName, lastName, mobileNum, username, role } = user.data.createUser;
-        dispatch(LoginUser({
-          id, email, firstName, lastName, mobileNum, username, role
-        }));
-        // localStorage.se
-        dispatch(setLoading(false));
-        return navigate("/");
+        else {
+          // const { id, email, username, role } = user.data.createUser;
+          // dispatch(LoginUser({
+          //   id, email, firstName, lastName, mobileNum, username, role
+          // }));
+          // localStorage.se
+          dispatch(setLoading(false));
+          return navigate("/");
+        }
       })
       .catch((catchError) => {
         console.log("Error in signUpUser catch block:", catchError);
@@ -99,8 +96,8 @@ function Onboarding() {
     loop: true,
     autoplay: true,
     animationData: animationData,
-    
-};
+
+  };
 
 
   if (isLoading) return <Loader />;
@@ -109,13 +106,13 @@ function Onboarding() {
       <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5">
         <div className="flex-1">
           <Link to="/" className="font-bold dark:text-white text-4xl">
-          <div className='w-0 justify-items-start'>
-                <Lottie 
-            options={defaultOptions}
-            height={100}
-            width={100}
-        />
-                </div>
+            <div className='w-0 justify-items-start'>
+              <Lottie
+                options={defaultOptions}
+                height={100}
+                width={100}
+              />
+            </div>
             <span className="px-2 py-1 bg-gradient-to-r from from-indigo-500  via-purple-500 to-pink-500 rounded-lg text-white">
               PreP
             </span>
@@ -129,8 +126,9 @@ function Onboarding() {
         <div className="flex-1">
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <div>
-              <Label value="Your Username"></Label>
+              <Label value="* Your Username "></Label>
               <TextInput
+                required
                 type="text"
                 placeholder="Username"
                 id="username"
@@ -138,35 +136,19 @@ function Onboarding() {
               ></TextInput>
             </div>
             <div>
-              <Label value="First Name"></Label>
+              <Label value="* Full Name "></Label>
               <TextInput
+                required
                 type="text"
-                placeholder="John"
-                id="firstName"
+                placeholder="John Doe"
+                id="name"
                 onChange={handleChange}
               ></TextInput>
             </div>
             <div>
-              <Label value="Last Name"></Label>
+              <Label value="* Your Mobile Number"></Label>
               <TextInput
-                type="text"
-                placeholder="Doe"
-                id="lastName"
-                onChange={handleChange}
-              ></TextInput>
-            </div>
-            <div>
-              <Label value="Your Email"></Label>
-              <TextInput
-                type="email"
-                placeholder="name@company.com"
-                id="email"
-                onChange={handleChange}
-              ></TextInput>
-            </div>
-            <div>
-              <Label value="Your Mobile Number"></Label>
-              <TextInput
+                required
                 type="text"
                 placeholder="+91-0000000000"
                 id="mobileNum"
@@ -174,14 +156,166 @@ function Onboarding() {
               ></TextInput>
             </div>
             <div>
-              <Label value="Your Password"></Label>
+              <Label value="* Enrollment no "></Label>
               <TextInput
-                type="password"
-                placeholder="Password"
-                id="password"
+                required
+                type="text"
+                placeholder="21UEE055"
+                id="college_id"
                 onChange={handleChange}
               ></TextInput>
             </div>
+            <div>
+              <Label value="* Graduation Year"></Label>
+              <TextInput
+                required
+                type="Integer"
+                placeholder="2025"
+                id="graduation_year"
+                onChange={handleChange}
+              ></TextInput>
+            </div>
+            <div>
+              <Label value="* College"></Label>
+              <Select
+                id="college"
+                name="college"
+                onChange={handleChange}
+              >
+                <option selected>Choose your College </option>
+                <option value="NIT AGARTALA">NIT AGARTALA</option>
+                <option value="IIIT AGARTALA">IIIT AGARTALA</option>
+
+              </Select>
+            </div>
+            <div>
+              <Label value="* Course"></Label>
+              <Select
+              required
+                id="course"
+                name="course"
+                onChange={handleChange}
+              >
+                BTech
+                PhD
+                MCA
+                MTech
+                <option selected>Choose your Course </option>
+                <option value="BTech">BTech</option>
+                <option value="BTech">BTech</option>
+                <option value="MCA">MCA</option>
+                <option value="MTech">MTech</option>
+
+              </Select>
+            </div>
+
+            <div>
+              <Label value="* CGPA"></Label>
+              <TextInput
+                required
+                type="float"
+                placeholder="9.23"
+                id="cgpa"
+                onChange={handleChange}
+              ></TextInput>
+            </div>
+
+            <div>
+              <Label value="* State"></Label>
+              <TextInput
+                required
+                type="text"
+                placeholder="Rajasthan"
+                id="state"
+                onChange={handleChange}
+              ></TextInput>
+            </div>
+            <div>
+              <Label value="* Hostler"></Label>
+              <Select
+                id="hostler"
+                name="hostler"
+                onChange={handleChange}
+              >
+                {/* <option selected> </option> */}
+                <option value="true">YES</option>
+                <option value="false">NO</option>
+
+              </Select>
+            </div>
+            <div>
+              <Label value="* Gender"></Label>
+              <Select
+                id="gender"
+                name="gender"
+                onChange={handleChange}
+              >
+                <option selected>Choose your gender </option>
+                <option value="MALE">MALE</option>
+                <option value="FEMALE">FEMALE</option>
+                <option value="TRANSGENDER">TRANSGENDER</option>
+                <option value="PREFER_NOT_TO_SAY">PREFER_NOT_TO_SAY</option>
+              </Select>
+
+            </div>
+
+            <div>
+              <Label value="* Department"></Label>
+              <Select
+                id="department"
+                name="department"
+                onChange={handleChange}
+              >
+
+                <option selected>Choose your College </option>
+                <option value="COMPUTER_SCIENCE_AND_ENGINEERING">CSE</option>
+                <option value="ELECTRONICS_AND_COMMUNICATIONS_ENGINEERING">ECE</option>
+                <option value="ELECTRICAL_ENGINEERING">EE</option>
+                <option value="ELECTRONICS_AND_COMMUNICATIONS_ENGINEERING">EI</option>
+                <option value="MECHANICAL_ENGINEERING">Mechanical</option>
+                <option value="CHEMICAL_ENGINEERING">Chemical</option>
+                <option value="CIVIL_ENGINEERING">Civil</option>
+                <option value="PRODUCTION_ENGINEERING">Production</option>
+                <option value="BIO_TECH_AND_BIO_ENGINEERING">Bio_Tech</option>
+              </Select>
+            </div>
+            <div>
+              <Label value="Leetcode Profile"></Label>
+              <TextInput
+                type="text"
+                placeholder="https://leetcode.com/username/"
+                id="leetcodeProfile"
+                onChange={handleChange}
+              ></TextInput>
+            </div>
+            <div>
+              <Label value="Codeforces Profile"></Label>
+              <TextInput
+                type="text"
+                placeholder="https://codeforces.com/username/"
+                id="codeforcesProfile"
+                onChange={handleChange}
+              ></TextInput>
+            </div>
+            <div>
+              <Label value="Linkedin Profile"></Label>
+              <TextInput
+                type="text"
+                placeholder="https://linkedin.com/username/"
+                id="linkedProfile"
+                onChange={handleChange}
+              ></TextInput>
+            </div>
+            <div>
+              <Label value="Github Profile"></Label>
+              <TextInput
+                type="text"
+                placeholder="https://github.com/username/ "
+                id="githubProfile"
+                onChange={handleChange}
+              ></TextInput>
+            </div>
+
             <Button
               gradientDuoTone="purpleToPink"
               type="submit"
@@ -193,17 +327,11 @@ function Onboarding() {
                   <span>Loading...</span>
                 </>
               ) : (
-                "Register"
+                "Submit"
               )}
             </Button>
-            <OAuth></OAuth>
           </form>
-          <div className="flex gap-2 text-sm mt-5">
-            <span>Already Have an Account ?</span>
-            <Link to={"/login"} className="text-blue-500">
-              Login
-            </Link>
-          </div>
+         
           {error && (
             <Alert className="mt-5" color="failure">
               {error}
