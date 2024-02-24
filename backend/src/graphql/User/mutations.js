@@ -7,10 +7,14 @@ export const mutations = `#graphql
     checkOTPForEmail(email: String!, otp: String!) : UserWithJWT
 
     onboardUser(user : UserInput) : User
+
+    updateUserProfile(user: UserInputOptional) : User
     
     updateUserRole(id : Int!, role : UserRole!) : String
     
     getUserById(id : Int!) : User
+
+    getAllUser(user : UserInputOptional) : [User]
 `
     
     // createUser(User: UserInput) : UserWithJWT
