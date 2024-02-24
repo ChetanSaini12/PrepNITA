@@ -18,7 +18,6 @@ function SignUp() {
   const [error, setError] = useState(null);
 
   const [emailModel, setEmailModel] = useState(false);
-  const [otpModel, setOtpModel] = useState(false);
 
   const { loggedIn, isLoading } = useSelector((state) => state.user);
 
@@ -70,7 +69,7 @@ function SignUp() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(setLoading(false));
+    dispatch(setLoading(true));
     const { password, email } = formData;
 
     if (!email || !password) {
@@ -90,34 +89,35 @@ function SignUp() {
       // const { id, role } = response.data.loginUser.user;
       console.log("signUp user form backend :", user);
       // Handle success or navigation here
-      if (!user || !user.data) {
+      if (!user || !user.data || !user.data.registerUser) {
         dispatch(setLoading(false));
         console.log("user not found ");
         return setError(user.errors.message || "Internal Server Error");
       }
 
-      const { isVerified, isBoarded,
-        otpForEmail, otpEmailExpiry } = user.data.registerUser.user.authentication;
-      // if (!otpForEmail) {
-      //   try {
-      //     const response = await sendVerifyEmail({
-      //       variables: {
-      //         email
-      //       }
-      //     })
-      //     console.log("Response from sendVerifyEmail at register  :", response.data);
-      //     return setError(response.data.sendVerifyMail);
-
-      //   } catch (catchError) {
-      //     console.log("Error in sendVerifyEmail catch block:", catchError);
-      //     dispatch(setLoading(false));
-      //     return setError(catchError);
-      //   };
-      // }
+      const { isVerified, isBoarded } = user.data.registerUser.user.authentication;
       if (!isVerified) {
-        dispatch(setLoading(false));
-        console.log("Email not verified! Please verify your Email");
-        return setError("Email not verified! Please verify your Email");
+        console.log("email : ", email);
+        sendVerifyEmail({
+          variables: {
+            email
+          }
+        }).then((response) => {
+          if (!response || !response.data || !response.data.sendVerifyMail) {
+            dispatch(setLoading(false));
+            return setError(response.errors.message || "Email not sent! Please try again later.");
+          }
+          else {
+            dispatch(setLoading(false));
+            setError(response.data.sendVerifyMail + " Please verify your email");
+            return setEmailModel(true);
+          }
+        })
+          .catch((catchError) => {
+            dispatch(setLoading(false));
+            console.log("Error in sendVerifyEmail catch block: *111 ", catchError);
+            return setError(catchError);
+          });
       }
       else if (!isBoarded) {
         const { id, username, role } = user.data.registerUser.user;
@@ -150,7 +150,7 @@ function SignUp() {
 
   const handleOtpModel = async (e) => {
     e.preventDefault();
-    dispatch(setLoading(false));
+    dispatch(setLoading(true));
     const { otp, email } = formData;
 
     if (!email || !otp) {
@@ -167,13 +167,15 @@ function SignUp() {
       });
 
       console.log("res of verifyEMail  form backend :", user.data);
-      if (!user || !user.data) {
+      if (!user || !user.data || !user.data.checkOTPForEmail) {
         dispatch(setLoading(false));
         console.log("user not found ");
         return setError(user.errors.message || "Internal Server Error");
       }
       else {
-        return setError("Email Verified Successfully ! You can Login Now ");
+        dispatch(setLoading(false));
+        setError("Email Verified Successfully ! You can Login Now ");
+        return setEmailModel(false);
       }
     } catch (catchError) {
       console.log("Error in signUpUser catch block:", catchError);
@@ -184,9 +186,12 @@ function SignUp() {
 
   const handleEmailModel = (e) => {
     e.preventDefault();
-    dispatch(setLoading(false));
+    dispatch(setLoading(true));
     const { email } = formData;
-    if (!email) return setError("Please Fillout All The Fields")
+    if (!email) {
+      dispatch(setLoading(false));
+      return setError("Please Fillout All The Fields")
+    }
     else {
       sendVerifyEmail({
         variables: {
@@ -194,7 +199,11 @@ function SignUp() {
         }
       }).then((response) => {
         console.log("Response from sendVerifyEmail :", response.data);
-        return setError(response.data.sendVerifyMail);
+        dispatch(setLoading(false));
+        if (!response.data || !response.data.sendVerifyMail)
+          return setError(response.errors.message || "Email not sent! Please try again later.");
+        else
+          return setError(response.data.sendVerifyMail);
 
       }).catch((catchError) => {
         console.log("Error in sendVerifyEmail catch block:", catchError);
@@ -219,69 +228,31 @@ function SignUp() {
     <div className="min-h-screen flex p-3 max-w-2xl mx-auto items-center justify-center gap-5">
       <div className="flex-1 flex-col shadow-lg shadow-black p-10 pt-20 -mt-20">
         <h1 className="flex items-center justify-center mb-10 font-bold text-2xl" >Enter Your Email for OTP </h1>
-        <form className="flex flex-col gap-4" onSubmit={handleEmailModel}>
-          <div className="">
-            {/* <Label value="Your Email"></Label> */}
-            <TextInput
-              type="email"
-              placeholder="name@company.com"
-              id="email"
-              onChange={handleChange}
-              className="min-w-2xl mx-auto items-center justify-center gap-5"
-            ></TextInput>
-          </div>
-          <Button
-            gradientDuoTone="purpleToPink"
-            type="submit"
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <>
-                <Spinner size="sm"></Spinner>
-                <span>Loading...</span>
-              </>
-            ) : (
-              "Submit"
-            )}
-          </Button>
-        </form>
-        <div className="flex items-center justify-center text-md mt-5">
-          <button className="bg-blue-200 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={() => { setEmailModel(false); setOtpModel(false); setError(null) }}>
-            Back
-          </button>
-        </div>
-        {error && (
-          <Alert className="mt-5" color="failure">
-            {error}
-          </Alert>
-        )}
-      </div>
-    </div>
-  )
-  else if (otpModel) return (
-    <div className="min-h-screen flex p-3 max-w-2xl mx-auto items-center justify-center gap-5">
-      <div className="flex-1 flex-col  shadow-lg shadow-black   p-10 pt-20 -mt-20">
-        <h1 className="flex items-center justify-center mb-10 font-bold text-2xl" >Enter Your Email for OTP </h1>
         <form className="flex flex-col gap-4" onSubmit={handleOtpModel}>
           <div className="">
-            {/* <Label value="Your Email"></Label> */}
+            <Label value="Your Email"></Label>
             <TextInput
+              required
               type="email"
-              placeholder="name@company.com"
+              placeholder="name@gmail.com"
               id="email"
               onChange={handleChange}
               className="min-w-2xl mx-auto items-center justify-center gap-5"
             ></TextInput>
           </div>
-          <div>
-            <Label value="Your Otp"></Label>
+          <div className="">
+            {/* <Label value="Your Email"></Label> */}
             <TextInput
+              required
               type="text"
-              placeholder="Otp"
+              placeholder="Please Enter OTP Here "
               id="otp"
               onChange={handleChange}
+              className="min-w-2xl mx-auto items-center justify-center gap-5"
             ></TextInput>
+            <Button className="mt-2" onClick={handleEmailModel}>
+              Resend Otp
+            </Button>
           </div>
           <Button
             gradientDuoTone="purpleToPink"
@@ -294,13 +265,13 @@ function SignUp() {
                 <span>Loading...</span>
               </>
             ) : (
-              "Submit"
+              "Verify Email"
             )}
           </Button>
         </form>
         <div className="flex items-center justify-center text-md mt-5">
           <button className="bg-blue-200 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={() => { setEmailModel(false); setOtpModel(false); setError(null) }}>
+            onClick={() => { setEmailModel(false); setError(null) }}>
             Back
           </button>
         </div>
@@ -311,8 +282,6 @@ function SignUp() {
         )}
       </div>
     </div>
-
-
   )
   else return (
     <div className="min-h-screen mt-20 ">
@@ -374,11 +343,6 @@ function SignUp() {
             <OAuth></OAuth>
           </form>
           <div className="flex gap-2 text-sm mt-5">
-            <button onClick={() => { setOtpModel(true) }}>
-              {/* <Link to={"/verifyEmail"} className="text-blue-500"> */}
-              Verify Otp
-              {/* </Link> */}
-            </button>
             <button >
               {/* <Link to={"/onBoarding"} className="text-blue-500"> */}
               Forgot Password
@@ -386,7 +350,7 @@ function SignUp() {
             </button>
             <button onClick={() => { setEmailModel(true) }}>
               {/* <Link to={"/onBoarding"} className="text-blue-500"> */}
-              Resend Otp
+              Verify Email
               {/* </Link> */}
             </button>
           </div>
