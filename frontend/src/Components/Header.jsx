@@ -18,7 +18,7 @@ function Header() {
 
     const logoutHandler = () => {
         dispatch(LogoutUser());
-        return navigate('/login');
+        return navigate('/register');
     };
     const defaultOptions = {
         loop: true,
@@ -51,7 +51,7 @@ function Header() {
                 </Button>
                 {!loggedIn && (
                     <Link to='/register' >
-                        <Button gradientDuoTone='purpleToBlue' outline >Login/Register</Button>
+                        <Button gradientDuoTone='purpleToBlue' outline >Login</Button>
                     </Link>
                 )}
                 {loggedIn && (

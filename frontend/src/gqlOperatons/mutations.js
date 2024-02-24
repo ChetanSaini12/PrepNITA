@@ -19,8 +19,21 @@ export const REGISTER_USER = gql`
   }
 `;
 
+// onboardUser(user : UserInput) : User
+export const ONBOARD_USER = gql`
+  mutation onboardUserMutation($user:UserInput!){
+    onboardUser(user: $user) {
+      id
+      email
+      username
+      role
+    }
+  }
 
-export const LOGIN_USER=gql`
+  `;
+
+
+export const LOGIN_USER = gql`
   mutation loginUserMutation($username:String,$email:String,$password:String!){
     loginUser(username: $username, email: $email, password: $password) {
       token
@@ -35,7 +48,7 @@ export const LOGIN_USER=gql`
   }
 `;
 
-export const VERIFY_EMAIL=gql`
+export const VERIFY_EMAIL = gql`
   mutation verifyEmailMutation($email:String!,$otp:String!){
     checkOTPForEmail(email: $email, otp: $otp) {
       token
@@ -47,9 +60,17 @@ export const VERIFY_EMAIL=gql`
       authentication {
         isVerified
         isBoarded
+        otpForEmail 
+        otpEmailExpiry
       }
      }
     }
+  }
+`;
+
+export const SEND_VERIFY_EMAIL = gql`
+  mutation sendVerifyMailMutation($email:String!){
+    sendVerifyMail(email: $email)
   }
 `;
 
