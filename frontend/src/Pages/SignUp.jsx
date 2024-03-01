@@ -10,6 +10,7 @@ import { LoginUser, setLoading } from "../app/user/userSlice";
 import { VerifyToken } from "../utils/verifyToken";
 import Lottie from 'react-lottie';
 import animationData from '../../src/lotties/startup.json';
+import { FaEnvelope } from "react-icons/fa";
 
 function SignUp() {
   const navigate = useNavigate();
@@ -330,6 +331,7 @@ function SignUp() {
               gradientDuoTone="purpleToPink"
               type="submit"
               disabled={isLoading}
+              outline
             >
               {isLoading ? (
                 <>
@@ -341,16 +343,16 @@ function SignUp() {
               )}
             </Button>
             <OAuth></OAuth>
-          </form>
-          <div className="flex gap-2 text-sm mt-5">
-            <button >
+            <Button gradientMonochrome='cyan' onClick={() => { setEmailModel(true) }} outline>
               {/* <Link to={"/onBoarding"} className="text-blue-500"> */}
-              Forgot Password
+              <FaEnvelope className='w-6 h-5 mr-2' />Verify Email
               {/* </Link> */}
-            </button>
-            <button onClick={() => { setEmailModel(true) }}>
+            </Button>
+          </form>
+          <div className="flex gap-2 text-sm mt-5 text-blue-700">
+            <button>
               {/* <Link to={"/onBoarding"} className="text-blue-500"> */}
-              Verify Email
+              Forgot Password ?
               {/* </Link> */}
             </button>
           </div>
