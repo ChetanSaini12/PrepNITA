@@ -6,14 +6,15 @@ import { setLoading, LogoutUser } from "../app/user/userSlice";
 export const Auth = ({ children }) => {
   const dispatch = useDispatch();
   const loggedIn = useSelector((state) => state.user.loggedIn);
-  
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const checkToken = async () => {
       try {
         console.log("Enter in Auth component");
-
-        if (!loggedIn && localStorage.getItem("token")) {
+        console.log('LoggedIn : ', loggedIn);
+        if (!loggedIn && token) {
+          console.log('YHA AAYA H ');
           const response = await VerifyToken(dispatch);
           console.log("response in Auth:", response);
 
@@ -25,8 +26,12 @@ export const Auth = ({ children }) => {
             dispatch(LogoutUser()); // Assuming you have a LogoutUser action
           }
         } 
-        else{
-          console.log("Token not present in local storage || already logged in ");
+        else if(!token) {
+          dispatch(LogoutUser)
+          console.log('TOKEN IS NOT PRESENT!');
+        }   
+        else {
+          console.log("Already logged in");
         }
       } catch (error) {
         console.log("Error in Auth try catch:", error.message);

@@ -54,11 +54,7 @@ export const registerUser = async (_, payload) => {
     }
   } catch (error) {
     console.log('Error while registering user : ', error);
-    throw new GraphQLError('Error while registering user', {
-      extensions: {
-        code: 'REGISTRATION_FAILED',
-      },
-    })
+    throw error
   }
 }
 
