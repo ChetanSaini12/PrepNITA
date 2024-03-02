@@ -7,15 +7,18 @@ export const onboardUser = async (_, payload, context) => {
       console.log('UserInput for Onboarding: ' + JSON.stringify(payload.user))
 
       const usernameExist = await prisma.user.findFirst({
-        where : { username: payload.user.username}
+        where: { username: payload.user.username },
       })
 
-      if(usernameExist) {
-        throw new GraphQLError('Username already exist', {
-          extensions: {
-            code: 'USERNAME_ALREADY_EXISTS',
-          },
-        })
+      if (usernameExist) {
+        throw new GraphQLError(
+          'Username already exist, Please Select a different.',
+          {
+            extensions: {
+              code: 'USERNAME_ALREADY_EXISTS',
+            },
+          }
+        )
       }
 
       const user = await prisma.user.update({
@@ -29,21 +32,29 @@ export const onboardUser = async (_, payload, context) => {
           ...payload.user,
         },
       })
-  
+
       return user
     }
-  
+
     throw new GraphQLError('User is not registered yet!!', {
       extensions: {
         code: 'NOT_REGISTERED',
       },
     })
   } catch (error) {
-    console.log('Error while onboarding user : ', error);
-    throw new GraphQLError('Error while onboarding user', {
-      extensions: {
-        code: 'ONBOARD_FAILED',
-      },
-    })
+    console.log('Error while onboarding user : ', error)
+    if (
+      error.extensions &&
+      (error.extensions.code === 'USERNAME_ALREADY_EXISTS' ||
+        error.extensions.code === 'NOT_REGISTERED')
+    ) {
+      throw error
+    } else {
+      throw new GraphQLError('Error while onboarding user', {
+        extensions: {
+          code: 'ONBOARD_FAILED',
+        },
+      })
+    }
   }
 }
