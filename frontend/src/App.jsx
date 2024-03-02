@@ -15,28 +15,34 @@ import Question from "./Pages/Question";
 import DisplayUsers from "./Pages/DisplayUsers";
 import Onboarding from "./Pages/Onboarding";
 
+import toast, { Toaster } from 'react-hot-toast';
+
+
 
 function App() {
   return (
-    <BrowserRouter>
-      <Header />
-      <Routes>
-        <Route path="/" element={<Home />}></Route> */
-        <Route path="/faltu" element={<AllUsers />}></Route>
-        <Route path="/dashboard" element={<Dashboard></Dashboard>}></Route>
-        <Route path="/quizes" element={<Quizes></Quizes>}></Route>
-        <Route path="/discuss" element={<Discuss></Discuss>}></Route>
-        {/* <Route path="/login" element={<SignIn></SignIn>}></Route> */}
-        <Route path="/register" element={<SignUp></SignUp>}></Route>
-        <Route path="/interview" element={<Interviews />}></Route>
-        <Route path="/profile" element={<Profile />}></Route>
-        <Route path="/questions" element={<Question/>}></Route>
-        <Route path="/students" element={<DisplayUsers/>}></Route>
-        <Route path="/onBoarding" element={<Onboarding/>}></Route>
+    <>
+      <Toaster />
+      <BrowserRouter>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />}></Route> */
+          <Route path="/faltu" element={<AllUsers />}></Route>
+          <Route path="/dashboard" element={<Dashboard></Dashboard>}></Route>
+          <Route path="/quizes" element={<Quizes></Quizes>}></Route>
+          <Route path="/discuss" element={<Discuss></Discuss>}></Route>
+          {/* <Route path="/login" element={<SignIn></SignIn>}></Route> */}
+          <Route path="/register" element={<SignUp></SignUp>}></Route>
+          <Route path="/interview" element={<Interviews />}></Route>
+          <Route path="/profile" element={<Profile />}></Route>
+          <Route path="/questions" element={<Question />}></Route>
+          <Route path="/students" element={<DisplayUsers />}></Route>
+          <Route path="/onBoarding" element={<Onboarding />}></Route>
 
-      </Routes>
-      <FooterCom></FooterCom>
-    </BrowserRouter>
+        </Routes>
+        <FooterCom></FooterCom>
+      </BrowserRouter>
+    </>
   );
 }
 
