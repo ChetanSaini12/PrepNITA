@@ -11,6 +11,7 @@ import { VerifyToken } from "../utils/verifyToken";
 import Lottie from 'react-lottie';
 import animationData from '../../src/lotties/startup.json';
 import { FaEnvelope } from "react-icons/fa";
+import toast from "react-hot-toast";
 
 function SignUp() {
   const navigate = useNavigate();
@@ -33,6 +34,7 @@ function SignUp() {
 
       } catch (error) {
         console.log("Error in Auth try catch:", error.message);
+        toast.error(error.message, { duration: 4000 });
         dispatch(setLoading(false));
       }
     };
@@ -48,7 +50,8 @@ function SignUp() {
     onError: (mutationError) => {
       console.log("Error in signUpUser mutation 1:", mutationError.message);
       dispatch(setLoading(false));
-      return setError(mutationError.message);
+     return toast.error(mutationError.message, { duration: 4000 });
+      // return setError(mutationError.message);
     },
   });
 
@@ -56,7 +59,8 @@ function SignUp() {
     onError: (mutationError) => {
       console.log("Error in signUpUser mutation 2:", mutationError.message);
       dispatch(setLoading(false));
-      return setError(mutationError.message);
+      return toast.error(mutationError.message, { duration: 4000 });
+      // return setError(mutationError.message);
     },
   });
 
@@ -64,7 +68,8 @@ function SignUp() {
     onError: (mutationError) => {
       console.log("Error in signUpUser mutation 3:", mutationError.message);
       dispatch(setLoading(false));
-      return setError(mutationError.message);
+     return toast.error(mutationError.message, { duration: 4000 });
+      // return setError(mutationError.message);
     },
   });
 
@@ -75,7 +80,8 @@ function SignUp() {
 
     if (!email || !password) {
       dispatch(setLoading(false));
-      return setError("Please Fillout All The Fields");
+     return toast.error("Please Fillout All The Fields", { duration: 4000 });
+      // return setError("Please Fillout All The Fields");
     }
     try {
       const user = await signUpUser({
@@ -93,7 +99,8 @@ function SignUp() {
       if (!user || !user.data || !user.data.registerUser) {
         dispatch(setLoading(false));
         console.log("user not found ");
-        return setError(user.errors.message || "Internal Server Error");
+        return toast.error(user.errors.message || "Internal Server Error", { duration: 4000 });
+        // return setError(user.errors.message || "Internal Server Error");
       }
 
       const { isVerified, isBoarded } = user.data.registerUser.user.authentication;
@@ -106,18 +113,21 @@ function SignUp() {
         }).then((response) => {
           if (!response || !response.data || !response.data.sendVerifyMail) {
             dispatch(setLoading(false));
-            return setError(response.errors.message || "Email not sent! Please try again later.");
+            return toast.error(response.errors.message || "Email not sent! Please try again later.", { duration: 4000 });
+            // return setError(response.errors.message || "Email not sent! Please try again later.");
           }
           else {
             dispatch(setLoading(false));
-            setError(response.data.sendVerifyMail + " Please verify your email");
+            toast.success(response.data.sendVerifyMail + " Please verify your email", { duration: 4000 });
+            // setError(response.data.sendVerifyMail + " Please verify your email");
             return setEmailModel(true);
           }
         })
           .catch((catchError) => {
             dispatch(setLoading(false));
             console.log("Error in sendVerifyEmail catch block: *111 ", catchError);
-            return setError(catchError);
+            return toast.error(catchError.message||catchError, { duration: 4000 });;
+            // return setError(catchError);
           });
       }
       else if (!isBoarded) {
@@ -145,7 +155,8 @@ function SignUp() {
     } catch (catchError) {
       console.log("Error in signUpUser catch block:", catchError);
       dispatch(setLoading(false));
-      return setError(catchError);
+      return toast.error(catchError.message||catchError, { duration: 4000 });
+      // return setError(catchError);
     };
   };
 
@@ -156,7 +167,8 @@ function SignUp() {
 
     if (!email || !otp) {
       dispatch(setLoading(false));
-      return setError("Please Fillout All The Fields");
+      return toast.error("Please Fillout All The Fields", { duration: 4000 });
+      // return setError("Please Fillout All The Fields");
     }
 
     try {
@@ -171,17 +183,20 @@ function SignUp() {
       if (!user || !user.data || !user.data.checkOTPForEmail) {
         dispatch(setLoading(false));
         console.log("user not found ");
-        return setError(user.errors.message || "Internal Server Error");
+        return toast.error(user.errors.message || "Internal Server Error", { duration: 4000 });
+        // return setError(user.errors.message || "Internal Server Error");
       }
       else {
         dispatch(setLoading(false));
-        setError("Email Verified Successfully ! You can Login Now ");
+        toast.success("Email Verified Successfully ! You can Login Now ", { duration: 4000 });
+        // setError("Email Verified Successfully ! You can Login Now ");
         return setEmailModel(false);
       }
     } catch (catchError) {
       console.log("Error in signUpUser catch block:", catchError);
       dispatch(setLoading(false));
-      return setError(catchError);
+      return toast.error(catchError.message||catchError, { duration: 4000 });
+      // return setError(catchError);
     };
   };
 
@@ -191,7 +206,8 @@ function SignUp() {
     const { email } = formData;
     if (!email) {
       dispatch(setLoading(false));
-      return setError("Please Fillout All The Fields")
+      return toast.error("Please Fillout All The Fields", { duration: 4000 });
+      // return setError("Please Fillout All The Fields")
     }
     else {
       sendVerifyEmail({
@@ -202,14 +218,17 @@ function SignUp() {
         console.log("Response from sendVerifyEmail :", response.data);
         dispatch(setLoading(false));
         if (!response.data || !response.data.sendVerifyMail)
-          return setError(response.errors.message || "Email not sent! Please try again later.");
+        return toast.error(response.errors.message || "Email not sent! Please try again later.", { duration: 4000 });
+          // return setError(response.errors.message || "Email not sent! Please try again later.");
         else
-          return setError(response.data.sendVerifyMail);
+          return toast.success(response.data.sendVerifyMail, { duration: 4000 });
+          // return setError(response.data.sendVerifyMail);
 
       }).catch((catchError) => {
         console.log("Error in sendVerifyEmail catch block:", catchError);
         dispatch(setLoading(false));
-        return setError(catchError);
+        return toast.error(catchError.message||catchError, { duration: 4000 }); 
+        // return setError(catchError);
       });
     };
   };

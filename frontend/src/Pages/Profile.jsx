@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Loader } from './Loader';
 import { useDispatch, useSelector } from 'react-redux';
 import { setLoading } from '../app/user/userSlice';
+import toast from 'react-hot-toast';
 
 export const Profile = () => {
   const navigate = useNavigate();
@@ -12,17 +13,18 @@ export const Profile = () => {
   const { username, profile_pic, role } = useSelector((state) => state.user);
   // console.log("profile pic : ", profile_pic);
 
-  // useEffect(() => {
-  //   if (!loggedIn) {
-  //     alert("User is not authorized. Redirecting to login page");
-  //     // console.log('User is not authorized. Redirecting to login page.');
-  //     dispatch(setLoading(false));
-  //     return navigate('/register');
-  //   }
-  //   dispatch(setLoading(false));
-  // }, []);
+  useEffect(() => {
+    if (!loggedIn) {
+      // alert("User is not authorized. Redirecting to login page");
+      toast.error('User is not authorized to view profile page . Redirecting to login page.');
+      // console.log('User is not authorized. Redirecting to login page.');
+      dispatch(setLoading(false));
+      return navigate('/register');
+    }
+    dispatch(setLoading(false));
+  }, []);
 
-  // if (isLoading) return <Loader />;
+  if (isLoading) return <Loader />;
 
   return (
     <div className=' w-screen h-screen flex flex-col justify-center items-center'>
