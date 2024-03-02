@@ -1,5 +1,5 @@
-import { GraphQLError } from "graphql"
-import { prisma } from "../../../prisma/index.js"
+import { GraphQLError } from 'graphql'
+import { prisma } from '../../../prisma/index.js'
 
 export const updateUserProfile = async (_, payload, context) => {
   if (context && context.userId) {
@@ -12,11 +12,14 @@ export const updateUserProfile = async (_, payload, context) => {
       return user
     } catch (error) {
       console.log('ERRROR : ', error)
-      throw new GraphQLError('Something went wrong while updating user profile', {
-        extensions: {
-          code: 'ROLE_UPDATE_FAILED',
-        },
-      })
+      throw new GraphQLError(
+        'Something went wrong while updating user profile',
+        {
+          extensions: {
+            code: 'ROLE_UPDATE_FAILED',
+          },
+        }
+      )
     }
   }
 

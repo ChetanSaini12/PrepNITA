@@ -2,6 +2,7 @@ import { GraphQLError } from 'graphql'
 import { prisma } from '../../../prisma/index.js'
 
 export const createQuestion = async (_, payload, context) => {
+  try {
     console.log('CREATING QUESTION : ', payload)
     if (context.isUser) {
       const question = await prisma.question.create({
@@ -26,5 +27,18 @@ export const createQuestion = async (_, payload, context) => {
         },
       }
     )
+  } catch (error) {
+    if (
+      error.extensions &&
+      error.extensions.code === 'NOT_AUTHORISED_FOR_QUESTION'
+    ) {
+      throw error
+    } else {
+      throw new GraphQLError('Error while creating question!!', {
+        extensions: {
+          code: 'CREATE_QUESTION_FAILED',
+        },
+      })
+    }
   }
-  
+}
