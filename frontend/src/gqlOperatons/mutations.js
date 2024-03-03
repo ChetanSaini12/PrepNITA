@@ -74,3 +74,16 @@ export const SEND_VERIFY_EMAIL = gql`
   }
 `;
 
+
+export const All_USER = gql`
+mutation getAllUserMuatation($user:UserInputOptional){
+        getAllUser(user:$user){
+          username
+          id
+          email
+          name
+          mobileNum
+        }
+  }
+`
+

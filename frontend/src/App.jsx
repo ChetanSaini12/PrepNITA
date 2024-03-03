@@ -12,7 +12,6 @@ import AllUsers from "./Pages/AllUsers";
 import Interviews from "./Pages/Interview";
 import { Profile } from "./Pages/Profile";
 import Question from "./Pages/Question";
-import DisplayUsers from "./Pages/DisplayUsers";
 import Onboarding from "./Pages/Onboarding";
 
 import toast, { Toaster } from 'react-hot-toast';
@@ -36,7 +35,7 @@ function App() {
           <Route path="/interview" element={<Interviews />}></Route>
           <Route path="/profile" element={<Profile />}></Route>
           <Route path="/questions" element={<Question />}></Route>
-          <Route path="/students" element={<DisplayUsers />}></Route>
+          <Route path="/students" element={<AllUsers/>}></Route>
           <Route path="/onBoarding" element={<Onboarding />}></Route>
 
         </Routes>
