@@ -9,7 +9,7 @@ export const registerUser = async (_, payload) => {
     const existingUser = await prisma.user.findFirst({
       where: { email },
     })
-  
+
     if (!existingUser) {
       if (!(email.includes('@') && email.includes('.', email.indexOf('@')))) {
         throw new GraphQLError('Invalid Email!!', {
@@ -18,18 +18,20 @@ export const registerUser = async (_, payload) => {
           },
         })
       }
-  
+
       await prisma.user.create({
         data: {
           email,
           password: await bcrypt.hash(payload.password, 10),
-          authentication: { create : {} }
+          authentication: { create: {} },
         },
       })
-    }
-    else {
-      const isValid = await bcrypt.compare(payload.password, existingUser.password)
-      if(!isValid) {
+    } else {
+      const isValid = await bcrypt.compare(
+        payload.password,
+        existingUser.password
+      )
+      if (!isValid) {
         throw new GraphQLError('Passwords do not match!!', {
           extensions: {
             code: 'PASSWORDS_DO_NOT_MATCH',
@@ -37,27 +39,38 @@ export const registerUser = async (_, payload) => {
         })
       }
     }
-  
+
     const user = await prisma.user.findFirst({
       where: { email },
       include: {
-        authentication: true
-      }
-    });
-  
-    console.log("Registered User: ", user);
+        authentication: true,
+      },
+    })
+
+    console.log('Registered User: ', user)
     const token = generateJwtToken(user.id)
-  
+
     return {
       token,
       user,
     }
   } catch (error) {
-    console.log('Error while registering user : ', error);
-    throw error
+    console.log('Error while registering user : ', error)
+    if (
+      error.extensions &&
+      (error.extensions.code === 'INVALID_EMAIL' ||
+        error.extensions.code === 'PASSWORDS_DO_NOT_MATCH')
+    ) {
+      throw error
+    } else {
+      throw new GraphQLError('Error while registering User!!', {
+        extensions: {
+          code: 'REGISTRATION_FAILED',
+        },
+      })
+    }
   }
 }
-
 
 // const signinUser = async (_, payload) => {
 //   const user = await prisma.user.findFirst({
