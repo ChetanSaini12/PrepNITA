@@ -13,6 +13,7 @@ function AllUsers() {
   const [data, setData] = useState(null);
   const [formData, setFormData] = useState({});
   const [filter, setFilter] = useState({});
+  const [fetch, setFetch] = useState(false);
   const [loading, setLoading] = useState(false);
   const [callBackend, setCallBackend] = useState(true);
   const [optionsIndex, setOptionsIndex] = useState(0);
@@ -21,15 +22,17 @@ function AllUsers() {
     "username",
     "name",
     "mobileNum",
-    // "gender",
+    // 
+    "gender",//Gender
+    "cgpa",//float->String
+    "department",//Department
+    "course",//Course
+    "hosteler",//boolean->String
+    "graduation_year",//Int->String
+    // 
     "college_id",
-    "graduation_year",
-    // "cgpa",
     "college",
-    // "department",
-    // "course",
     "state",
-    // "hosteler",
     "leetcodeProfile",
     "codeforcesProfile",
     "linkedinProfile",
@@ -44,25 +47,50 @@ function AllUsers() {
   });
 
   const handleChange = (e) => {
-    setFilter({ ...filter, [e.target.id]: e.target.value });
+    if (e.target.id === "hosteler") {
+      setFilter({ ...filter, [e.target.id]: e.target.value == "yes" ? true : false });
+    }
+    else if (e.target.id === "cgpa") {
+      setFilter({ ...filter, [e.target.id]: parseFloat(e.target.value) });
+    }
+    else if (e.target.id === "graduation_year") {
+      setFilter({ ...filter, [e.target.id]: parseInt(e.target.value) });
+    }
+    else
+      setFilter({ ...filter, [e.target.id]: e.target.value });
     console.log("filter", filter);
     // setFetch(!fetch);
   };
 
   const handleFilter = (e) => {
     e.preventDefault();
-    setFormData(filter);
-    // setFetch(!fetch);
+    if (filter[options[optionsIndex]] === undefined || filter[options[optionsIndex]] === "") {
+      filter[options[optionsIndex]] = " ";
+      setFilter(filter);
+      // setFormData(...formData, { [options[optionsIndex]]: " " });
+      toast.error("Please enter the value for the selected filter");
+    }
+    else if (typeof(filter[options[optionsIndex]])=="number" &&isNaN(filter[options[optionsIndex]])) {
+      filter[options[optionsIndex]] = 0;
+      setFilter(filter);
+      // setFormData(...formData, { [options[optionsIndex]]: " " });
+      toast.error("Please enter the value for the selected filter 2");
+    }
+    else
+      setFormData(filter);
+    setFetch(!fetch);
   };
   const deleteFilter = (props) => {
-    if (filter && filter[props]) {
-      console.log("delete filetr ", filter[props]);
+    if (filter) {
+      console.log("delete filetr 1", filter[props]);
       delete filter[props];
-      console.log("delete filetr ", filter[props]);
-      setFilter(filter);
-      setCallBackend(!callBackend);
+      console.log("delete filetr 1", filter[props]);
+      setFormData(filter);
+      // setFilter(filter);
+      // setCallBackend(!callBackend);
 
     }
+    setFetch(!fetch);
   };
 
 
@@ -71,9 +99,14 @@ function AllUsers() {
     for (let key in formData) {
       if (formData.hasOwnProperty(key)) {
         console.log(`${key}: ${formData[key]}`);
-        if (formData[key].trim().length < 1) {
-          delete formData[key];
+        if (typeof formData[key] === "string") {
+          if (formData[key].trim().length < 1) {
+            delete formData[key];
+          }
         }
+        // else if(formData[key] === 0){
+        //   delete formData[key];
+        // }
       }
     }
     console.log("serach filter criteria", formData);
@@ -104,11 +137,10 @@ function AllUsers() {
   }, [callBackend]);
 
 
-  // useEffect(() => {
-
-  // }, [fetch]);
-
-
+  useEffect(() => {
+    // setFilter(filter);
+    setFormData(filter);
+  }, [fetch]);
 
   return (
     <>
@@ -132,16 +164,89 @@ function AllUsers() {
                 </option>
               ))}
             </Select>
-            <TextInput
-              type="text"
-              placeholder={options[optionsIndex]}
-              // required
-              id={options[optionsIndex]}
-              value={filter[options[optionsIndex]] || ""}
-              onChange={handleChange}
-            >
 
-            </TextInput>
+            {options[optionsIndex] === "gender" && (
+              <Select id={options[optionsIndex]} onChange={handleChange}
+              >
+                <option selected disabled>Select your Gender </option>
+                <option value={"MALE"} >Male</option>
+                <option value={"FEMALE"} >Female</option>
+                <option value={"TRANSGENDER"} >Transgender</option>
+                <option value={"PREFER_NOT_TO_SAY"}>don't know</option>
+              </Select>
+            )}
+            {options[optionsIndex] === "course" && (
+              <Select id={options[optionsIndex]} onChange={handleChange}
+              >
+                <option selected disabled>Select your Course </option>
+                <option value={"BTech"} >BTech</option>
+                <option value={"MTech"} >MTech</option>
+                <option value={"MCA"} >MCA</option>
+                <option value={"PhD"}>PhD</option>
+              </Select>
+            )}
+            {options[optionsIndex] === "department" && (
+              <Select id={options[optionsIndex]} onChange={handleChange}
+              >
+                <option selected disabled>Select your Department </option>
+                <option value={"COMPUTER_SCIENCE_AND_ENGINEERING"} >CSE</option>
+                <option value={"ELECTRONICS_AND_COMMUNICATIONS_ENGINEERING"} >ECE</option>
+                <option value={"ELECTRICAL_ENGINEERING"} >Electrical</option>
+                <option value={"ELECTRONICS_AND_INSTRUMENTATION_ENGINEERING"}>EI</option>
+                <option value={"MECHANICAL_ENGINEERING"}>Mechanical</option>
+                <option value={"CHEMICAL_ENGINEERING"}>Chemical</option>
+                <option value={"CIVIL_ENGINEERING"}>Civil</option>
+                <option value={"PRODUCTION_ENGINEERING"}>Production</option>
+                <option value={"BIO_TECH_AND_BIO_ENGINEERING"}>BioTech & Bio</option>
+              </Select>
+            )}
+            {options[optionsIndex] === "hosteler" && (
+              <Select id={options[optionsIndex]} onChange={handleChange}
+              >
+                <option selected disabled>Are you hosteler ?</option>
+                <option value={"yes"} >Yes</option>
+                <option value={"no"} >No</option>
+                {/* <option value={"MCA"} >MCA</option>
+                <option value={"PhD"}>PhD</option> */}
+              </Select>
+            )}
+            {options[optionsIndex] === "graduation_year" && (
+              <TextInput
+                // required
+                type="number"
+                placeholder={options[optionsIndex]}
+                id={options[optionsIndex]}
+                value={parseInt(filter[options[optionsIndex]]) || ""}
+                onChange={handleChange}
+              />
+            )}
+            {options[optionsIndex] === "cpga" && (
+              <TextInput
+                // required
+                type="float"
+                placeholder={options[optionsIndex]}
+                id={options[optionsIndex]}
+                value={parseFloat(filter[options[optionsIndex]]) || ""}
+                onChange={handleChange}
+              />
+            )}
+            {!(options[optionsIndex] === "gender" || options[optionsIndex] === "cpga" || options[optionsIndex] === "department" ||
+              options[optionsIndex] === "course" || options[optionsIndex] === "hosteler" || options[optionsIndex] === "graduation_year") && (
+                <TextInput
+                  // required
+                  type="text"
+                  placeholder={options[optionsIndex]}
+                  id={options[optionsIndex]}
+                  value={filter[options[optionsIndex]] || ""}
+                  onChange={handleChange}
+                />
+              )}
+
+
+
+
+
+
 
             <button onClick={handleFilter} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Add filter </button>
 
@@ -152,7 +257,12 @@ function AllUsers() {
         <div className="flex flex-wrap gap-3 my-2 ">
           {formData && Object.keys(formData).map((key, index) => (
             <>
-              <div key={index} className=" p-2 rounded-md">{key} : {formData[key]}</div>
+              {key == "hosteler" && (
+                <div key={index} className=" p-2 rounded-md">{key} : {formData[key] ? "yes" : "no"}</div>
+              )}
+              {key !== "hosteler" &&
+                <div key={index} className=" p-2 rounded-md">{key} : {formData[key]}</div>
+              }
               <button onClick={() => deleteFilter(key)}
                 className="bg-blue-300 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">X</button>
             </>
