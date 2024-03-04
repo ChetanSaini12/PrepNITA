@@ -12,8 +12,9 @@ function AllUsers() {
   // const { data, loading: queryLoading, error: queryError } = useQuery(ALL_USER);
   const [data, setData] = useState(null);
   const [formData, setFormData] = useState({});
+  const [filter, setFilter] = useState({});
   const [loading, setLoading] = useState(false);
-  const [fetch, setFetch] = useState(false);
+  const [callBackend, setCallBackend] = useState(true);
   const [optionsIndex, setOptionsIndex] = useState(0);
 
   const options = [
@@ -26,7 +27,7 @@ function AllUsers() {
     // "cgpa",
     "college",
     // "department",
-    "course",
+    // "course",
     "state",
     // "hosteler",
     "leetcodeProfile",
@@ -43,20 +44,30 @@ function AllUsers() {
   });
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value });
-    console.log("formdata", formData);
-    setFetch(!fetch);
+    setFilter({ ...filter, [e.target.id]: e.target.value });
+    console.log("filter", filter);
+    // setFetch(!fetch);
+  };
+
+  const handleFilter = (e) => {
+    e.preventDefault();
+    setFormData(filter);
+    // setFetch(!fetch);
+  };
+  const deleteFilter = (props) => {
+    if (filter && filter[props]) {
+      console.log("delete filetr ", filter[props]);
+      delete filter[props];
+      console.log("delete filetr ", filter[props]);
+      setFilter(filter);
+      setCallBackend(!callBackend);
+
+    }
   };
 
 
   const handleSubmitSearch = (e) => {
     e.preventDefault();
-    console.log("serach filter criteria", formData);
-    setFetch(!fetch);
-  };
-
-  useEffect(() => {
-    setLoading(true);
     for (let key in formData) {
       if (formData.hasOwnProperty(key)) {
         console.log(`${key}: ${formData[key]}`);
@@ -65,6 +76,13 @@ function AllUsers() {
         }
       }
     }
+    console.log("serach filter criteria", formData);
+    setCallBackend(!callBackend);
+  };
+
+  useEffect(() => {
+    setLoading(true);
+    // if (callBackend) {
     searchUser({
       variables: {
         user: formData,
@@ -77,93 +95,110 @@ function AllUsers() {
       .catch(error => {
         console.log("error in allUser catch block ", error || error.message);
         setLoading(false);
-         toast.error(error || error.message);
+        toast.error(error || error.message);
       });
+    // }
 
 
     console.log("option index", optionsIndex);
-  }, [fetch]);
+  }, [callBackend]);
+
+
+  // useEffect(() => {
+
+  // }, [fetch]);
 
 
 
   return (
-    <div className="flex h-screen items-center flex-col">
-      <div className="mb-5">
-        Search Bar
-        <form className="flex gap-2 " onSubmit={handleSubmitSearch}   >
-          <Select
-            className="text-black"
-            onChange={(e) => { setOptionsIndex(e.target.value); setFetch(!fetch) }}
-          >
-            <option selected disabled>Select filters </option>
-            {options?.map((choice, index) => (
-              <option
-                key={index}
-                value={index}
-              >
-                {choice}
+    <>
+      {loading && <Loader />}
+      < div className="flex h-screen items-center flex-col" >
+        <div className="mb-5">
+          Search Bar
+          <form className="flex gap-2 " onSubmit={handleSubmitSearch}   >
+            <Select
+              className="text-black"
+              onChange={(e) => { setOptionsIndex(e.target.value); }}
+            >
+              <option selected disabled>Select filters </option>
+              {options?.map((choice, index) => (
+                <option
+                  key={index}
+                  value={index}
+                >
+                  {choice}
 
-              </option>
-            ))}
-          </Select>
-          <TextInput
-            type="text"
-            placeholder={options[optionsIndex]}
-            required
-            id={options[optionsIndex]}
-            onChange={handleChange}
-          >
+                </option>
+              ))}
+            </Select>
+            <TextInput
+              type="text"
+              placeholder={options[optionsIndex]}
+              // required
+              id={options[optionsIndex]}
+              value={filter[options[optionsIndex]] || ""}
+              onChange={handleChange}
+            >
 
-          </TextInput>
+            </TextInput>
 
-          {/* <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Add filter </button> */}
+            <button onClick={handleFilter} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Add filter </button>
 
-          <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Search</button>
-        </form>
-      </div>
-      <h1>your filters</h1>
-      <div className="flex flex-wrap gap-3 my-2 ">
-        {formData && Object.keys(formData).map((key, index) => (
-          <div key={index} className=" p-2 rounded-md">{key} : {formData[key]}</div>
-        ))
+            <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Search</button>
+          </form>
+        </div>
+        <h1>.....your filters........</h1>
+        <div className="flex flex-wrap gap-3 my-2 ">
+          {formData && Object.keys(formData).map((key, index) => (
+            <>
+              <div key={index} className=" p-2 rounded-md">{key} : {formData[key]}</div>
+              <button onClick={() => deleteFilter(key)}
+                className="bg-blue-300 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">X</button>
+            </>
+          ))
 
+          }
+        </div>
+
+        {
+          data && data.length !== 0 ? (
+            <>
+              <div className="w-full ">
+                <table className="flex flex-col justify-start mx-20 gap-3">
+                  <thead>
+                    <tr className=" flex justify-between">
+                      <th>ID</th>
+                      <th>Username</th>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Mobile Num</th>
+                    </tr>
+                    <div className="border my-2"></div>
+                  </thead>
+                  <tbody>
+                    {data.map((user, index) => (
+                      <tr key={index} className="flex justify-between my-2">
+                        <td>{index + 1}</td>
+                        <td>{user.username}</td>
+                        <td>{user.name}</td>
+                        <td>{user.email}</td>
+                        <td>{user.mobileNum}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
+
+          ) : (
+            <>
+              <div>User not exist !!</div>
+            </>
+          )
         }
-      </div>
-      {data && data.length !== 0 ? (
-        <>
-          <div className="w-full ">
-            <table className="flex flex-col justify-start mx-20 gap-3">
-              <thead>
-                <tr className=" flex justify-between">
-                  <th>ID</th>
-                  <th>Username</th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Mobile Num</th>
-                </tr>
-                <div className="border my-2"></div>
-              </thead>
-              <tbody>
-                {data.map((user, index) => (
-                  <tr key={index} className="flex justify-between my-2">
-                    <td>{index + 1}</td>
-                    <td>{user.username}</td>
-                    <td>{user.name}</td>
-                    <td>{user.email}</td>
-                    <td>{user.mobileNum}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </>
-
-      ) : (
-        <>
-          <div>User not exist !!</div>
-        </>
-      )}
-    </div>
+      </div >
+    </>
   );
 }
 
