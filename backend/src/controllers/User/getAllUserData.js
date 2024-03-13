@@ -1,3 +1,4 @@
+import { GraphQLError } from 'graphql'
 import { prisma } from '../../../prisma/index.js'
 
 export const getAllUserData = async (_, payload) => {
