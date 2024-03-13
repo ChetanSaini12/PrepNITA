@@ -36,7 +36,7 @@ export const checkOtpForEmail = async (_, payload) => {
                   authentication: true,
                 },
               })
-  
+
               const token = generateJwtToken(user.id)
               return {
                 token,
@@ -78,11 +78,22 @@ export const checkOtpForEmail = async (_, payload) => {
       })
     }
   } catch (error) {
-    console.log('Error while checking otp for email : ', error);
-    throw new GraphQLError('Error while checking otp for email', {
-      extensions: {
-        code: 'OTP_VERIFICATION_FAILED',
-      },
-    })
+    console.log('Error while checking otp for email : ', error)
+    if (
+      error.extensions &&
+      (error.extensions.code === 'USER_NOT_FOUND' ||
+        error.extensions.code === 'ALREADY_VERIFIED' ||
+        error.extensions.code === 'OTP_NOT_SENT' ||
+        error.extensions.code === 'OTP_EXPIRED' ||
+        error.extensions.code === 'INVALID_OTP')
+    ) {
+      throw error
+    } else {
+      throw new GraphQLError('Error while checking otp for email', {
+        extensions: {
+          code: 'OTP_VERIFICATION_FAILED',
+        },
+      })
+    }
   }
 }

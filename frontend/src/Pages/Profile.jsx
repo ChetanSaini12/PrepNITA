@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Loader } from './Loader';
 import { useDispatch, useSelector } from 'react-redux';
 import { setLoading } from '../app/user/userSlice';
+import toast from 'react-hot-toast';
 import { Alert,Spinner,Button,Label,TextInput } from 'flowbite-react';
 import { Link } from 'react-router-dom';
 import OAuth from '../Components/OAuth';
@@ -25,17 +26,18 @@ export const Profile = () => {
   const [error,setError]=useState(null);
   // console.log("profile pic : ", profile_pic);
 
-  // useEffect(() => {
-  //   if (!loggedIn) {
-  //     alert("User is not authorized. Redirecting to login page");
-  //     // console.log('User is not authorized. Redirecting to login page.');
-  //     dispatch(setLoading(false));
-  //     return navigate('/register');
-  //   }
-  //   dispatch(setLoading(false));
-  // }, []);
+  useEffect(() => {
+    if (!loggedIn) {
+      // alert("User is not authorized. Redirecting to login page");
+      toast.error('User is not authorized to view profile page . Redirecting to login page.');
+      // console.log('User is not authorized. Redirecting to login page.');
+      dispatch(setLoading(false));
+      return navigate('/register');
+    }
+    dispatch(setLoading(false));
+  }, []);
 
-  // if (isLoading) return <Loader />;
+  if (isLoading) return <Loader />;
   const handleSubmit=(e)=>{
     e.preventDefault();
     try {

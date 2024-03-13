@@ -12,6 +12,7 @@ import { VerifyToken } from "../utils/verifyToken";
 import Lottie from 'react-lottie';
 import animationData from '../../src/lotties/startup.json';
 import { CircularProgressbar } from 'react-circular-progressbar';
+import toast from "react-hot-toast";
 
 function Onboarding() {
   const navigate = useNavigate();
@@ -49,7 +50,8 @@ function Onboarding() {
     onError: (mutationError) => {
       console.log("Error in onBoardUser mutation:", mutationError.message);
       dispatch(setLoading(false));
-      return setError(mutationError.message);
+      return toast.error(mutationError.message);
+      // return setError(mutationError.message);
     },
   });
 
@@ -75,7 +77,8 @@ function Onboarding() {
         if (!user || !user.data) {
           console.log("Error in onBoardUser user:", user.errors.message || "Internal Server Error");
           dispatch(setLoading(false));
-          return setError(user.errors.message || "Internal Server Error");
+          return toast.error(user.errors.message || "Internal Server Error");
+          // return setError(user.errors.message || "Internal Server Error");
         }
         else {
           // const { id, email, username, role } = user.data.createUser;
@@ -90,7 +93,8 @@ function Onboarding() {
       .catch((catchError) => {
         console.log("Error in signUpUser catch block:", catchError);
         dispatch(setLoading(false));
-        return setError(catchError);
+        return toast.error(catchError.message);
+        // return setError(catchError);
       });
   };
 

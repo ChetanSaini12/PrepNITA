@@ -1,5 +1,5 @@
-import { GraphQLError } from "graphql"
-import { prisma } from "../../../prisma/index.js"
+import { GraphQLError } from 'graphql'
+import { prisma } from '../../../prisma/index.js'
 
 export const getUserById = async (_, id) => {
   try {
