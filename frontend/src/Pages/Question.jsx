@@ -1,38 +1,46 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
-import { GET_ALL_QUESTIONS, GET_TEMP_QUE } from '../gqlOperatons/Question/queries';
-import { CHANGE_APPROVE_STATUS_OF_QUE, DOWN_VOTE_QUESTION, UP_VOTE_QUESTION } from '../gqlOperatons/Question/mutations';
+import { GET_TEMP_QUE } from '../gqlOperatons/Question/queries';
+import { CHANGE_APPROVE_STATUS_OF_QUE, DOWN_VOTE_QUESTION, GET_ALL_QUESTIONS, UP_VOTE_QUESTION } from '../gqlOperatons/Question/mutations';
 import { Button } from 'flowbite-react';
+import { Loader } from '../Pages/Loader';
+import { toast } from 'react-hot-toast';
 
 
 const Question = () => {
     const [Error, setError] = useState(null);
-    const [tempQ,setTempQ]=useState(null);
-    const { data, loading: queryLoading, error: queryError } = useQuery(GET_ALL_QUESTIONS);
-    if (queryError) {
-        setError(queryError.message);
-    }
-    // const { data2, loading: queryLoading2, error: queryError2 } = useQuery(GET_TEMP_QUE);
-    // if (queryError2) {
-    //     setError(queryError2.message);
-    // }
+    const [tempQ, setTempQ] = useState(null);
+    const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(false);
+
+    const [getQuestions] = useMutation(GET_ALL_QUESTIONS, {
+        onError: (error) => {
+            console.log("error from getQuestions ", error);
+            toast.error("Error fetching questions");
+            // setError(error.message);
+        }
+    });
+
     const [changeStatus] = useMutation(CHANGE_APPROVE_STATUS_OF_QUE, {
         onError: (error) => {
             console.log("error from changeStatus ", error);
-            setError(error.message);
+            toast.error(error.message);
+            // setError(error.message);
         }
     });
 
     const [downVote] = useMutation(DOWN_VOTE_QUESTION, {
         onError: (error) => {
             console.log("error from downVote ", error);
-            setError(error.message);
+            toast.error(error.message);
+            // setError(error.message);
         }
     });
     const [upVote] = useMutation(UP_VOTE_QUESTION, {
         onError: (error) => {
             console.log("error from downVote ", error);
-            setError(error.message);
+            toast.error(error.message);
+            // setError(error.message);
         }
     });
 
@@ -61,15 +69,33 @@ const Question = () => {
             },
         })
     };
-    
+
+
+    useEffect(() => {
+        setLoading(true);
+        getQuestions().then((res) => {
+            console.log("res from getQuestions ", res);
+            setData(res.data.getQuestions)
+            setLoading(false);
+            // setData(res.data);
+        }).catch((err) => {
+            setLoading(false);
+            toast.error(err.message);
+            console.log("err from getQuestions ", err);
+        });
+    }, []);
+
+
+
 
 
     return (
         <div className=' w-screen h-screen border-spacing-0 text-white' >
+            {loading && <Loader />}
             <h1 className='text-4xl mb-4'> QUESTIONS PAGE </h1>
             {data && (
                 <>
-                    {data.getQuestions.map((question) => (
+                    {data.map((question) => (
                         <div key={question.id}>
                             <div>TITLE : {question.title}</div>
                             <div>QUESTION : {question.description}</div>
@@ -81,7 +107,7 @@ const Question = () => {
                             <Button onClick={() => { updateQuestionStatus(question.id) }} gradientDuoTone="purpleToPink" className='mb-2' >
                                 Update status
                             </Button>
-                            <Button onClick={() => { upVoteQuestion(question.id) }} gradientDuoTone="purpleToPink"className='mb-2' >
+                            <Button onClick={() => { upVoteQuestion(question.id) }} gradientDuoTone="purpleToPink" className='mb-2' >
                                 Upvote
                             </Button>
                             <Button onClick={() => { downVoteQuestion(question.id) }} gradientDuoTone="purpleToPink" className='mb-2'>
@@ -102,8 +128,6 @@ const Question = () => {
                     ))}
                 </>
             )}
-            {queryLoading && <div>Loading...</div>}
-            {Error && <div>{Error}</div>}
 
         </div>
 

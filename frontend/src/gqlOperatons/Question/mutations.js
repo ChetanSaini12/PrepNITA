@@ -1,4 +1,27 @@
 import { gql } from '@apollo/client';
+
+export const GET_ALL_QUESTIONS = gql`
+     mutation getAllQuestions($title: String, $tags: [String]){
+        getQuestions(title: $title, tags: $tags){
+            id 
+            title
+            description
+            answer
+            postedBy 
+            tags 
+            links {
+                id
+                title
+                url
+                questionId
+              }
+            isApproved 
+            upvotes 
+            downvotes
+        }
+    }
+`;
+
 export const CREATE_QUESTION = gql`
     mutation createQuestionMutation($Question: QuestionInput){
         createQuestion(Question: $Question){
