@@ -11,7 +11,7 @@ datasource db {
 }
 
 model User {
-  id                         Int                 @id @default(autoincrement())
+  id                         Int                 @id @unique @default(autoincrement())
   userInformation            UserInformation
   authentication             Authentication
   userContribution           UserContribution
@@ -19,7 +19,7 @@ model User {
 }
 
 model Authentication {
-  id                        Int                  @id @default(autoincrement())
+  id                        Int                  @id @unique @default(autoincrement())
   user                      User                 @relation(fields: [userId], references: [id])
   userId                    Int                  @unique
   otpForEmail               String?
@@ -31,8 +31,8 @@ model Authentication {
 }
 
 model UserInformation {
-  id                        Int                  @id @default(autoincrement())
-  user                      User                 @relation(fields: [userId], references: [id]) 
+  id                        Int                  @id @unique @default(autoincrement())
+  user                      User                 @relation(fields: [userId], references: [id])
   userId                    Int                  @unique 
   email                     String               @unique
   username                  String?              @unique
@@ -57,9 +57,9 @@ model UserInformation {
 }
 
 model UserContribution {
-  id                        Int                   @id @default(autoincrement())
-  user                      User                  @relation(fields: [userId], references: [id])
-  userId                    Int                   @unique
+  id                        Int                  @id @unique @default(autoincrement())
+  user                      User                 @relation(fields: [userId], references: [id])
+  userId                    Int                  @unique
   interview                 Interview
   questions                 Question
   quizes                    Quiz
@@ -68,7 +68,7 @@ model UserContribution {
 }
 
 model UserTraining {
-  id                        Int                   @id @default(autoincrement())
+  id                        Int                   @id @unique @default(autoincrement())
   user                      User                  @relation(fields: [userId], references: [id])
   userId                    Int                   @unique
   interview                 Interview
@@ -77,13 +77,13 @@ model UserTraining {
 }
 
 model Question {
-  id                        Int                   @id @default(autoincrement())
+  id                        Int                   @id @unique @default(autoincrement())
   description               String
   answer                    String?
   creator                   UserContribution      @relation(fields: [createdBy], references: [id])
   createdBy                 Int
-  tags                      String[]?
-  links                     QueAddOnLink[]?
+  tags                      String[]
+  links                     QueAddOnLink[]
   isApproved                Boolean               @default(false)
   isVisibile                Boolean               @default(false)
   upvotes                   Int                   @default(0)
@@ -91,7 +91,7 @@ model Question {
 }
 
 model QueAddOnLink {
-  id                        Int                   @id @default(autoincrement())
+  id                        Int                   @id @unique @default(autoincrement())
   question                  Question              @relation(fields: [questionId], references: [id])
   questionId                Int
   title                     String
@@ -99,7 +99,7 @@ model QueAddOnLink {
 }
 
 model Quiz {
-  id                        Int                   @id @default(autoincrement())
+  id                        Int                   @id @unique @default(autoincrement())
   creator                   User                  @relation(fields: [createdBy], references: [id])
   createdBy                 Int
   title                     String
@@ -112,7 +112,7 @@ model Quiz {
 }
 
 model QuizAttendance {
-  id                        Int                   @id @default(autoincrement())
+  id                        Int                   @id @unique @default(autoincrement())
   quiz                      Quiz                  @relation(fields: [quizId], references: [id])
   quizId                    Int
   attendee                  User                  @relation(fields: [userId], references: [id])
@@ -121,16 +121,16 @@ model QuizAttendance {
 }
 
 model QuizQuestion {
-  id                        Int                   @id @default(autoincrement())
+  id                        Int                   @id @unique @default(autoincrement())
   quiz                      Quiz                  @relation(fields: [quizId], references: [id])
   quizId                    Int
   description               String
-  options                   String[4]
+  options                   String[]
   correctOption             Int  
 }
 
 model Article {
-  id                        Int                   @id @default(autoincrement())
+  id                        Int                   @id @unique @default(autoincrement())
   creator                   User                  @relation(fields: [createdBy], references: [id])
   createdBy                 Int
   title                     String
@@ -140,7 +140,7 @@ model Article {
 }
 
 model Interview {
-  id                        Int                   @id @default(autoincrement())
+  id                        Int                   @id @unique @default(autoincrement())
   interviewer               UserContribution      @relation(fields: [interviewerId], references: [id])
   interviewee               UserInformation       @relation(fields: [intervieweeId], references: [id])
   interviewerId             Int
@@ -153,14 +153,14 @@ model Interview {
 }
 
 model Feedback {
-  id                        Int                   @id @default(autoincrement())
+  id                        Int                   @id @unique @default(autoincrement())
   interview                 Interview             @relation(fields: [interviewId], references: [id])
   interviewId               Int                   @unique
   communication             Int                   @default(0)
   development               Int                   @default(0)
   dsa                       Int                   @default(0)
   csfundamentals            Int                   @default(0)
-  notes                     String[]?
+  notes                     String[]
   points                    Int                   @default(0)
 }
 
