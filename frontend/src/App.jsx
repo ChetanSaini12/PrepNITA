@@ -15,6 +15,7 @@ import Question from "./Pages/Question";
 import Onboarding from "./Pages/Onboarding";
 
 import toast, { Toaster } from 'react-hot-toast';
+import CreateQuestion from "./Pages/CreateQuestion";
 
 
 
@@ -34,7 +35,8 @@ function App() {
           <Route path="/register" element={<SignUp></SignUp>}></Route>
           <Route path="/interview" element={<Interviews />}></Route>
           <Route path="/profile" element={<Profile />}></Route>
-          <Route path="/questions" element={<Question />}></Route>
+          <Route path="/ques_all" element={<Question />}></Route>
+          <Route path="/ques_create" element={<CreateQuestion/>}></Route>
           <Route path="/students" element={<AllUsers/>}></Route>
           <Route path="/onBoarding" element={<Onboarding />}></Route>
 
