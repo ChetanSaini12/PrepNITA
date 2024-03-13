@@ -21,7 +21,7 @@ function App() {
     <BrowserRouter>
       <Header />
       <Routes>
-        <Route path="/" element={<Home />}></Route> */
+        <Route path="/" element={<Home />}></Route> 
         <Route path="/faltu" element={<AllUsers />}></Route>
         <Route path="/dashboard" element={<Dashboard></Dashboard>}></Route>
         <Route path="/quizes" element={<Quizes></Quizes>}></Route>
@@ -33,7 +33,6 @@ function App() {
         <Route path="/questions" element={<Question/>}></Route>
         <Route path="/students" element={<DisplayUsers/>}></Route>
         <Route path="/onBoarding" element={<Onboarding/>}></Route>
-
       </Routes>
       <FooterCom></FooterCom>
     </BrowserRouter>

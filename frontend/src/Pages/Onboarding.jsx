@@ -19,7 +19,7 @@ function Onboarding() {
   const [error, setError] = useState(null);
 
   const { loggedIn, isLoading } = useSelector((state) => state.user);
-
+  
 
   // useEffect(() => {
   //   const checkToken = async () => {
@@ -210,7 +210,7 @@ function Onboarding() {
             </div>
 
             <div>
-              <Label value="* CGPA"></Label>
+              <Label value="* CGPA" ></Label>
               <TextInput
                 required
                 type="float"
@@ -266,7 +266,6 @@ function Onboarding() {
                 name="department"
                 onChange={handleChange}
               >
-
                 <option selected>Choose your College </option>
                 <option value="COMPUTER_SCIENCE_AND_ENGINEERING">CSE</option>
                 <option value="ELECTRONICS_AND_COMMUNICATIONS_ENGINEERING">ECE</option>
@@ -339,6 +338,79 @@ function Onboarding() {
           )}
         </div>
       </div>
+      {/* <div className='max-w-lg mx-auto p-3 w-full ' >
+        <h1 className='my-7 text-center font-semibold text-3xl' >Profile</h1>
+        <form className='flex flex-col gap-4 align-items:center' >
+            <input type='file' accept='image/*'  hidden></input>
+            <div className='relative w-32 h-32 self-center  cursor-pointer shadow-md overflow-hidden rounded-full' >
+              <img src= {imageUrl || currentUser.profilePicture} alt="user" className={`rounded-full w-full h-full object-cover border-8  border-[lightgray] ${
+              imageFileUploadProgress>0 && imageFileUploadProgress<100 && `opacity-60`}`}/>
+              {imageFileUploadProgress && imageFileUploadProgress<100 && 
+                <CircularProgressbar
+                value={imageFileUploadProgress || 0}
+                text={`${imageFileUploadProgress}%`}
+                strokeWidth={5}
+                styles={{
+                  root: {
+                    width: '100%',
+                    height: '100%',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                  },
+                  path: {
+                    stroke: `rgba(62, 152, 199, ${
+                      imageFileUploadProgress / 100
+                    })`,
+                  },
+                }}
+            />
+              }
+            
+            </div>
+            {imageFileUploadError && <Alert color='failure'>
+              {imageFileUploadError}
+            </Alert>}
+            <TextInput type='text' id='username' placeholder='username' defaultValue={currentUser.username} onChange={handleChange}></TextInput>
+            <TextInput type='email' id='email' placeholder='email' defaultValue={currentUser.email} onChange={handleChange}></TextInput>
+            <TextInput type='password' id='password' placeholder='password' onChange={handleChange}></TextInput>
+            <Button type='submit' gradientDuoTone="purpleToBlue" outline disabled={loading || (imageFileUploadProgress>0 && imageFileUploadProgress<100) }>
+              {
+                loading ? 'Loading...' :'Update'
+              }
+            </Button>
+            {
+              currentUser.isAdmin && (
+                <Link to={'/create-post'}>
+                  <Button type='button' gradientDuoTone='purpleToPink' className='w-full'>Create Post</Button>
+                </Link>
+              )
+            }
+        </form>
+        <div className='text-red-500 flex justify-between mt-5'>
+          <span className='cursor-pointer ' onClick={handleDelete}>Delete Account</span>
+          <span className='cursor-pointer ' onClick={()=>setShowModel2(true)} >Sign Out</span>
+
+        </div>
+        {
+            updateUserSuccess && (
+            <Alert color='success' className='mt-5'>
+              {updateUserSuccess}
+              
+            </Alert>
+          )
+        }
+        {
+          updateUserError && (
+            <Alert color='failure' className='mt-5'>
+              {updateUserError}
+            </Alert>
+          )
+        }
+        </div> */}
+
+
+
     </div>
   )
 
