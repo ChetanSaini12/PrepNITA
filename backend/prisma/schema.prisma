@@ -11,17 +11,39 @@ datasource db {
 }
 
 model User {
-  id                        Int         @id @default(autoincrement())
-  email                     String      @unique
-  username                  String?     @unique
+  id                         Int                 @id @default(autoincrement())
+  userInformation            UserInformation
+  authentication             Authentication
+  userContribution           UserContribution
+  userTraining               UserTraining
+}
+
+model Authentication {
+  id                        Int                  @id @default(autoincrement())
+  user                      User                 @relation(fields: [userId], references: [id])
+  userId                    Int                  @unique
+  otpForEmail               String?
+  otpEmailExpiry            DateTime?
+  otpForExtra               String?
+  otpExtraExpiry            DateTime?
+  isVerified                Boolean              @default(false)
+  isBoarded                 Boolean              @default(false)
+}
+
+model UserInformation {
+  id                        Int                  @id @default(autoincrement())
+  user                      User                 @relation(fields: [userId], references: [id]) 
+  userId                    Int                  @unique 
+  email                     String               @unique
+  username                  String?              @unique
   name                      String?
   password                  String
   mobileNum                 String?
-  role                      Roles       @default(USER)
+  role                      Roles                @default(USER)
   profilePic                String?
   gender                    Gender?
-  college_id                String?
-  graduation_year           Int?
+  collegeId                 String?
+  graduationYear            Int?
   cgpa                      Float?
   college                   String?
   department                Department?
@@ -31,21 +53,115 @@ model User {
   leetcodeProfile           String?
   codeforcesProfile         String?
   linkedinProfile           String?
-  githubProfile             String?
-  questions                 Question[]
-  authentication            Authentication?
+  githubProfile             String?  
 }
 
-model Authentication {
-  id                      Int       @id @default(autoincrement())
-  user                    User      @relation(fields: [userId], references: [id])
-  userId                  Int       @unique
-  otpForEmail             String?
-  otpEmailExpiry          DateTime?
-  otpForPasswordChange    String?
-  otpPasswordChangeExpiry DateTime?
-  isVerified              Boolean   @default(false)
-  isBoarded               Boolean   @default(false)
+model UserContribution {
+  id                        Int                   @id @default(autoincrement())
+  user                      User                  @relation(fields: [userId], references: [id])
+  userId                    Int                   @unique
+  interview                 Interview
+  questions                 Question
+  quizes                    Quiz
+  articles                  Article
+  contributionPoints        Int                   @default(0)
+}
+
+model UserTraining {
+  id                        Int                   @id @default(autoincrement())
+  user                      User                  @relation(fields: [userId], references: [id])
+  userId                    Int                   @unique
+  interview                 Interview
+  quizes                    Quiz
+  trainingPoints            Int                   @default(0)
+}
+
+model Question {
+  id                        Int                   @id @default(autoincrement())
+  description               String
+  answer                    String?
+  creator                   UserContribution      @relation(fields: [createdBy], references: [id])
+  createdBy                 Int
+  tags                      String[]?
+  links                     QueAddOnLink[]?
+  isApproved                Boolean               @default(false)
+  isVisibile                Boolean               @default(false)
+  upvotes                   Int                   @default(0)
+  downvotes                 Int                   @default(0)
+}
+
+model QueAddOnLink {
+  id                        Int                   @id @default(autoincrement())
+  question                  Question              @relation(fields: [questionId], references: [id])
+  questionId                Int
+  title                     String
+  url                       String
+}
+
+model Quiz {
+  id                        Int                   @id @default(autoincrement())
+  creator                   User                  @relation(fields: [createdBy], references: [id])
+  createdBy                 Int
+  title                     String
+  description               String?
+  questions                 QuizQuestion[] 
+  startTime                 DateTime
+  endTime                   DateTime
+  isVisibile                Boolean               @default(false)
+  attendees                 QuizAttendance[]
+}
+
+model QuizAttendance {
+  id                        Int                   @id @default(autoincrement())
+  quiz                      Quiz                  @relation(fields: [quizId], references: [id])
+  quizId                    Int
+  attendee                  User                  @relation(fields: [userId], references: [id])
+  userId                    Int
+  score                     Int
+}
+
+model QuizQuestion {
+  id                        Int                   @id @default(autoincrement())
+  quiz                      Quiz                  @relation(fields: [quizId], references: [id])
+  quizId                    Int
+  description               String
+  options                   String[4]
+  correctOption             Int  
+}
+
+model Article {
+  id                        Int                   @id @default(autoincrement())
+  creator                   User                  @relation(fields: [createdBy], references: [id])
+  createdBy                 Int
+  title                     String
+  description               String
+  isApproved                Boolean               @default(false)
+  isVisibile                Boolean               @default(false)
+}
+
+model Interview {
+  id                        Int                   @id @default(autoincrement())
+  interviewer               UserContribution      @relation(fields: [interviewerId], references: [id])
+  interviewee               UserInformation       @relation(fields: [intervieweeId], references: [id])
+  interviewerId             Int
+  intervieweeId             Int
+  startTime                 DateTime
+  duration                  Int 
+  topics                    String[]
+  isCompleted               Boolean               @default(false)
+  feedback                  Feedback
+}
+
+model Feedback {
+  id                        Int                   @id @default(autoincrement())
+  interview                 Interview             @relation(fields: [interviewId], references: [id])
+  interviewId               Int                   @unique
+  communication             Int                   @default(0)
+  development               Int                   @default(0)
+  dsa                       Int                   @default(0)
+  csfundamentals            Int                   @default(0)
+  notes                     String[]?
+  points                    Int                   @default(0)
 }
 
 enum Roles {
@@ -79,26 +195,4 @@ enum Course {
   PhD
   MCA
   MTech
-}
-
-model Question {
-  id          Int       @id @default(autoincrement())
-  title       String
-  description String
-  answer      String?
-  user User @relation(fields: [postedBy], references: [id])
-  postedBy    Int
-  tags        String[]
-  links       QueAddOnLink[]
-  isApproved  Boolean   @default(false)
-  upvotes     Int       @default(0)
-  downvotes   Int       @default(0)
-}
-
-model QueAddOnLink {
-  id    Int    @id @default(autoincrement())
-  title String
-  url   String
-  question Question @relation(fields: [questionId], references: [id])
-  questionId Int
 }
