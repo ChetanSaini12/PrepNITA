@@ -7,6 +7,7 @@ import { getAllUserData } from '../../controllers/User/getAllUserData.js'
 import { getCurrentUser } from '../../controllers/User/getCurrentUser.js'
 import { onboardUser } from '../../controllers/Auth/onboardUser.js'
 import { updateUserProfile } from '../../controllers/User/updateUserProfile.js'
+import { getUserById } from '../../controllers/User/getUserById.js'
 
 
 const queries = {

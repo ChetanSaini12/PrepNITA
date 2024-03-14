@@ -7,11 +7,17 @@ export const updateUserProfile = async (_, payload, context) => {
     try {
       const user = await prisma.user.update({
         where: { id: context.userId },
-        data: { userInformation : {
-          update : {
-            ...payload.user
-          }
-        } },
+        data: {
+          userInformation: {
+            update: {
+              ...payload.user,
+            },
+          },
+        },
+        include: {
+          authentication: true,
+          userInformation: true,
+        },
       })
       return user
     } catch (error) {
