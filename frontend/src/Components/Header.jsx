@@ -31,13 +31,6 @@ function Header() {
     return (
         <Navbar>
             <Link to="/" className='font-bold text-lg flex-col '>
-                <div className='w-0 justify-items-start'>
-                <Lottie 
-            options={defaultOptions}
-            height={45}
-            width={45}
-        />
-                </div>
             
                 <span className='px-2 py-1 bg-gradient-to-r from from-indigo-500  via-purple-500 to-pink-500 rounded-lg text-white text-lg font-bold ab'>PreP</span> NITA
             </Link>
@@ -46,7 +39,7 @@ function Header() {
                     dispatch(toggleTheme())
                 }}>
                     {
-                        theme === 'light' ? <FaMoon></FaMoon> : <FaSun></FaSun>
+                        theme === 'light' ? <FaMoon className='w-full h-full'></FaMoon> : <FaSun className='w-full h-full'></FaSun>
                     }
                 </Button>
                 {!loggedIn && (
