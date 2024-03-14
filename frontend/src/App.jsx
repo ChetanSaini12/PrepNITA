@@ -12,7 +12,7 @@ import AllUsers from "./Pages/AllUsers";
 import Interviews from "./Pages/Interview";
 import { Profile } from "./Pages/Profile";
 import Question from "./Pages/Question";
-import DisplayUsers from "./Pages/DisplayUsers";
+import DisplayUsers from "./Pages/DisplayUsers.jsx";
 import Onboarding from "./Pages/Onboarding";
 
 
