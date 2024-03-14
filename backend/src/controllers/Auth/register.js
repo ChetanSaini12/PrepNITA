@@ -21,15 +21,17 @@ export const registerUser = async (_, payload) => {
 
       await prisma.user.create({
         data: {
-          userInformation: { create: {
-            data : {
-              email,
-              password: await bcrypt.hash(payload.password, 10),
-            }
-          } },
-          authentication:  { create: {} },
-          userContribution:{ create: {} },
-          userTraining:{ create: {} }
+          userInformation: {
+            create: {
+              // data: {
+                email,
+                password: await bcrypt.hash(payload.password, 10),
+              // },
+            },
+          },
+          authentication: { create: {} },
+          userContribution: { create: {} },
+          userTraining: { create: {} },
         },
       })
     } else {
@@ -47,10 +49,11 @@ export const registerUser = async (_, payload) => {
     }
 
     const user = await prisma.user.findFirst({
-      where: { 
-        userInformation : {
-          email
-        }},
+      where: {
+        userInformation: {
+          email,
+        },
+      },
       include: {
         authentication: true,
         userInformation: true,

@@ -14,9 +14,9 @@ export const updateUserRole = async (_, payload, context) => {
             },
           },
         },
-        include : {
-          userInformation: true
-        }
+        include: {
+          userInformation: true,
+        },
       })
       return user.userInformation.role
     } catch (error) {
