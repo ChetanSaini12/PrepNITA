@@ -7,7 +7,7 @@ const checkRole = async ({ _, payload, context }, next) => {
     try {
       const user = await getUserById(_, context.userId)
       console.log('USERUSER : ', user)
-      if (user.role === 'MANAGER') {
+      if (user.userInformation.role === 'MANAGER') {
         return next(_, payload, {
           ...context,
           isManager: true,
@@ -15,20 +15,20 @@ const checkRole = async ({ _, payload, context }, next) => {
           isAdmin: true,
           isUser: true,
         })
-      } else if (user.role === 'SUPERADMIN') {
+      } else if (user.userInformation.role === 'SUPERADMIN') {
         return next(_, payload, {
           ...context,
           isSuperAdmin: true,
           isAdmin: true,
           isUser: true,
         })
-      } else if (user.role === 'ADMIN') {
+      } else if (user.userInformation.role === 'ADMIN') {
         return next(_, payload, {
           ...context,
           isAdmin: true,
           isUser: true,
         })
-      } else if (user.role === 'USER') {
+      } else if (user.userInformation.role === 'USER') {
         return next(_, payload, {
           ...context,
           isUser: true,

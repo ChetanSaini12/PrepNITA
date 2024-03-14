@@ -6,7 +6,7 @@ export const onboardUser = async (_, payload, context) => {
     if (context && context.userId) {
       console.log('UserInput for Onboarding: ' + JSON.stringify(payload.user))
 
-      const usernameExist = await prisma.user.findFirst({
+      const usernameExist = await prisma.userInformation.findFirst({
         where: { username: payload.user.username },
       })
 
@@ -29,8 +29,16 @@ export const onboardUser = async (_, payload, context) => {
               isBoarded: true,
             },
           },
-          ...payload.user,
+          userInformation: {
+            update: {
+              ...payload.user
+            },
+          },
         },
+        include : {
+          authentication: true,
+          userInformation: true,
+        }
       })
 
       return user

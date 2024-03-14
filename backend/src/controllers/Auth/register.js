@@ -6,7 +6,7 @@ import { generateJwtToken } from './generateJWT.js'
 export const registerUser = async (_, payload) => {
   try {
     const email = payload.email
-    const existingUser = await prisma.user.findFirst({
+    const existingUser = await prisma.userInformation.findFirst({
       where: { email },
     })
 
@@ -21,9 +21,15 @@ export const registerUser = async (_, payload) => {
 
       await prisma.user.create({
         data: {
-          email,
-          password: await bcrypt.hash(payload.password, 10),
-          authentication: { create: {} },
+          userInformation: { create: {
+            data : {
+              email,
+              password: await bcrypt.hash(payload.password, 10),
+            }
+          } },
+          authentication:  { create: {} },
+          userContribution:{ create: {} },
+          userTraining:{ create: {} }
         },
       })
     } else {
@@ -41,9 +47,13 @@ export const registerUser = async (_, payload) => {
     }
 
     const user = await prisma.user.findFirst({
-      where: { email },
+      where: { 
+        userInformation : {
+          email
+        }},
       include: {
         authentication: true,
+        userInformation: true,
       },
     })
 
