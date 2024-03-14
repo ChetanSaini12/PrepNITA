@@ -11,28 +11,17 @@ datasource db {
 }
 
 model User {
-  id                         Int                 @id @default(autoincrement())
-  userInformation            UserInformation
-  authentication             Authentication
-  userContribution           UserContribution
-  userTraining               UserTraining
+  id                         Int                 @id @unique @default(autoincrement())
+  userInformation            UserInformation?     
+  authentication             Authentication?
+  userContribution           UserContribution?
+  userTraining               UserTraining?
 }
 
-model Authentication {
-  id                        Int                  @id @default(autoincrement())
-  user                      User                 @relation(fields: [userId], references: [id])
-  userId                    Int                  @unique
-  otpForEmail               String?
-  otpEmailExpiry            DateTime?
-  otpForExtra               String?
-  otpExtraExpiry            DateTime?
-  isVerified                Boolean              @default(false)
-  isBoarded                 Boolean              @default(false)
-}
 
 model UserInformation {
-  id                        Int                  @id @default(autoincrement())
-  user                      User                 @relation(fields: [userId], references: [id]) 
+  id                        Int                  @id @unique @default(autoincrement())
+  informationUser           User?                 @relation(fields: [userId], references: [id], map: "user_information_user_fk")
   userId                    Int                  @unique 
   email                     String               @unique
   username                  String?              @unique
@@ -56,34 +45,46 @@ model UserInformation {
   githubProfile             String?  
 }
 
+model Authentication {
+  id                        Int                  @id @unique @default(autoincrement())
+  authenticationUser        User?                 @relation(fields: [userId], references: [id], map: "authentication_user_fk")
+  userId                    Int                  @unique
+  otpForEmail               String?
+  otpEmailExpiry            DateTime?
+  otpForExtra               String?
+  otpExtraExpiry            DateTime?
+  isVerified                Boolean              @default(false)
+  isBoarded                 Boolean              @default(false)
+}
+
 model UserContribution {
-  id                        Int                   @id @default(autoincrement())
-  user                      User                  @relation(fields: [userId], references: [id])
-  userId                    Int                   @unique
-  interview                 Interview
-  questions                 Question
-  quizes                    Quiz
-  articles                  Article
+  id                        Int                  @id @unique @default(autoincrement())
+  contributionUser          User?                 @relation(fields: [userId], references: [id], map: "user_contribution_user_fk")
+  userId                    Int                  @unique
+  interview                 Interview[]
+  questions                 Question[]
+  quizes                    Quiz[]
+  articles                  Article[]
   contributionPoints        Int                   @default(0)
 }
 
 model UserTraining {
-  id                        Int                   @id @default(autoincrement())
-  user                      User                  @relation(fields: [userId], references: [id])
+  id                        Int                   @id @unique @default(autoincrement())
+  trainingUser              User?                  @relation(fields: [userId], references: [id], map: "user_training_user_fk")
   userId                    Int                   @unique
-  interview                 Interview
-  quizes                    Quiz
+  interview                 Interview[]
+  quizesAttended            QuizAttendance[]
   trainingPoints            Int                   @default(0)
 }
 
 model Question {
-  id                        Int                   @id @default(autoincrement())
+  id                        Int                   @id @unique @default(autoincrement())
   description               String
   answer                    String?
-  creator                   UserContribution      @relation(fields: [createdBy], references: [id])
+  creator                   UserContribution      @relation(fields: [createdBy], references: [id], map: "question_user_contribution_fk")
   createdBy                 Int
-  tags                      String[]?
-  links                     QueAddOnLink[]?
+  tags                      String[]
+  links                     QueAddOnLink[]
   isApproved                Boolean               @default(false)
   isVisibile                Boolean               @default(false)
   upvotes                   Int                   @default(0)
@@ -91,17 +92,17 @@ model Question {
 }
 
 model QueAddOnLink {
-  id                        Int                   @id @default(autoincrement())
-  question                  Question              @relation(fields: [questionId], references: [id])
+  id                        Int                   @id @unique @default(autoincrement())
+  question                  Question              @relation(fields: [questionId], references: [id], map: "question_add_onlink_fk")
   questionId                Int
   title                     String
   url                       String
 }
 
 model Quiz {
-  id                        Int                   @id @default(autoincrement())
-  creator                   User                  @relation(fields: [createdBy], references: [id])
-  createdBy                 Int
+  id                        Int                   @id @unique @default(autoincrement())
+  creator                   UserContribution      @relation(fields: [createdBy], references: [id], map: "quiz_user_contribution_fk")
+  createdBy                 Int                   @unique
   title                     String
   description               String?
   questions                 QuizQuestion[] 
@@ -112,26 +113,26 @@ model Quiz {
 }
 
 model QuizAttendance {
-  id                        Int                   @id @default(autoincrement())
-  quiz                      Quiz                  @relation(fields: [quizId], references: [id])
+  id                        Int                   @id @unique @default(autoincrement())
+  quiz                      Quiz                  @relation(fields: [quizId], references: [id], map: "quiz_qttendence_quiz_fk")
   quizId                    Int
-  attendee                  User                  @relation(fields: [userId], references: [id])
+  attendee                  UserTraining          @relation(fields: [userId], references: [id], map: "quiz_attendence_traingin_fk")
   userId                    Int
   score                     Int
 }
 
 model QuizQuestion {
-  id                        Int                   @id @default(autoincrement())
-  quiz                      Quiz                  @relation(fields: [quizId], references: [id])
+  id                        Int                   @id @unique @default(autoincrement())
+  quiz                      Quiz                  @relation(fields: [quizId], references: [id], map: "quiz_question_quiz_fk")
   quizId                    Int
   description               String
-  options                   String[4]
+  options                   String[]
   correctOption             Int  
 }
 
 model Article {
-  id                        Int                   @id @default(autoincrement())
-  creator                   User                  @relation(fields: [createdBy], references: [id])
+  id                        Int                   @id @unique @default(autoincrement())
+  creator                   UserContribution      @relation(fields: [createdBy], references: [id], map: "article_user_fk")
   createdBy                 Int
   title                     String
   description               String
@@ -140,27 +141,27 @@ model Article {
 }
 
 model Interview {
-  id                        Int                   @id @default(autoincrement())
-  interviewer               UserContribution      @relation(fields: [interviewerId], references: [id])
-  interviewee               UserInformation       @relation(fields: [intervieweeId], references: [id])
+  id                        Int                   @id @unique @default(autoincrement())
+  interviewer               UserContribution      @relation(fields: [interviewerId], references: [id], map: "interviewer_user_contribution_fk")
+  interviewee               UserTraining          @relation(fields: [intervieweeId], references: [id], map: "interviewee_user_contribution_fk")
   interviewerId             Int
   intervieweeId             Int
   startTime                 DateTime
   duration                  Int 
   topics                    String[]
   isCompleted               Boolean               @default(false)
-  feedback                  Feedback
+  feedback                  Feedback?
 }
 
 model Feedback {
-  id                        Int                   @id @default(autoincrement())
-  interview                 Interview             @relation(fields: [interviewId], references: [id])
+  id                        Int                   @id @unique @default(autoincrement())
+  interview                 Interview             @relation(fields: [interviewId], references: [id], map: "feedback_interview_fk")
   interviewId               Int                   @unique
   communication             Int                   @default(0)
   development               Int                   @default(0)
   dsa                       Int                   @default(0)
   csfundamentals            Int                   @default(0)
-  notes                     String[]?
+  notes                     String[]
   points                    Int                   @default(0)
 }
 
