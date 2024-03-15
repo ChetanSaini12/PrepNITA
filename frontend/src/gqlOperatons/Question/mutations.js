@@ -4,10 +4,9 @@ export const GET_ALL_QUESTIONS = gql`
      mutation getAllQuestions($title: String, $tags: [String]){
         getQuestions(title: $title, tags: $tags){
             id 
-            title
             description
             answer
-            postedBy 
+            createdBy 
             tags 
             links {
                 id
@@ -26,10 +25,9 @@ export const CREATE_QUESTION = gql`
     mutation createQuestionMutation($Question: QuestionInput){
         createQuestion(Question: $Question){
             id 
-            title
             description
             answer
-            postedBy 
+             createdBy
             tags 
             links {
                 id
@@ -48,10 +46,9 @@ export const GET_QUESTION_BY_ID = gql`
     mutation getQuestionByIdMutation($QuestionId:Int!){
         getQuestionById(QuestionId:$QuestionId){
             id 
-            title
             description
             answer
-            postedBy 
+             
             tags 
             links {
                 id
@@ -70,10 +67,9 @@ export const UP_VOTE_QUESTION = gql`
     mutation upVoteQuestionMutation($QuestionId:Int!){
         upVoteQuestion(QuestionId:$QuestionId){
             id 
-            title
             description
             answer
-            postedBy 
+             
             tags 
             links {
                 id
@@ -92,10 +88,10 @@ export const DOWN_VOTE_QUESTION = gql`
     mutation downVoteQuestionMutation($QuestionId:Int!){
         downVoteQuestion(QuestionId:$QuestionId){
             id 
-            title
+        
             description
             answer
-            postedBy 
+             
             tags 
             links {
                 id
@@ -115,10 +111,10 @@ export const CHANGE_APPROVE_STATUS_OF_QUE = gql`
     mutation changeApproveStatusOfQueMutation($QuestionId:Int!){
         changeApproveStatusOfQue(QuestionId:$QuestionId){
             id 
-            title
+        
             description
             answer
-            postedBy 
+             
             tags 
             links {
                 id
@@ -145,10 +141,10 @@ export const UPDATE_QUESTION = gql`
     mutation updateQuestionMutation($QuestionId:Int!,$Question:QuestionInput){
         updateQuestion(QuestionId:$QuestionId,Question:$Question){
             id 
-            title
+    
             description
             answer
-            postedBy 
+             
             tags 
             links {
                 id

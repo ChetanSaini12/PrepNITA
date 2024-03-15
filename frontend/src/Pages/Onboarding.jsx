@@ -172,7 +172,7 @@ function Onboarding() {
                 required
                 type="text"
                 placeholder="21UEE055"
-                id="college_id"
+                id="collegeId"
                 onChange={handleChange}
               ></TextInput>
             </div>
@@ -182,7 +182,7 @@ function Onboarding() {
                 required
                 type="Integer"
                 placeholder="2025"
-                id="graduation_year"
+                id="graduationYear"
                 onChange={handleChange}
               ></TextInput>
             </div>
