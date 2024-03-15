@@ -80,17 +80,6 @@ const CreateQuestion = () => {
                     <form id='questionForm' onSubmit={handleSubmit} className="question_details_area">
 
                         <div id="question_area_section">
-                            <h1 className="text-2xl">Title : </h1>
-
-                            <Textarea
-                                required
-                                placeholder='Title of the question'
-                                id="title"
-                                onChange={handleChange}
-                            />
-                        </div>
-
-                        <div id="question_area_section">
                             <h1 className="text-2xl">Description : </h1>
                             <Textarea
                                 required
@@ -146,4 +135,4 @@ const CreateQuestion = () => {
     )
 }
 
-export default CreateQuestion
+export default CreateQuestion;

@@ -12,11 +12,13 @@ const Question = () => {
     const [tempQ, setTempQ] = useState(null);
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [refresh, setRefresh] = useState(false);
 
     const [getQuestions] = useMutation(GET_ALL_QUESTIONS, {
         onError: (error) => {
             console.log("error from getQuestions ", error);
-            toast.error("Error fetching questions");
+            return toast.error("Error fetching questions");
+            // toast.error("Error fetching questions");
             // setError(error.message);
         }
     });
@@ -24,7 +26,7 @@ const Question = () => {
     const [changeStatus] = useMutation(CHANGE_APPROVE_STATUS_OF_QUE, {
         onError: (error) => {
             console.log("error from changeStatus ", error);
-            toast.error(error.message);
+            toast.error(error.message || error);
             // setError(error.message);
         }
     });
@@ -61,6 +63,7 @@ const Question = () => {
                 QuestionId: Q_id,
             },
         })
+
     };
     const upVoteQuestion = (Q_id) => {
         upVote({
@@ -84,7 +87,12 @@ const Question = () => {
             console.log("err from getQuestions ", err);
         });
     }, []);
-
+    
+    useEffect(() => {
+        setLoading(true);
+        setData(data);
+        setLoading(false);
+    }, [refresh]);
 
 
 
@@ -97,20 +105,20 @@ const Question = () => {
                 <>
                     {data.map((question) => (
                         <div key={question.id}>
-                            <div>TITLE : {question.title}</div>
+                            <div>TITLE : {question?.links?.title}</div>
                             <div>QUESTION : {question.description}</div>
                             <div>ANS : {question.answer}</div>
                             <div>UpVotes : {question.upvotes}</div>
                             <div>DownVotes : {question.downvotes}</div>
                             <div>Approved : {question.isApproved ? "YES" : "NO"}</div>
-                            <div>Author : {question.postedBy}</div>
-                            <Button onClick={() => { updateQuestionStatus(question.id) }} gradientDuoTone="purpleToPink" className='mb-2' >
+                            <div>Author : {question.createdBy}</div>
+                            <Button onClick={() => { setRefresh(!refresh); updateQuestionStatus(question.id) }} gradientDuoTone="purpleToPink" className='mb-2' >
                                 Update status
                             </Button>
-                            <Button onClick={() => { upVoteQuestion(question.id) }} gradientDuoTone="purpleToPink" className='mb-2' >
+                            <Button onClick={() => { setRefresh(!refresh); upVoteQuestion(question.id) }} gradientDuoTone="purpleToPink" className='mb-2' >
                                 Upvote
                             </Button>
-                            <Button onClick={() => { downVoteQuestion(question.id) }} gradientDuoTone="purpleToPink" className='mb-2'>
+                            <Button onClick={() => { setRefresh(!refresh); downVoteQuestion(question.id) }} gradientDuoTone="purpleToPink" className='mb-2'>
                                 DownVote
                             </Button>
                             {/* <Button onClick={()=>{setTempQ(data.tempQueQr)}}  gradientDuoTone="purpleToPink" className='mb-2'>

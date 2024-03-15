@@ -10,6 +10,7 @@ import { BASE_URL } from "./utils";
 import { PersistGate } from "redux-persist/integration/react";
 import { Auth } from "./Components/Auth";
 import ThemeProvider from "./Components/ThemeProvider";
+import toast,{ Toaster } from 'react-hot-toast';
 
 
 // client for graphql
@@ -32,6 +33,7 @@ root.render(
           <ThemeProvider>
           <Auth>
             <App />
+            <Toaster/>
           </Auth>
           </ThemeProvider>
         </Provider>
