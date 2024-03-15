@@ -26,8 +26,10 @@ export const VerifyToken = async (dispatch) => {
                 console.log("Data from verifyToken:", data);
                 dispatch(LoginUser({
                     id: data.getMe.id,
-                    username: data.getMe.username,
-                    role: data.getMe.role,
+                    username: data.getMe.userInformation.username,
+                    role: data.getMe.userInformation.role,
+                    // profilePic: data.getMe.userInformation.profilePic
+
                 }));
                 dispatch(setLoading(false));
                 response.verified = true;

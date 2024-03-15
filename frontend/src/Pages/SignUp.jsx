@@ -51,7 +51,7 @@ function SignUp() {
     onError: (mutationError) => {
       console.log("Error in signUpUser mutation 1:", mutationError.message);
       dispatch(setLoading(false));
-     return toast.error(mutationError.message, { duration: 4000 });
+      return toast.error(mutationError.message, { duration: 4000 });
       // return setError(mutationError.message);
     },
   });
@@ -69,7 +69,7 @@ function SignUp() {
     onError: (mutationError) => {
       console.log("Error in signUpUser mutation 3:", mutationError.message);
       dispatch(setLoading(false));
-     return toast.error(mutationError.message, { duration: 4000 });
+      return toast.error(mutationError.message, { duration: 4000 });
       // return setError(mutationError.message);
     },
   });
@@ -81,7 +81,7 @@ function SignUp() {
 
     if (!email || !password) {
       dispatch(setLoading(false));
-     return toast.error("Please Fillout All The Fields", { duration: 4000 });
+      return toast.error("Please Fillout All The Fields", { duration: 4000 });
       // return setError("Please Fillout All The Fields");
     }
     try {
@@ -127,7 +127,7 @@ function SignUp() {
           .catch((catchError) => {
             dispatch(setLoading(false));
             console.log("Error in sendVerifyEmail catch block: *111 ", catchError);
-            return toast.error(catchError.message||catchError, { duration: 4000 });;
+            return toast.error(catchError.message || catchError, { duration: 4000 });;
             // return setError(catchError);
           });
       }
@@ -144,19 +144,20 @@ function SignUp() {
       }
       else {
 
-        const { id, username, role } = user.data.registerUser;
+        const { id, username, role } = user.data.registerUser.user;
+        const { token } = user.data.registerUser;
 
         dispatch(LoginUser({
           id, email, username, role
         }));
-        // localStorage.se
+        localStorage.setItem("token", token);
         dispatch(setLoading(false));
         return navigate("/");
       }
     } catch (catchError) {
       console.log("Error in signUpUser catch block:", catchError);
       dispatch(setLoading(false));
-      return toast.error(catchError.message||catchError, { duration: 4000 });
+      return toast.error(catchError.message || catchError, { duration: 4000 });
       // return setError(catchError);
     };
   };
@@ -196,7 +197,7 @@ function SignUp() {
     } catch (catchError) {
       console.log("Error in signUpUser catch block:", catchError);
       dispatch(setLoading(false));
-      return toast.error(catchError.message||catchError, { duration: 4000 });
+      return toast.error(catchError.message || catchError, { duration: 4000 });
       // return setError(catchError);
     };
   };
@@ -219,16 +220,16 @@ function SignUp() {
         console.log("Response from sendVerifyEmail :", response.data);
         dispatch(setLoading(false));
         if (!response.data || !response.data.sendVerifyMail)
-        return toast.error(response.errors.message || "Email not sent! Please try again later.", { duration: 4000 });
-          // return setError(response.errors.message || "Email not sent! Please try again later.");
+          return toast.error(response.errors.message || "Email not sent! Please try again later.", { duration: 4000 });
+        // return setError(response.errors.message || "Email not sent! Please try again later.");
         else
           return toast.success(response.data.sendVerifyMail, { duration: 4000 });
-          // return setError(response.data.sendVerifyMail);
+        // return setError(response.data.sendVerifyMail);
 
       }).catch((catchError) => {
         console.log("Error in sendVerifyEmail catch block:", catchError);
         dispatch(setLoading(false));
-        return toast.error(catchError.message||catchError, { duration: 4000 }); 
+        return toast.error(catchError.message || catchError, { duration: 4000 });
         // return setError(catchError);
       });
     };
@@ -330,10 +331,10 @@ function SignUp() {
         <div className="flex-1">
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <div>
-            <FloatingLabel variant="outlined" label="Email" type="email" id="email" onChange={handleChange}></FloatingLabel>
+              <FloatingLabel variant="outlined" label="Email" type="email" id="email" onChange={handleChange}></FloatingLabel>
             </div>
             <div>
-            <FloatingLabel variant="outlined" label="Password" type="password" id="password" onChange={handleChange}></FloatingLabel>
+              <FloatingLabel variant="outlined" label="Password" type="password" id="password" onChange={handleChange}></FloatingLabel>
             </div>
             <Button
               gradientDuoTone="purpleToPink"

@@ -11,6 +11,7 @@ export const GET_USER_STATUS = gql`
                 mobileNum
                 username
                 role
+                profilePic
             }
         }
     }
