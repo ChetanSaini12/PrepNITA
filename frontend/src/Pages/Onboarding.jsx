@@ -58,7 +58,7 @@ function Onboarding() {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(setLoading(false));
-    const { name, username, mobileNum, gender, college_id, graduation_year, cgpa, college,
+    const { name, username, mobileNum, gender, collegeId, graduationYear, cgpa, college,
       department, course, state, hosteler } = formData;
 
     const leetcodeProfile = formData.leetcodeProfile || ""; const codeforcesProfile = formData.codeforcesProfile || ""; const linkedinProfile = formData.linkedinProfile || ""; const githubProfile = formData.githubProfile || "";
@@ -66,7 +66,7 @@ function Onboarding() {
     onBoardUser({
       variables: {
         user: {
-          name, username, mobileNum, gender, college_id, graduation_year:parseInt(graduation_year,10), cgpa:parseFloat(cgpa), college,
+          name, username, mobileNum, gender, collegeId, graduationYear:parseInt(graduationYear,10), cgpa:parseFloat(cgpa), college,
           department, course, state, hosteler:hosteler==='true', leetcodeProfile, codeforcesProfile, linkedinProfile, githubProfile
         }
       }

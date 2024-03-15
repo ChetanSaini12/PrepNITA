@@ -91,6 +91,7 @@ mutation getAllUserMuatation($user:UserInputOptional){
             username
             email
             mobileNum
+            role
           }
         }
   }
