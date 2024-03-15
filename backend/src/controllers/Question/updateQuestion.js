@@ -12,7 +12,6 @@ export const updateQuestion = async (_, payload, context) => {
       const question = await prisma.question.update({
         where: { id: payload.QuestionId },
         data: {
-          title: payload.Question.title,
           description: payload.Question.description,
           answer: payload.Question.answer,
           tags: { set: payload.Question.tags }, // Update tags

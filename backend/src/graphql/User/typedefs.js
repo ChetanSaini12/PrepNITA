@@ -1,26 +1,7 @@
 export const typeDefs = `#graphql
     type User {
         id                      : Int
-        username                : String
-        name                    : String
-        email                   : String
-        mobileNum               : String
-        role                    : UserRole
-        profilePic              : String
-        gender                  : Gender
-        college_id              : String
-        graduation_year         : Int
-        cgpa                    : Float
-        college                 : String
-        department              : Department
-        course                  : Course
-        state                   : String
-        hosteler                : Boolean
-        leetcodeProfile         : String
-        codeforcesProfile       : String
-        linkedinProfile         : String
-        githubProfile           : String
-        question                : [Question]
+        userInformation         : UserInformation
         authentication          : Authentication
     }
 
@@ -60,6 +41,29 @@ export const typeDefs = `#graphql
         isVerified              : Boolean
         isBoarded               : Boolean
     }
+
+    type UserInformation {
+        id                      : Int
+        username                : String
+        name                    : String
+        email                   : String
+        mobileNum               : String
+        role                    : UserRole
+        profilePic              : String
+        gender                  : Gender
+        collegeId               : String
+        graduationYear          : Int
+        cgpa                    : Float
+        college                 : String
+        department              : Department
+        course                  : Course
+        state                   : String
+        hosteler                : Boolean
+        leetcodeProfile         : String
+        codeforcesProfile       : String
+        linkedinProfile         : String
+        githubProfile           : String
+    }
       
     enum Course {
         BTech
@@ -79,8 +83,8 @@ export const typeDefs = `#graphql
         mobileNum               : String!
         profilePic              : String
         gender                  : Gender!
-        college_id              : String!
-        graduation_year         : Int!
+        collegeId               : String!
+        graduationYear          : Int!
         cgpa                    : Float!
         college                 : String!
         department              : Department!
@@ -99,8 +103,8 @@ export const typeDefs = `#graphql
         mobileNum               : String
         profilePic              : String
         gender                  : Gender
-        college_id              : String
-        graduation_year         : Int
+        collegeId               : String
+        graduationYear          : Int
         cgpa                    : Float
         college                 : String
         department              : Department

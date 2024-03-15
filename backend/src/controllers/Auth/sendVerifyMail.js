@@ -7,7 +7,7 @@ import { GraphQLError } from 'graphql'
 export const sendVerificationMail = async (_, payload) => {
   const email = payload.email
   const existingUser = await prisma.user.findFirst({
-    where: { email },
+    where: { userInformation :{ email }},
     include: {
       authentication: true,
     },

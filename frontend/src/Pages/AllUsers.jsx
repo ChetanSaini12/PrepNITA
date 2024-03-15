@@ -124,6 +124,7 @@ function AllUsers() {
       console.log("user in AllUser", user);
       setLoading(false);
       setData(user.data.getAllUser);
+      console.log("data ",data);
     })
       .catch(error => {
         console.log("error in allUser catch block ", error || error.message);
@@ -287,13 +288,14 @@ function AllUsers() {
                     <div className="border my-2"></div>
                   </thead>
                   <tbody>
-                    {data.map((user, index) => (
+                    {data?.map((user, index) => (
                       <tr key={index} className="flex justify-between my-2">
                         <td>{index + 1}</td>
-                        <td>{user.username}</td>
-                        <td>{user.name}</td>
-                        <td>{user.email}</td>
-                        <td>{user.mobileNum}</td>
+                        <td>{user.userInformation.username}</td>
+                        {/* <td>{"hello"}</td> */}
+                        <td>{user.userInformation.name}</td>
+                        <td>{user.userInformation.email}</td>
+                        <td>{user.userInformation.mobileNum}</td>
                       </tr>
                     ))}
                   </tbody>

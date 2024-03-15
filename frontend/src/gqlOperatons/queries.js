@@ -6,11 +6,13 @@ export const GET_USER_STATUS = gql`
     query GetUserStatus{
         getMe{
             id
-            email
-           
-            mobileNum
-            username
-            role
+            userInformation{
+                email
+                mobileNum
+                username
+                role
+                profilePic
+            }
         }
     }
 `;

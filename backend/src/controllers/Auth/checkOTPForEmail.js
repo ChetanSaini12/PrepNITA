@@ -7,7 +7,7 @@ export const checkOtpForEmail = async (_, payload) => {
   const { email, otp } = payload
 
   const existingUser = await prisma.user.findFirst({
-    where: { email },
+    where: { userInformation : { email }},
     include: {
       authentication: true,
     },
@@ -34,6 +34,7 @@ export const checkOtpForEmail = async (_, payload) => {
                 where: { id: existingUser.id },
                 include: {
                   authentication: true,
+                  userInformation: true,
                 },
               })
 

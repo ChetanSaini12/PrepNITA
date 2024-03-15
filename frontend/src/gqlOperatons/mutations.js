@@ -7,9 +7,11 @@ export const REGISTER_USER = gql`
       token
       user {
         id
-        email
-        username
-        role
+        userInformation{
+         email
+         username
+         role
+        }
         authentication {
           isVerified
           isBoarded
@@ -24,9 +26,11 @@ export const ONBOARD_USER = gql`
   mutation onboardUserMutation($user:UserInput!){
     onboardUser(user: $user) {
       id
-      email
-      username
-      role
+      userInformation{
+        email
+        username
+        role
+       }
     }
   }
 
@@ -39,10 +43,11 @@ export const LOGIN_USER = gql`
       token
       user {
         id
-        email
-        mobileNum
-        username
-        role
+        userInformation{
+          email
+          username
+          role
+         }
       }
     }
   }
@@ -54,9 +59,11 @@ export const VERIFY_EMAIL = gql`
       token
      user{
       id
-      email
-      username
-      role
+      userInformation{
+        email
+        username
+        role
+       }
       authentication {
         isVerified
         isBoarded
@@ -78,11 +85,14 @@ export const SEND_VERIFY_EMAIL = gql`
 export const All_USER = gql`
 mutation getAllUserMuatation($user:UserInputOptional){
         getAllUser(user:$user){
-          username
           id
-          email
-          name
-          mobileNum
+          userInformation{
+            name
+            username
+            email
+            mobileNum
+            role
+          }
         }
   }
 `

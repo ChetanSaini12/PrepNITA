@@ -7,7 +7,17 @@ export const updateUserProfile = async (_, payload, context) => {
     try {
       const user = await prisma.user.update({
         where: { id: context.userId },
-        data: { ...payload.user },
+        data: {
+          userInformation: {
+            update: {
+              ...payload.user,
+            },
+          },
+        },
+        include: {
+          authentication: true,
+          userInformation: true,
+        },
       })
       return user
     } catch (error) {
@@ -16,7 +26,7 @@ export const updateUserProfile = async (_, payload, context) => {
         'Something went wrong while updating user profile',
         {
           extensions: {
-            code: 'ROLE_UPDATE_FAILED',
+            code: 'PROFILE_UPDATE_FAILED',
           },
         }
       )

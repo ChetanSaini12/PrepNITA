@@ -1,4 +1,4 @@
-import { Alert, Button, Label, Spinner, TextInput, Select } from "flowbite-react";
+import { Alert, Button, Label, Spinner, TextInput,Select } from "flowbite-react";
 // import Select from 'flow-bite-react-select-library';
 import { Link, useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
@@ -11,6 +11,7 @@ import { LoginUser, setLoading } from "../app/user/userSlice";
 import { VerifyToken } from "../utils/verifyToken";
 import Lottie from 'react-lottie';
 import animationData from '../../src/lotties/startup.json';
+import { CircularProgressbar } from 'react-circular-progressbar';
 import toast from "react-hot-toast";
 
 function Onboarding() {
@@ -18,9 +19,10 @@ function Onboarding() {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({});
   const [error, setError] = useState(null);
+  const [imageFileUploadProgress,setImageFIleUploadProgress]=useState(0);
 
   const { loggedIn, isLoading } = useSelector((state) => state.user);
-
+  
 
   // useEffect(() => {
   //   const checkToken = async () => {
@@ -56,7 +58,7 @@ function Onboarding() {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(setLoading(false));
-    const { name, username, mobileNum, gender, college_id, graduation_year, cgpa, college,
+    const { name, username, mobileNum, gender, collegeId, graduationYear, cgpa, college,
       department, course, state, hosteler } = formData;
 
     const leetcodeProfile = formData.leetcodeProfile || ""; const codeforcesProfile = formData.codeforcesProfile || ""; const linkedinProfile = formData.linkedinProfile || ""; const githubProfile = formData.githubProfile || "";
@@ -64,7 +66,7 @@ function Onboarding() {
     onBoardUser({
       variables: {
         user: {
-          name, username, mobileNum, gender, college_id, graduation_year:parseInt(graduation_year,10), cgpa:parseFloat(cgpa), college,
+          name, username, mobileNum, gender, collegeId, graduationYear:parseInt(graduationYear,10), cgpa:parseFloat(cgpa), college,
           department, course, state, hosteler:hosteler==='true', leetcodeProfile, codeforcesProfile, linkedinProfile, githubProfile
         }
       }
@@ -106,31 +108,36 @@ function Onboarding() {
 
   if (isLoading) return <Loader />;
   return (
-    <div className="min-h-screen mt-20 ">
-      <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5">
-        <div className="flex-1">
-          <Link to="/" className="font-bold dark:text-white text-4xl">
-            <div className='w-0 justify-items-start'>
-              <Lottie
-                options={defaultOptions}
-                height={100}
-                width={100}
-              />
+    <div className="max-w-lg mx-auto p-3 w-full">
+          <form className="flex flex-col gap-4 align-items:center" onSubmit={handleSubmit}>
+          <input type='file' accept='image/*' hidden></input>
+            <div className='relative w-32 h-32 self-center  cursor-pointer shadow-md overflow-hidden rounded-full' >
+              <img src= {loggedIn.profilePic} alt="user" className={`rounded-full w-full h-full object-cover border-8  border-[lightgray] `}/>
+              {imageFileUploadProgress && imageFileUploadProgress<100 && 
+                <CircularProgressbar
+                value={imageFileUploadProgress || 0}
+                text={`${imageFileUploadProgress}%`}
+                strokeWidth={5}
+                styles={{
+                  root: {
+                    width: '100%',
+                    height: '100%',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                  },
+                  path: {
+                    stroke: `rgba(62, 152, 199, ${
+                      imageFileUploadProgress / 100
+                    })`,
+                  },
+                }}
+            />
+              }
+            
             </div>
-            <span className="px-2 py-1 bg-gradient-to-r from from-indigo-500  via-purple-500 to-pink-500 rounded-lg text-white">
-              PreP
-            </span>
-            NITA
-          </Link>
-          <p className="text-sm mt-5 ">
-            This is a demo project. You can Sign Up with your email and
-            password. Or with Google.
-          </p>
-        </div>
-        <div className="flex-1">
-          <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <div>
-              <Label value="* Your Username "></Label>
+              <Label value="Username*"></Label>
               <TextInput
                 required
                 type="text"
@@ -140,7 +147,7 @@ function Onboarding() {
               ></TextInput>
             </div>
             <div>
-              <Label value="* Full Name "></Label>
+              <Label value="Full Name*"></Label>
               <TextInput
                 required
                 type="text"
@@ -150,7 +157,7 @@ function Onboarding() {
               ></TextInput>
             </div>
             <div>
-              <Label value="* Your Mobile Number"></Label>
+              <Label value="Contact*"></Label>
               <TextInput
                 required
                 type="text"
@@ -160,27 +167,27 @@ function Onboarding() {
               ></TextInput>
             </div>
             <div>
-              <Label value="* Enrollment no "></Label>
+              <Label value="Enrollment Number*"></Label>
               <TextInput
                 required
                 type="text"
                 placeholder="21UEE055"
-                id="college_id"
+                id="collegeId"
                 onChange={handleChange}
               ></TextInput>
             </div>
             <div>
-              <Label value="* Graduation Year"></Label>
+              <Label value="Graduation Year*"></Label>
               <TextInput
                 required
                 type="Integer"
                 placeholder="2025"
-                id="graduation_year"
+                id="graduationYear"
                 onChange={handleChange}
               ></TextInput>
             </div>
             <div>
-              <Label value="* College"></Label>
+              <Label value="College*"></Label>
               <Select
                 id="college"
                 name="college"
@@ -193,7 +200,7 @@ function Onboarding() {
               </Select>
             </div>
             <div>
-              <Label value="* Course"></Label>
+              <Label value="Course*"></Label>
               <Select
               required
                 id="course"
@@ -214,7 +221,7 @@ function Onboarding() {
             </div>
 
             <div>
-              <Label value="* CGPA"></Label>
+              <Label value="CGPA*" ></Label>
               <TextInput
                 required
                 type="float"
@@ -225,7 +232,7 @@ function Onboarding() {
             </div>
 
             <div>
-              <Label value="* State"></Label>
+              <Label value="State*"></Label>
               <TextInput
                 required
                 type="text"
@@ -235,7 +242,7 @@ function Onboarding() {
               ></TextInput>
             </div>
             <div>
-              <Label value="* Hostler"></Label>
+              <Label value="Hostler*"></Label>
               <Select
                 id="hostler"
                 name="hostler"
@@ -248,7 +255,7 @@ function Onboarding() {
               </Select>
             </div>
             <div>
-              <Label value="* Gender"></Label>
+              <Label value="Gender*"></Label>
               <Select
                 id="gender"
                 name="gender"
@@ -264,13 +271,12 @@ function Onboarding() {
             </div>
 
             <div>
-              <Label value="* Department"></Label>
+              <Label value="Department*"></Label>
               <Select
                 id="department"
                 name="department"
                 onChange={handleChange}
               >
-
                 <option selected>Choose your College </option>
                 <option value="COMPUTER_SCIENCE_AND_ENGINEERING">CSE</option>
                 <option value="ELECTRONICS_AND_COMMUNICATIONS_ENGINEERING">ECE</option>
@@ -342,8 +348,6 @@ function Onboarding() {
             </Alert>
           )}
         </div>
-      </div>
-    </div>
   )
 
 };

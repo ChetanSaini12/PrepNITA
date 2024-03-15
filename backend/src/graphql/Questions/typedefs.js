@@ -2,13 +2,13 @@ export const typeDefs = `#graphql
 
     type Question {
         id : Int
-        title : String
         description : String
         answer : String
-        postedBy : Int
+        createdBy : Int
         tags : [String]
         links : [QueAddOnLink]
         isApproved : Boolean
+        isVisibile : Boolean
         upvotes : Int
         downvotes : Int
     }
@@ -21,7 +21,6 @@ export const typeDefs = `#graphql
     }
 
     input QuestionInput {
-        title : String!
         description : String!
         answer : String!
         tags : [String]

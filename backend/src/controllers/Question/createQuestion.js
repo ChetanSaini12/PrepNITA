@@ -7,10 +7,9 @@ export const createQuestion = async (_, payload, context) => {
     if (context.isUser) {
       const question = await prisma.question.create({
         data: {
-          title: payload.Question.title,
           description: payload.Question.description,
           answer: payload.Question.answer,
-          postedBy: context.userId,
+          createdBy: context.userId,
           tags: payload.Question.tags,
           links: { create: payload.Question.links },
         },

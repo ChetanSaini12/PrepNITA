@@ -3,9 +3,15 @@ import { prisma } from '../../../prisma/index.js'
 
 export const getAllUserData = async (_, payload) => {
   try {
-    console.log('Get All User Data with filet : ', JSON.stringify(payload))
+    console.log('Get All User Data with filter : ', JSON.stringify(payload))
     const users = await prisma.user.findMany({
-      where: payload.user,
+      where: {
+        userInformation: { ...payload.user },
+      },
+      include: {
+        authentication: true,
+        userInformation: true,
+      },
     })
     console.log(users)
     return users

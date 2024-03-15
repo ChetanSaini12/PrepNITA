@@ -1,6 +1,6 @@
 /*
-user token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzA4NjMwNzM0LCJleHAiOjE3MTcyNzA3MzR9.GOInAFgGTlBXOwJpzdGzigxsiqs2uoEesLZOQy-yecM
-chetansaini1241@gmail.com -> 1234567890 : 1 
+manager token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzEwNDQ1ODQ3LCJleHAiOjE3MTkwODU4NDd9.c2yK8FP-25sqQ6jfqSpBEFqFZWI96_IQ7aFUrbmM1XM
+rinomes238@cmheia.com -> password : 1 
 
 admin token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiaWF0IjoxNzA3ODU4MTI0LCJleHAiOjE3MTY0OTgxMjR9.7675Ma9ZCzCHgBzOZWHMwMnp9Z4noj2eRfgoDhrONJY
 admin1 -> adminpassword : 9

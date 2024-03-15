@@ -8,6 +8,10 @@ export const getUserById = async (_, id) => {
       where: {
         id,
       },
+      include: {
+        authentication: true,
+        userInformation: true
+      }
     })
     return user
   } catch (error) {

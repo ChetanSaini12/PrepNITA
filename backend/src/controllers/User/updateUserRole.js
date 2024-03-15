@@ -7,9 +7,18 @@ export const updateUserRole = async (_, payload, context) => {
     try {
       const user = await prisma.user.update({
         where: { id: payload.id },
-        data: { role: payload.role },
+        data: {
+          userInformation: {
+            update: {
+              role: payload.role,
+            },
+          },
+        },
+        include: {
+          userInformation: true,
+        },
       })
-      return user.role
+      return user.userInformation.role
     } catch (error) {
       console.log('ERRROR : ', error)
       throw new GraphQLError('Something went wrong while updating user role', {
