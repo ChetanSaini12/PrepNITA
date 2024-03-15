@@ -25,31 +25,35 @@ export const Profile = () => {
 
   const { loggedIn, isLoading } = useSelector((state) => state.user);
   const [formData, setFormData] = useState({});
-  const [error, setError] = useState(null);
+  const [ready, setReady] = useState(false);
   const [userData, setUserData] = useState({});
 
 
 
   useEffect(() => {
-    if (!loggedIn) {
-      // alert("User is not authorized. Redirecting to login page");
-      toast.error('User is not authorized to view profile page . Redirecting to login page.');
-      // console.log('User is not authorized. Redirecting to login page.');
-      dispatch(setLoading(false));
-      return navigate('/register');
-    }
-
-    // setUserData(myData);
     client.query({
       query: GET_USER_STATUS,
     }).then((data) => {
       console.log("userdata in profile", data);
-      setUserData(data.data.getMe.userInformation);
+      if (data.data)
+        setUserData(data.data.getMe.userInformation);
+      dispatch(setLoading(false));
+      setReady(true);
     }).catch((error) => {
       console.log("Error in profile:", error);
+      dispatch(setLoading(false));
+      setReady(true);
     });
-    dispatch(setLoading(false));
+
+
   }, []);
+
+  if (ready && loggedIn === false) {
+    dispatch(setLoading(false));
+    toast.error('You need to login first');
+    return navigate('/register');
+  }
+
 
   if (isLoading) return <Loader />;
   const handleSubmit = (e) => {
@@ -69,10 +73,10 @@ export const Profile = () => {
     <div className='min-h-screen mt-20 justify-center'>
       <div className=' flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5 '>
         <div className="flex ">
-        
+
         </div>
         <div className="flex-1 ">
-          <img src={userData.profilePic||"https://images.pexels.com/photos/2690774/pexels-photo-2690774.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"} alt="Profile Picture" className={`rounded-full h-48 w-48 object-cover border-8  border-[lightgray] translate-x-56 `} />
+          <img src={userData.profilePic || "https://images.pexels.com/photos/2690774/pexels-photo-2690774.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"} alt="Profile Picture" className={`rounded-full h-48 w-48 object-cover border-8  border-[lightgray] translate-x-56 `} />
           <form className="flex flex-col gap-4"
           //  onSubmit={handleSubmit}
           >
@@ -113,10 +117,10 @@ export const Profile = () => {
                 placeholder="+91-XXXXXXXXXX"
                 id="contactNumber"
                 value={userData.mobileNum}
-                // onChange={handleChange}
+              // onChange={handleChange}
               ></TextInput>
             </div>
-          
+
           </form>
 
         </div>

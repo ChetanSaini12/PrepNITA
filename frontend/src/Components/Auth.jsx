@@ -15,21 +15,28 @@ export const Auth = ({ children }) => {
         console.log('LoggedIn : ', loggedIn);
         if (!loggedIn && token) {
           console.log('YHA AAYA H ');
-          const response = await VerifyToken(dispatch);
-          console.log("response in Auth:", response);
+          VerifyToken(dispatch).then((response) => {
+            console.log("response in Auth:", response);
 
-          if (response.verified) {
-            dispatch(setLoading(false));
-            // Do nothing, token is verified
-          } else {
-            dispatch(setLoading(false));
-            dispatch(LogoutUser()); // Assuming you have a LogoutUser action
-          }
-        } 
-        else if(!token) {
+            if (response.verified) {
+              dispatch(setLoading(false));
+              // Do nothing, token is verified
+            } else {
+              dispatch(setLoading(false));
+              dispatch(LogoutUser()); // Assuming you have a LogoutUser action
+            }
+          })
+            .catch((error) => {
+              console.log("Error in Auth:", error);
+              dispatch(setLoading(false));
+              dispatch(LogoutUser());
+            })
+
+        }
+        else if (!token) {
           dispatch(LogoutUser)
           console.log('TOKEN IS NOT PRESENT!');
-        }   
+        }
         else {
           console.log("Already logged in");
         }
