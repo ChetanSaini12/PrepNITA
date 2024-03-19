@@ -124,28 +124,28 @@ function Home() {
       </div>
 
       <div className="main-cards">
-        <div className='text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2'>
+        <div className='text-white bg-gradient-to-r from from-indigo-500  via-purple-500 to-pink-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2'>
           <div className="card-inner">
             <h3>TOPICS</h3>
             <BsFillArchiveFill className="card_icon" />
           </div>
           <h1>300</h1>
         </div>
-        <div className="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+        <div className="text-white bg-gradient-to-r from from-indigo-500  via-purple-500 to-pink-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
           <div className="card-inner">
             <h3>DOMAINS</h3>
             <BsFillGrid3X3GapFill className="card_icon" />
           </div>
           <h1>12</h1>
         </div>
-        <div className="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+        <div className="text-white bg-gradient-to-r from from-indigo-500  via-purple-500 to-pink-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
           <div className="card-inner">
             <h3>INSTITUTE RANK</h3>
             <BsPeopleFill className="card_icon" />
           </div>
           <h1>33</h1>
         </div>
-        <div className="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+        <div className="text-white bg-gradient-to-r from from-indigo-500  via-purple-500 to-pink-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
           <div className="card-inner">
             <h3>OVERALL RATING</h3>
             <BsFillBellFill className="card_icon" />
