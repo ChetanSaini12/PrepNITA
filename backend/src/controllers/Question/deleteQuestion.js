@@ -18,7 +18,7 @@ export const deleteQuestion = async (_, payload, context) => {
         where: { id: payload.QuestionId },
       })
       console.log(`DELETED QUESTION WITH ID : ${payload.QuestionId}`)
-      return `DELETED QUESTION WITH TITLE : ${question.title}`
+      return `DELETED QUESTION WITH ID : ${question.id}`
     }
 
     console.log(`FAILED DELETION OF QUESTION WITH ID : ${payload.QuestionId}`)
