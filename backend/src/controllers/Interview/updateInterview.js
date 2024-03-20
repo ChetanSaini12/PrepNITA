@@ -1,28 +1,34 @@
 import { prisma } from '../../../prisma/index.js' 
 import { GraphQLError } from 'graphql'
+import { interviewNameAdd } from './interviewNameHelper.js'
 
 export const updateInterview = async (_, payload, context) => {
     try {
         if(context.userId)
         {
-            const interview = await prisma.interview.findFirst({
+            const exisitngInterview = await prisma.interview.findFirst({
                 where : {
                     id : payload.interviewId
                 }
             })
     
-            if(interview)
+            if(exisitngInterview)
             {
-                if(interview.intervieweeId === context.userId)
+                if(exisitngInterview.intervieweeId === context.userId)
                 {
-                    const interview = await prisma.interview.update({
+                    var interview = await prisma.interview.update({
                         where : {
                             id : payload.interviewId
                         },
                         data : {
                             ...payload
+                        },
+                        include : {
+                            feedback : true
                         }
                     })
+                    interview = interviewNameAdd(interview)
+                    console.log('Updated Interview: ' + JSON.stringify(interview));
                     return interview
                 }
                 else 
