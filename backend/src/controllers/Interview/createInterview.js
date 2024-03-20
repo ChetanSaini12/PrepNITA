@@ -1,17 +1,23 @@
 import { GraphQLError } from 'graphql'
 import { prisma } from '../../../prisma/index.js'
+import { interviewNameAdd } from './interviewNameHelper.js';
 
 export const createInterview = async (_, payload, context) => {
   try {
     if (context.isUser) {
-      const interview = await prisma.interview.create({
+      var interview = await prisma.interview.create({
         data: {
           interviewerId: context.userId,
           startTime: payload.interview.startTime,
           duration: payload.interview.duration,
           topics: payload.interview.topics,
         },
+        include : {
+          feedback : true
+        }
       })
+      interview = interviewNameAdd(interview);
+
       console.log('INTERVIEW CREATED : ', interview)
       return interview
     } else {

@@ -4,9 +4,15 @@ import { GraphQLError } from 'graphql'
 export const giveFeedback = async (_, payload, context) => {
   try {
     if (context.userId) {
-      const feedback = await prisma.feedback.create({
+      const feedback = await prisma.feedback.update({
+        where : { interviewId : payload.interviewId},
         data: {
-          ...payload,
+          communication : payload.communication,
+          dsa : payload.dsa,
+          development : payload.development,
+          csfundamentals : payload.csfundamentals,
+          notes : payload.notes,
+          points : payload.communication + payload.dsa + payload.development + payload.csfundamentals
         },
       })
       return feedback
