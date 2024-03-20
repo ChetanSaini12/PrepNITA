@@ -1,4 +1,4 @@
-export const typedefs = `#graphql
+export const typeDefs = `#graphql
 
     type Interview {
         id : Int
@@ -24,13 +24,13 @@ export const typedefs = `#graphql
         points : Int
     }
 
-    intput InterviewInput {
+    input InterviewInput {
         startTime : DateTime!
         duration : Int!
         topics : [String]
     }
 
-    input feedbackInput {
+    input FeedbackInput {
         interviewId : Int!
         communication : Int!
         development : Int!
