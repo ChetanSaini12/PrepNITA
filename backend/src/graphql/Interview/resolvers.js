@@ -4,6 +4,7 @@ import { deleteInterview } from "../../controllers/Interview/deleteInterview.js"
 import { giveFeedback } from "../../controllers/Interview/giveFeedback.js";
 import { revokeInterview } from "../../controllers/Interview/revokeInterview.js";
 import { updateInterview } from "../../controllers/Interview/updateInterview.js";
+import { checkRole } from "../../middlewares/checkRole.js";
 
 const queries = {}
 
