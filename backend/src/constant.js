@@ -1,6 +1,6 @@
 /*
-manager token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzEwNDQ1ODQ3LCJleHAiOjE3MTkwODU4NDd9.c2yK8FP-25sqQ6jfqSpBEFqFZWI96_IQ7aFUrbmM1XM
-rinomes238@cmheia.com -> password : 1 
+manager token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzExMDQxMTEwLCJleHAiOjE3MTk2ODExMTB9.RqwJQznaMJn8JA1Ym2zTtfQeXvxLQ4OhkmEiWcxa6Ws
+yavok55164@glaslack.com -> password : 1 
 
 admin token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiaWF0IjoxNzA3ODU4MTI0LCJleHAiOjE3MTY0OTgxMjR9.7675Ma9ZCzCHgBzOZWHMwMnp9Z4noj2eRfgoDhrONJY
 admin1 -> adminpassword : 9

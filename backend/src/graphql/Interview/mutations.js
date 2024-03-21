@@ -9,5 +9,5 @@ export const mutations = `#graphql
 
     giveFeedback(Feedback : FeedbackInput) : Feedback
 
-    revokeInterview(interviewId : Int!) : Interview
+    revokeInterview(Interview : InterviewInput) : Interview
 `
