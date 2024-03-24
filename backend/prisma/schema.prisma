@@ -142,9 +142,9 @@ model Article {
 
 model Interview {
   id                        Int                   @id @unique @default(autoincrement())
-  interviewer               UserContribution      @relation(fields: [interviewerId], references: [id], map: "interviewer_user_contribution_fk")
+  interviewer               UserContribution?      @relation(fields: [interviewerId], references: [id], map: "interviewer_user_contribution_fk")
   interviewee               UserTraining          @relation(fields: [intervieweeId], references: [id], map: "interviewee_user_contribution_fk")
-  interviewerId             Int
+  interviewerId             Int?
   intervieweeId             Int
   startTime                 DateTime
   duration                  Int 
