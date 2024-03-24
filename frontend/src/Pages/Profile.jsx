@@ -12,6 +12,7 @@ import animationData from '../../src/lotties/startup.json';
 import { useQuery } from '@apollo/client';
 import { client } from '../index';
 import { GET_USER_STATUS } from '../gqlOperatons/queries';
+import { VerifyToken } from '../utils/verifyToken';
 
 export const Profile = () => {
   const navigate = useNavigate();
@@ -31,14 +32,16 @@ export const Profile = () => {
 
 
   useEffect(() => {
-    client.query({
-      query: GET_USER_STATUS,
-    }).then((data) => {
+    dispatch(setLoading(true));
+   VerifyToken(dispatch).then((data) => {
       console.log("userdata in profile", data);
-      if (data.data)
-        setUserData(data.data.getMe.userInformation);
+      if (data.verified){
+        setUserData(data.userInformation);
       dispatch(setLoading(false));
-      setReady(true);
+      setReady(true);}
+      else{
+        ;
+      }
     }).catch((error) => {
       console.log("Error in profile:", error);
       dispatch(setLoading(false));
