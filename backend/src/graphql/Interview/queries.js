@@ -1,1 +1,2 @@
-export const queries = `#graphql`
+export const queries = `#graphql
+`
