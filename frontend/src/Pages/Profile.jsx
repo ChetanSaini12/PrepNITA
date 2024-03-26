@@ -48,6 +48,8 @@ export const Profile = () => {
       setReady(true);
     });
 
+    console.log(Date.now().time);
+
 
   }, []);
 
