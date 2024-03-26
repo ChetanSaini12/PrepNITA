@@ -6,7 +6,8 @@ import { client } from '../index';
 //   const dispatch = useDispatch();
 
 export const VerifyToken = async (dispatch) => {
-    const response = { verified: false };
+    const response = { verified: false ,userInformation:{},authentication:{} };
+    console.log("Enter in verifyToken");
 
     if (localStorage.getItem("token")) {
         try {
@@ -19,11 +20,12 @@ export const VerifyToken = async (dispatch) => {
             const { data, errors } = result;
 
             if (errors) {
-                console.log("Error in verifyToken:", errors);
+                console.log("Error in verifyToken 1:", errors);
                 dispatch(setLoading(false));
                 response.verified = false;
             } else if (data) {
-                console.log("Data from verifyToken:", data);
+                console.log("Data from verifyToken * :", data);
+                  
                 dispatch(LoginUser({
                     id: data.getMe.id,
                     username: data.getMe.userInformation.username,
@@ -33,6 +35,8 @@ export const VerifyToken = async (dispatch) => {
                 }));
                 dispatch(setLoading(false));
                 response.verified = true;
+                response.userInformation = data.getMe.userInformation;
+                response.authentication = data.getMe.authentication;
             }
             else {
                 console.log("waiting at verifyToken ");
@@ -41,14 +45,14 @@ export const VerifyToken = async (dispatch) => {
         } catch (error) {
             console.log("Error in verifyToken try catch :", error.message);
             dispatch(setLoading(false));
-            dispatch(LogoutUser());
-            response.verified = false;
+            // dispatch(LogoutUser());
+            // response.verified = false;
         }
     }
     else {
         dispatch(setLoading(false));
         dispatch(LogoutUser());
-        console.log("token not present at verifyToken ");
+        console.log("token not present at verifyToken 2 ");
     }
 
     return response;

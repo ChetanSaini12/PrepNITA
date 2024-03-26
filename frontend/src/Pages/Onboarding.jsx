@@ -57,7 +57,7 @@ function Onboarding() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(setLoading(false));
+    dispatch(setLoading(true));
     const { name, username, mobileNum, gender, collegeId, graduationYear, cgpa, college,
       department, course, state, hosteler } = formData;
 

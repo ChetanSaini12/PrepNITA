@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,158 +8,157 @@ datasource db {
 }
 
 model User {
-  id                         Int                 @id @unique @default(autoincrement())
-  userInformation            UserInformation?     
-  authentication             Authentication?
-  userContribution           UserContribution?
-  userTraining               UserTraining?
+  id               Int               @id @unique @default(autoincrement())
+  authentication   Authentication?
+  userContribution UserContribution?
+  userInformation  UserInformation?
+  userTraining     UserTraining?
 }
 
-
 model UserInformation {
-  id                        Int                  @id @unique @default(autoincrement())
-  informationUser           User?                 @relation(fields: [userId], references: [id], map: "user_information_user_fk")
-  userId                    Int                  @unique 
-  email                     String               @unique
-  username                  String?              @unique
-  name                      String?
-  password                  String
-  mobileNum                 String?
-  role                      Roles                @default(USER)
-  profilePic                String?
-  gender                    Gender?
-  collegeId                 String?
-  graduationYear            Int?
-  cgpa                      Float?
-  college                   String?
-  department                Department?
-  course                    Course?
-  state                     String?
-  hosteler                  Boolean?
-  leetcodeProfile           String?
-  codeforcesProfile         String?
-  linkedinProfile           String?
-  githubProfile             String?  
+  id                Int         @id @unique @default(autoincrement())
+  userId            Int         @unique
+  email             String      @unique
+  username          String?     @unique
+  name              String?
+  password          String
+  mobileNum         String?
+  role              Roles       @default(USER)
+  profilePic        String?
+  gender            Gender?
+  collegeId         String?
+  graduationYear    Int?
+  cgpa              Float?
+  college           String?
+  department        Department?
+  course            Course?
+  state             String?
+  hosteler          Boolean?
+  leetcodeProfile   String?
+  codeforcesProfile String?
+  linkedinProfile   String?
+  githubProfile     String?
+  informationUser   User        @relation(fields: [userId], references: [id], map: "user_information_user_fk")
 }
 
 model Authentication {
-  id                        Int                  @id @unique @default(autoincrement())
-  authenticationUser        User?                 @relation(fields: [userId], references: [id], map: "authentication_user_fk")
-  userId                    Int                  @unique
-  otpForEmail               String?
-  otpEmailExpiry            DateTime?
-  otpForExtra               String?
-  otpExtraExpiry            DateTime?
-  isVerified                Boolean              @default(false)
-  isBoarded                 Boolean              @default(false)
+  id                 Int       @id @unique @default(autoincrement())
+  userId             Int       @unique
+  otpForEmail        String?
+  otpEmailExpiry     DateTime?
+  otpForExtra        String?
+  otpExtraExpiry     DateTime?
+  isVerified         Boolean   @default(false)
+  isBoarded          Boolean   @default(false)
+  authenticationUser User      @relation(fields: [userId], references: [id], map: "authentication_user_fk")
 }
 
 model UserContribution {
-  id                        Int                  @id @unique @default(autoincrement())
-  contributionUser          User?                 @relation(fields: [userId], references: [id], map: "user_contribution_user_fk")
-  userId                    Int                  @unique
-  interview                 Interview[]
-  questions                 Question[]
-  quizes                    Quiz[]
-  articles                  Article[]
-  contributionPoints        Int                   @default(0)
+  id                 Int         @id @unique @default(autoincrement())
+  userId             Int         @unique
+  contributionPoints Int         @default(0)
+  articles           Article[]
+  interview          Interview[]
+  questions          Question[]
+  quizes             Quiz?
+  contributionUser   User        @relation(fields: [userId], references: [id], map: "user_contribution_user_fk")
 }
 
 model UserTraining {
-  id                        Int                   @id @unique @default(autoincrement())
-  trainingUser              User?                  @relation(fields: [userId], references: [id], map: "user_training_user_fk")
-  userId                    Int                   @unique
-  interview                 Interview[]
-  quizesAttended            QuizAttendance[]
-  trainingPoints            Int                   @default(0)
+  id             Int              @id @unique @default(autoincrement())
+  userId         Int              @unique
+  trainingPoints Int              @default(0)
+  interview      Interview[]
+  quizesAttended QuizAttendance[]
+  trainingUser   User             @relation(fields: [userId], references: [id], map: "user_training_user_fk")
 }
 
 model Question {
-  id                        Int                   @id @unique @default(autoincrement())
-  description               String
-  answer                    String?
-  creator                   UserContribution      @relation(fields: [createdBy], references: [id], map: "question_user_contribution_fk")
-  createdBy                 Int
-  tags                      String[]
-  links                     QueAddOnLink[]
-  isApproved                Boolean               @default(false)
-  isVisibile                Boolean               @default(false)
-  upvotes                   Int                   @default(0)
-  downvotes                 Int                   @default(0)
+  id          Int              @id @unique @default(autoincrement())
+  description String
+  answer      String?
+  createdBy   Int
+  tags        String[]
+  isApproved  Boolean          @default(false)
+  isVisibile  Boolean          @default(false)
+  upvotes     Int              @default(0)
+  downvotes   Int              @default(0)
+  links       QueAddOnLink[]
+  creator     UserContribution @relation(fields: [createdBy], references: [id], map: "question_user_contribution_fk")
 }
 
 model QueAddOnLink {
-  id                        Int                   @id @unique @default(autoincrement())
-  question                  Question              @relation(fields: [questionId], references: [id], map: "question_add_onlink_fk")
-  questionId                Int
-  title                     String
-  url                       String
+  id         Int      @id @unique @default(autoincrement())
+  questionId Int
+  title      String
+  url        String
+  question   Question @relation(fields: [questionId], references: [id], map: "question_add_onlink_fk")
 }
 
 model Quiz {
-  id                        Int                   @id @unique @default(autoincrement())
-  creator                   UserContribution      @relation(fields: [createdBy], references: [id], map: "quiz_user_contribution_fk")
-  createdBy                 Int                   @unique
-  title                     String
-  description               String?
-  questions                 QuizQuestion[] 
-  startTime                 DateTime
-  endTime                   DateTime
-  isVisibile                Boolean               @default(false)
-  attendees                 QuizAttendance[]
+  id          Int              @id @unique @default(autoincrement())
+  createdBy   Int              @unique
+  title       String
+  description String?
+  startTime   DateTime
+  endTime     DateTime
+  isVisibile  Boolean          @default(false)
+  creator     UserContribution @relation(fields: [createdBy], references: [id], map: "quiz_user_contribution_fk")
+  attendees   QuizAttendance[]
+  questions   QuizQuestion[]
 }
 
 model QuizAttendance {
-  id                        Int                   @id @unique @default(autoincrement())
-  quiz                      Quiz                  @relation(fields: [quizId], references: [id], map: "quiz_qttendence_quiz_fk")
-  quizId                    Int
-  attendee                  UserTraining          @relation(fields: [userId], references: [id], map: "quiz_attendence_traingin_fk")
-  userId                    Int
-  score                     Int
+  id       Int          @id @unique @default(autoincrement())
+  quizId   Int
+  userId   Int
+  score    Int
+  attendee UserTraining @relation(fields: [userId], references: [id], map: "quiz_attendence_traingin_fk")
+  quiz     Quiz         @relation(fields: [quizId], references: [id], map: "quiz_qttendence_quiz_fk")
 }
 
 model QuizQuestion {
-  id                        Int                   @id @unique @default(autoincrement())
-  quiz                      Quiz                  @relation(fields: [quizId], references: [id], map: "quiz_question_quiz_fk")
-  quizId                    Int
-  description               String
-  options                   String[]
-  correctOption             Int  
+  id            Int      @id @unique @default(autoincrement())
+  quizId        Int
+  description   String
+  options       String[]
+  correctOption Int
+  quiz          Quiz     @relation(fields: [quizId], references: [id], map: "quiz_question_quiz_fk")
 }
 
 model Article {
-  id                        Int                   @id @unique @default(autoincrement())
-  creator                   UserContribution      @relation(fields: [createdBy], references: [id], map: "article_user_fk")
-  createdBy                 Int
-  title                     String
-  description               String
-  isApproved                Boolean               @default(false)
-  isVisibile                Boolean               @default(false)
+  id          Int              @id @unique @default(autoincrement())
+  createdBy   Int
+  title       String
+  description String
+  isApproved  Boolean          @default(false)
+  isVisibile  Boolean          @default(false)
+  creator     UserContribution @relation(fields: [createdBy], references: [id], map: "article_user_fk")
 }
 
 model Interview {
-  id                        Int                   @id @unique @default(autoincrement())
-  interviewer               UserContribution?      @relation(fields: [interviewerId], references: [id], map: "interviewer_user_contribution_fk")
-  interviewee               UserTraining          @relation(fields: [intervieweeId], references: [id], map: "interviewee_user_contribution_fk")
-  interviewerId             Int?
-  intervieweeId             Int
-  startTime                 DateTime
-  duration                  Int 
-  topics                    String[]
-  isCompleted               Boolean               @default(false)
-  feedback                  Feedback?
+  id            Int               @id @unique @default(autoincrement())
+  interviewerId Int?
+  intervieweeId Int
+  startTime     DateTime
+  duration      Int
+  topics        String[]
+  isCompleted   Boolean           @default(false)
+  feedback      Feedback?
+  interviewee   UserTraining      @relation(fields: [intervieweeId], references: [id], map: "interviewee_user_contribution_fk")
+  interviewer   UserContribution? @relation(fields: [interviewerId], references: [id], map: "interviewer_user_contribution_fk")
 }
 
 model Feedback {
-  id                        Int                   @id @unique @default(autoincrement())
-  interview                 Interview             @relation(fields: [interviewId], references: [id], map: "feedback_interview_fk")
-  interviewId               Int                   @unique
-  communication             Int                   @default(0)
-  development               Int                   @default(0)
-  dsa                       Int                   @default(0)
-  csfundamentals            Int                   @default(0)
-  notes                     String[]
-  points                    Int                   @default(0)
+  id             Int       @id @unique @default(autoincrement())
+  interviewId    Int       @unique
+  communication  Int       @default(0)
+  development    Int       @default(0)
+  dsa            Int       @default(0)
+  csfundamentals Int       @default(0)
+  notes          String[]
+  points         Int       @default(0)
+  interview      Interview @relation(fields: [interviewId], references: [id], map: "feedback_interview_fk")
 }
 
 enum Roles {

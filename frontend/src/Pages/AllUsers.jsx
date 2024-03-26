@@ -313,7 +313,7 @@ function AllUsers() {
       <div className="bg-primary-color text-text-color p-default-padding">AllUsers</div>
       {data && (
         <>
-          {data.getAllUser.map((user) => (
+          {data.getAllUser?.map((user) => (
             <div key={user.id} className="bg-secondary-color text-text-color p-default-padding my-medium-spacing rounded border border-element-color">
               <div className="mb-small-spacing">USERNAME : {user.username}</div>
               <div className="mb-small-spacing">FIRSTNAME : {user.firstName}</div>
@@ -324,8 +324,8 @@ function AllUsers() {
           ))}
         </>
       )}
-      {queryLoading && <div className="text-text-color">Loading...</div>}
-      {queryError && <div className="text-text-color">{queryError.message}</div>}
+      {/* {queryLoading && <div className="text-text-color">Loading...</div>}
+      {queryError && <div className="text-text-color">{queryError.message}</div>} */}
     </>
   );
 }

@@ -135,9 +135,9 @@ function SignUp() {
         const { id, username, role } = user.data.registerUser.user;
         console.log("User not onboarded! Please onboard your account");
         localStorage.setItem("token", user.data.registerUser.token);
-        dispatch(LoginUser({
-          id, email, username, role
-        }));
+        // dispatch(LoginUser({
+        //   id, email, username, role
+        // }));
         // localStorage.se
         dispatch(setLoading(false));
         return navigate('/onboarding');
@@ -148,7 +148,7 @@ function SignUp() {
         const { token } = user.data.registerUser;
 
         dispatch(LoginUser({
-          id, email, username, role
+        id, email, username, role
         }));
         localStorage.setItem("token", token);
         dispatch(setLoading(false));

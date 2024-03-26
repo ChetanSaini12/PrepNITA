@@ -13,6 +13,10 @@ export const GET_USER_STATUS = gql`
                 role
                 profilePic
             }
+            authentication{
+                isVerified
+                isBoarded   
+            }
         }
     }
 `;
