@@ -1,5 +1,32 @@
 import { gql } from '@apollo/client';
 
+
+export const GET_INTERVIEW = gql`
+    mutation getInterview{
+        getInterview{
+            id
+            intervieweeId
+            interviewerId
+            startTime
+            duration
+            topics
+            isCompleted
+            intervieweeName
+            interviewerName
+            feedback {
+                id
+                interviewId
+                communication
+                development
+                dsa
+                csfundamentals
+                notes
+                points
+            }
+        }
+    }
+`;
+
 export const CREATE_INTERVIEW = gql`
     mutation createInterviewMutation($Interview: InterviewInput!) {
         createInterview(Interview: $Interview) {
