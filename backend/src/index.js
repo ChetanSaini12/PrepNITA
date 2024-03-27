@@ -6,7 +6,7 @@ app.listen(process.env.PORT, () => {
   console.log(`Server running on port ${process.env.PORT}`)
 })
 
-console.log("moment",moment());
+console.log("moment",JSON.stringify(moment()));
 
 // connectDB()
 //   .then(() => {
