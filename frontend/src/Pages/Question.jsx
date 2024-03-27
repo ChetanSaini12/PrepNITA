@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 import { GET_TEMP_QUE } from '../gqlOperatons/Question/queries';
 import { CHANGE_APPROVE_STATUS_OF_QUE, DOWN_VOTE_QUESTION, GET_ALL_QUESTIONS, UP_VOTE_QUESTION } from '../gqlOperatons/Question/mutations';
-import { Button } from 'flowbite-react';
+import { Button, Table, TableRow } from 'flowbite-react';
 import { Loader } from '../Pages/Loader';
 import { toast } from 'react-hot-toast';
+import { Link } from 'react-router-dom';
+import {FaCheck, FaTimes} from 'react-icons/fa'
 
 
 const Question = () => {
@@ -78,6 +80,7 @@ const Question = () => {
         setLoading(true);
         getQuestions().then((res) => {
             console.log("res from getQuestions ", res);
+            
             setData(res.data.getQuestions)
             setLoading(false);
             // setData(res.data);
@@ -98,42 +101,98 @@ const Question = () => {
 
 
     return (
-        <div className=' w-screen h-screen border-spacing-0 text-white' >
+        <div className='table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500' >
             {loading && <Loader />}
-            <h1 className='text-4xl mb-4'> QUESTIONS PAGE </h1>
             {data && (
                 <>
+                    <Table hoverable className='shadow-md'>
+                    <Table.Head>
+                        <Table.HeadCell>Question ID</Table.HeadCell>
+                        <Table.HeadCell>Title</Table.HeadCell>
+                        <Table.HeadCell>Description</Table.HeadCell>
+                        <Table.HeadCell>Answer</Table.HeadCell>
+                        <Table.HeadCell>Upvotes</Table.HeadCell>
+                        <Table.HeadCell>Downvotes</Table.HeadCell>
+                        <Table.HeadCell>Author</Table.HeadCell>
+                        <Table.HeadCell>Approved</Table.HeadCell>
+                        <Table.HeadCell>
+                        <span>Edit</span>
+                        </Table.HeadCell>
+                    </Table.Head>
                     {data.map((question) => (
-                        <div key={question.id}>
-                            <div>TITLE : {question?.links?.title}</div>
-                            <div>QUESTION : {question.description}</div>
-                            <div>ANS : {question.answer}</div>
-                            <div>UpVotes : {question.upvotes}</div>
-                            <div>DownVotes : {question.downvotes}</div>
-                            <div>Approved : {question.isApproved ? "YES" : "NO"}</div>
-                            <div>Author : {question.createdBy}</div>
-                            <Button onClick={() => { setRefresh(!refresh); updateQuestionStatus(question.id) }} gradientDuoTone="purpleToPink" className='mb-2' >
-                                Update status
-                            </Button>
-                            <Button onClick={() => { setRefresh(!refresh); upVoteQuestion(question.id) }} gradientDuoTone="purpleToPink" className='mb-2' >
-                                Upvote
-                            </Button>
-                            <Button onClick={() => { setRefresh(!refresh); downVoteQuestion(question.id) }} gradientDuoTone="purpleToPink" className='mb-2'>
-                                DownVote
-                            </Button>
-                            {/* <Button onClick={()=>{setTempQ(data.tempQueQr)}}  gradientDuoTone="purpleToPink" className='mb-2'>
-                                Get temp questio 
-                            </Button> */}
-                            {/* {
-                                tempQ && (
-                                    <div>
-                                        <h1>Your temp quesiton </h1>
-                                        {tempQ.tempQueQr.question}
-                                    </div>
-                                )
-                            } */}
-                        </div>
+                        <Table.Body className='divide-y' key={question.id}>
+                            <Table.Row className='bg-white dark:border-gray-700 dark:bg-gray-800'>
+                                <Table.Cell>
+                                {question?.id}
+                                </Table.Cell>
+                                <Table.Cell>
+                                    <Link className='font-medium text-gray-900 dark:text-white'>
+                                {question?.links?.title}
+                                    </Link>
+                                </Table.Cell>
+                                <Table.Cell>
+                                <Link className='font-medium text-gray-900 dark:text-white'>
+
+                                {question.description}
+                                </Link>
+                                </Table.Cell>
+                                <Table.Cell>
+                                {question.answer}
+                                </Table.Cell>
+                                <Table.Cell className='text-teal-600'>
+                                {question.upvotes}
+                                </Table.Cell>
+                                <Table.Cell className='text-red-500'>
+                                {question.downvotes}
+                                </Table.Cell>
+                                <Table.Cell>
+                                <Link className='font-medium text-gray-900 dark:text-white'>
+                                {question.createdBy}
+                                </Link>
+                                </Table.Cell>
+                                <Table.Cell>
+                                {question.isApproved ? (<FaCheck className='text-teal-500'></FaCheck>):(<FaTimes className='text-red-500'></FaTimes>)}
+                                </Table.Cell>
+                                <Table.Cell>
+                                <Link
+                                    className='text-teal-500 hover:underline'
+                                >
+                                    <span>Edit</span>
+                                </Link>
+                                </Table.Cell>
+                            </Table.Row>
+                        </Table.Body>
+                        // <div key={question.id}>
+                        //     <div>TITLE : {question?.links?.title}</div>
+                        //     <div>QUESTION : {question.description}</div>
+                        //     <div>ANS : {question.answer}</div>
+                        //     <div>UpVotes : {question.upvotes}</div>
+                        //     <div>DownVotes : {question.downvotes}</div>
+                        //     <div>Approved : {question.isApproved ? "YES" : "NO"}</div>
+                        //     <div>Author : {question.createdBy}</div>
+                        //     <Button onClick={() => { setRefresh(!refresh); updateQuestionStatus(question.id) }} gradientDuoTone="purpleToPink" className='mb-2' >
+                        //         Update status
+                        //     </Button>
+                        //     <Button onClick={() => { setRefresh(!refresh); upVoteQuestion(question.id) }} gradientDuoTone="purpleToPink" className='mb-2' >
+                        //         Upvote
+                        //     </Button>
+                        //     <Button onClick={() => { setRefresh(!refresh); downVoteQuestion(question.id) }} gradientDuoTone="purpleToPink" className='mb-2'>
+                        //         DownVote
+                        //     </Button>
+                        //     {/* <Button onClick={()=>{setTempQ(data.tempQueQr)}}  gradientDuoTone="purpleToPink" className='mb-2'>
+                        //         Get temp questio 
+                        //     </Button> */}
+                        //     {/* {
+                        //         tempQ && (
+                        //             <div>
+                        //                 <h1>Your temp quesiton </h1>
+                        //                 {tempQ.tempQueQr.question}
+                        //             </div>
+                        //         )
+                        //     } */}
+                        // </div>
                     ))}
+                    </Table>
                 </>
             )}
 
