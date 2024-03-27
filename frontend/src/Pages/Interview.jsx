@@ -46,9 +46,9 @@ function Interviews() {
 
   useEffect(() => {
     // console.log(loggedIn);
-    getInterviews().then((data) => {
-      console.log("Interviews data ", data);
-      setInterviews(data.data.getInterview);
+    getInterviews().then((res) => {
+      console.log("Interviews data ", res);
+      setInterviews(res.data.getInterview);
     })
       .catch((error) => {
         console.log("Error in getting interviews ", error);
@@ -98,44 +98,45 @@ function Interviews() {
   // console.log("data ", data);
   if (Error) {
     toast.error(Error);
-    // setTimeout(() => {
-    setError(null);
-    setdata(null);
+    setTimeout(() => {
+      setError(null);
+      setdata(null);
 
-    // }, 2000);
+    }, 2000);
     // setRefresh(!refresh);
   }
   else if (data) {
     toast.success("Interview created successfully");
-    // setTimeout(() => {
-    setdata(null);
-    setError(null);
-    // }, 20000);
+    setTimeout(() => {
+      setdata(null);
+      setError(null);
+    }, 2000);
     // setRefresh(!refresh);
   }
 
   return (
-    <div className=' w-screen h-screen border-spacing-0'>
+    <div className=' w-screen min-h-screen border-spacing-0'>
       {/* <SidebarComponent></SidebarComponent> */}
-      <div className='my-5'>
+      <div className='my-5 ml-2'>
         <form onSubmit={handleSubmit}>
-          <TextInput type='number' placeholder='Duration' value={Duration}
+          <TextInput type='number' placeholder='Duration' value={Duration} className='text-white'
+
             required onChange={(e) => { setDuration(parseInt(e.target.value)) }}
           ></TextInput>
-          <TextInput placeholder='Topics (format :cs fundamentals, os , ...)' value={Topics}
+          <TextInput placeholder='Topics (format :cs fundamentals, os , ...)' value={Topics} className='my-3'
             onChange={(e) => { setTopics(e.target.value) }}
           ></TextInput>
           <DateTimePicker setDateTime={setDateTime} />
-          <Button type='submit'>Create</Button>
+          <Button type='submit' className='my-3'>Create</Button>
         </form>
       </div>
 
       <div>
         <h1 className='text-5xl'>Your Interviews</h1>
-        <div className='flex gap-5 flex-wrap'>
+        <div className=' my-3 flex gap-5 flex-wrap bg-slate-600 '>
           {interviews?.map((interview) => {
             return (
-              <div className='border-2 border-black p-3'>
+              <div className='border-2 border-black p-3 m-3'>
                 <h1>Interviewee : {interview.intervieweeName}</h1>
                 <h1>Interviewer : {interview.interviewerName}</h1>
                 <h1>Start Time : {moment(interview.startTime).format('MMMM Do YYYY, h:mm:ss a')}</h1>

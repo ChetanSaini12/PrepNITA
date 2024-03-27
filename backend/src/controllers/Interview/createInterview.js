@@ -18,9 +18,9 @@ export const createInterview = async (_, payload, context) => {
           feedback: true,
         },
       })
-      interview = interviewNameAdd(interview)
+      interview = await interviewNameAdd(interview)
 
-      console.log('INTERVIEW CREATED : ', interview)
+      console.log('INTERVIEW CREATED : ', JSON.stringify(interview));
       return interview
     } else {
       throw new GraphQLError('User is not authorized!!', {
