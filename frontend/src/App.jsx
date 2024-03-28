@@ -15,6 +15,9 @@ import Question from "./Pages/Question";
 import CreateQuestion from './Pages/CreateQuestion.jsx';
 import DisplayUsers from "./Pages/DisplayUsers.jsx";
 import Onboarding from "./Pages/Onboarding";
+import Interview from "./Pages/Interview.jsx";
+import InterviewDetail from "./Pages/InterviewDetail.jsx";
+import PageNotFound from "./Pages/404Page.jsx";
 
 
 function App() {
@@ -35,6 +38,10 @@ function App() {
         <Route path="/create_question" element={<CreateQuestion/>}></Route>
         <Route path="/students" element={<AllUsers/>}></Route>
         <Route path="/onBoarding" element={<Onboarding/>}></Route>
+        <Route path="/interview" element={<Interview/>}></Route>
+        <Route path="/interview_detail" element={<InterviewDetail/>}></Route>
+        <Route path="/*" element={<PageNotFound/>}></Route>
+
       </Routes>
       <FooterCom></FooterCom>
     </BrowserRouter>

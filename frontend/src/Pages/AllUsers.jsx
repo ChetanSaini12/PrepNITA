@@ -146,7 +146,7 @@ function AllUsers() {
   return (
     <>
       {loading && <Loader />}
-      < div className="flex h-screen items-center flex-col" >
+      < div className="flex min-h-screen items-center flex-col" >
         <div className="mb-5">
           Search Bar
           <form className="flex gap-2 " onSubmit={handleSubmitSearch}   >
