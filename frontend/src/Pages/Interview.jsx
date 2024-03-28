@@ -7,7 +7,7 @@ import { CREATE_INTERVIEW, GET_INTERVIEW } from '../gqlOperatons/Interview/mutat
 import toast from 'react-hot-toast';
 import { useMutation } from '@apollo/client';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Loader } from './Loader';
 import { setLoading } from '../app/user/userSlice';
 
@@ -136,14 +136,16 @@ function Interviews() {
         <div className=' my-3 flex gap-5 flex-wrap bg-slate-600 '>
           {interviews?.map((interview) => {
             return (
-              <div className='border-2 border-black p-3 m-3'>
-                <h1>Interviewee : {interview.intervieweeName}</h1>
-                <h1>Interviewer : {interview.interviewerName}</h1>
-                <h1>Start Time : {moment(interview.startTime).format('MMMM Do YYYY, h:mm:ss a')}</h1>
-                <h1>Duration : {interview.duration}</h1>
-                <h1>Topics : {interview.topics?.join(', ')}</h1>
-                <h1>Feedback : {interview.feedback ? "Given" : "Not Given"}</h1>
-              </div>
+              <Link >
+                <div className='border-2 border-black p-3 m-3'>
+                  <h1>Interviewee : {interview.intervieweeName}</h1>
+                  <h1>Interviewer : {interview.interviewerName}</h1>
+                  <h1>Start Time : {moment(interview.startTime).format('MMMM Do YYYY, h:mm:ss a')}</h1>
+                  <h1>Duration : {interview.duration}</h1>
+                  <h1>Topics : {interview.topics?.join(' , ')}</h1>
+                  <h1>Feedback : {interview.feedback ? "Given" : "Not Given"}</h1>
+                </div>
+              </Link>
             )
           })}
         </div>
