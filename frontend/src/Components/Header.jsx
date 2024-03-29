@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { toggleTheme } from '../app/theme/themSlice'
 import Lottie from 'react-lottie';
 import animationData from '../../src/lotties/startup.json';
-import { LogoutUser} from '../app/user/userSlice'
+import { LogoutUser, setLoading} from '../app/user/userSlice'
 
 
 function Header() {
@@ -18,6 +18,7 @@ function Header() {
 
     const logoutHandler = () => {
         dispatch(LogoutUser());
+        dispatch(setLoading(false));
         return navigate('/register');
     };
     const defaultOptions = {
