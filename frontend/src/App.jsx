@@ -11,13 +11,14 @@ import FooterCom from "./Components/Footer";
 import AllUsers from "./Pages/AllUsers";
 import Interviews from "./Pages/Interview";
 import { Profile } from "./Pages/Profile";
-import Question from "./Pages/Question";
-import CreateQuestion from './Pages/CreateQuestion.jsx';
+import Question from "./Pages/Questions/Question.jsx";
+import CreateQuestion from './Pages/Questions/CreateQuestion.jsx';
 import DisplayUsers from "./Pages/DisplayUsers.jsx";
 import Onboarding from "./Pages/Onboarding";
 import Interview from "./Pages/Interview.jsx";
 import InterviewDetail from "./Pages/InterviewDetail.jsx";
 import PageNotFound from "./Pages/404Page.jsx";
+import QuestionById from "./Pages/Questions/QuestionById.jsx";
 
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
         <Route path="/interview" element={<Interviews />}></Route>
         <Route path="/profile" element={<Profile />}></Route>
         <Route path="/questions" element={<Question/>}></Route>
+        <Route path="/questions/:id" element={<QuestionById/>}></Route>
         <Route path="/create_question" element={<CreateQuestion/>}></Route>
         <Route path="/students" element={<AllUsers/>}></Route>
         <Route path="/onBoarding" element={<Onboarding/>}></Route>
