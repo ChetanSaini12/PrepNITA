@@ -93,6 +93,7 @@ export const Profile = () => {
           toast.success("User Updated");
           dispatch(setLoading(false));
           setEditMode(false);
+          setUserData(res.data.updateUserProfile.userInformation);
         }
       })
         .catch(err => {
