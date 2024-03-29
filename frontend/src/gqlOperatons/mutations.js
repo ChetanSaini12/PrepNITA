@@ -96,4 +96,18 @@ mutation getAllUserMuatation($user:UserInputOptional){
         }
   }
 `
+export const UPDATE_USER = gql`
+mutation updateUserMutation($user:UserInputOptional){
+  updateUserProfile(user:$user){
+    userInformation{
+      name
+      username
+      email
+      mobileNum
+      role
+    }
+  }
+}
+
+`;
 

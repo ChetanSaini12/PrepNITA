@@ -135,10 +135,9 @@ function SignUp() {
         const { id, username, role } = user.data.registerUser.user;
         console.log("User not onboarded! Please onboard your account");
         localStorage.setItem("token", user.data.registerUser.token);
-        // dispatch(LoginUser({
-        //   id, email, username, role
-        // }));
-        // localStorage.se
+        dispatch(LoginUser({
+          id, email, username, role
+        }));
         dispatch(setLoading(false));
         return navigate('/onboarding');
       }
@@ -365,11 +364,6 @@ function SignUp() {
               {/* </Link> */}
             </button>
           </div>
-          {error && (
-            <Alert className="mt-5" color="failure">
-              {error}
-            </Alert>
-          )}
         </div>
       </div>
     </div>
