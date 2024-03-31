@@ -110,7 +110,7 @@ const QuestionById = () => {
         </div>
         <div className="text-gray-700 mb-4">
           {/* <h1 className='text-2xl font-bold'>{question.links?question.links[0].title:"TITLE not available"}</h1> */}
-          <p>{question.description}</p>
+          <p className='text-2xl font-semibold'>{question.description}</p>
         </div>
         <div className="text-gray-700 mb-4">
           <strong>Tags:</strong> {question.tags?.map(tag => (

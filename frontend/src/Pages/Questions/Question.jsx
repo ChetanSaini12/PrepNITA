@@ -116,17 +116,16 @@ const Question = () => {
                             <Table.HeadCell>Author</Table.HeadCell>
                             <Table.HeadCell>Approved</Table.HeadCell>
                             <Table.HeadCell>
-                                <span>Edit</span>
+                                <span>Question Link</span>
                             </Table.HeadCell>
                         </Table.Head>
                         {data.map((question) => (
                             <Table.Body className='divide-y' key={question.id}>
                                 <Table.Row className='bg-white dark:border-gray-700 dark:bg-gray-800'>
-                                    <Link to={`/questions/${question?.id}`}>
                                         <Table.Cell>
                                             {question?.id}
                                         </Table.Cell>
-                                    </Link>
+                                    
                                     {/* <Table.Cell>
                                     <Link className='font-medium text-gray-900 dark:text-white'>
                                 {question?.links?.title}
@@ -156,10 +155,8 @@ const Question = () => {
                                         {question.isApproved ? (<FaCheck className='text-teal-500'></FaCheck>) : (<FaTimes className='text-red-500'></FaTimes>)}
                                     </Table.Cell>
                                     <Table.Cell>
-                                        <Link
-                                            className='text-teal-500 hover:underline'
-                                        >
-                                            <span>Edit</span>
+                                    <Link to={`/questions/${question?.id}`}className='text-teal-500 hover:underline'>
+                                            <span>View </span>
                                         </Link>
                                     </Table.Cell>
                                 </Table.Row>

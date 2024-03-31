@@ -101,7 +101,7 @@ const CreateQuestion = () => {
                         </div> */}
 
                         <div id="question_area_section">
-                            <h1 className="text-2xl">Description : </h1>
+                            <h1 className="text-xl mb-1.5 mx-2">Description : </h1>
                             <Textarea
                                 required
                                 placeholder='Description of the question'
@@ -110,7 +110,7 @@ const CreateQuestion = () => {
                             />
                         </div>
                         <div id="question_area_section">
-                            <h1 className="text-2xl">Answer : </h1>
+                            <h1 className="text-xl mb-1.5 mx-2">Answer : </h1>
                             <Textarea
                                 required
                                 placeholder='Answer of the question'
@@ -120,7 +120,7 @@ const CreateQuestion = () => {
                         </div>
 
                         <div id="question_area_section">
-                            <h1 className="text-2xl">Tags : </h1>
+                            <h1 className="text-xl mb-1.5 mx-2">Tags : </h1>
                             <Textarea
                                 placeholder='os,dbms,linus,java'
                                 id="tags"
