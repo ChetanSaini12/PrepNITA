@@ -33,7 +33,7 @@ function App() {
         <Route path="/discuss" element={<Discuss></Discuss>}></Route>
         {/* <Route path="/login" element={<SignIn></SignIn>}></Route> */}
         <Route path="/register" element={<SignUp></SignUp>}></Route>
-        <Route path="/interview" element={<Interviews />}></Route>
+        {/* <Route path="/interview" element={<Interviews />}></Route> */}
         <Route path="/profile" element={<Profile />}></Route>
         <Route path="/questions" element={<Question/>}></Route>
         <Route path="/questions/:id" element={<QuestionById/>}></Route>
@@ -41,7 +41,7 @@ function App() {
         <Route path="/students" element={<AllUsers/>}></Route>
         <Route path="/onBoarding" element={<Onboarding/>}></Route>
         <Route path="/interview" element={<Interview/>}></Route>
-        <Route path="/interview_detail" element={<InterviewDetail/>}></Route>
+        <Route path="/interview/:id" element={<InterviewDetail/>}></Route>
         <Route path="/*" element={<PageNotFound/>}></Route>
 
       </Routes>

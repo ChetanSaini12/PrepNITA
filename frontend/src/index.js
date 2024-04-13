@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
@@ -12,6 +12,8 @@ import { Auth } from "./Components/Auth";
 import ThemeProvider from "./Components/ThemeProvider";
 import toast,{ Toaster } from 'react-hot-toast';
 
+// const [token,setToken]=useState("");
+
 
 // client for graphql
 export const client = new ApolloClient({
@@ -22,7 +24,7 @@ export const client = new ApolloClient({
   },
 });
 
-console.log("CLIENT : ", client);
+// console.log("CLIENT : ", client);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
