@@ -25,9 +25,6 @@ function Interviews() {
   const dispatch = useDispatch();
 
 
-
-
-
   const [createInterview] = useMutation(CREATE_INTERVIEW, {
     onError: (error) => {
       console.log("error in creating interview mutation ", error);
@@ -43,20 +40,23 @@ function Interviews() {
   });
 
 
-
   useEffect(() => {
     // console.log(loggedIn);
+    dispatch(setLoading(true));
     getInterviews().then((res) => {
       console.log("Interviews data ", res);
       setInterviews(res.data.getInterview);
+      dispatch(setLoading(false));
     })
       .catch((error) => {
         console.log("Error in getting interviews ", error);
         setError(error.message);
+        dispatch(setLoading(false));
 
         // setError(error.message);
       });
     // setdata(null);
+
 
   }, [data]);
 
@@ -102,7 +102,7 @@ function Interviews() {
       setError(null);
       setdata(null);
 
-    }, 2000);
+    }, 1000);
     // setRefresh(!refresh);
   }
   else if (data) {
@@ -110,50 +110,59 @@ function Interviews() {
     setTimeout(() => {
       setdata(null);
       setError(null);
-    }, 2000);
+    }, 1000);
     // setRefresh(!refresh);
   }
 
   return (
-    <div className=' w-screen min-h-screen border-spacing-0'>
-      {/* <SidebarComponent></SidebarComponent> */}
-      <div className='my-5 ml-2'>
-        <form onSubmit={handleSubmit}>
-          <TextInput type='number' placeholder='Duration' value={Duration} className='text-white'
-
-            required onChange={(e) => { setDuration(parseInt(e.target.value)) }}
-          ></TextInput>
-          <TextInput placeholder='Topics (format :cs fundamentals, os , ...)' value={Topics} className='my-3'
-            onChange={(e) => { setTopics(e.target.value) }}
-          ></TextInput>
+    <div className="w-screen min-h-screen  text-white flex flex-col items-center justify-center">
+      <div className="max-w-xl w-full bg-gray-800 rounded-lg shadow-lg p-6 mt-5 mb-8">
+        <h1 className="text-3xl font-semibold mb-4">Schedule an Interview</h1>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <TextInput
+            type="number"
+            placeholder="Duration (in minutes)"
+            value={Duration}
+            required
+            onChange={(e) => setDuration(parseInt(e.target.value))}
+            className="block w-full border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-gray-700 text-white"
+          />
+          <TextInput
+            placeholder="Topics (e.g., CS Fundamentals, OS, ...)"
+            value={Topics}
+            onChange={(e) => setTopics(e.target.value)}
+            className="block w-full border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-gray-700 text-white"
+          />
           <DateTimePicker setDateTime={setDateTime} />
-          <Button type='submit' className='my-3'>Create</Button>
+          <Button
+            type="submit"
+            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md transition duration-300"
+          >
+            Create Interview
+          </Button>
         </form>
       </div>
 
-      <div>
-        <h1 className='text-5xl'>Your Interviews</h1>
-        <div className=' my-3 flex gap-5 flex-wrap bg-slate-600 '>
-          {interviews?.map((interview) => {
-            return (
-              <Link >
-                <div className='border-2 border-black p-3 m-3'>
-                  <h1>Interviewee : {interview.intervieweeName}</h1>
-                  <h1>Interviewer : {interview.interviewerName}</h1>
-                  <h1>Start Time : {moment(interview.startTime).format('MMMM Do YYYY, h:mm:ss a')}</h1>
-                  <h1>Duration : {interview.duration}</h1>
-                  <h1>Topics : {interview.topics?.join(' , ')}</h1>
-                  <h1>Feedback : {interview.feedback ? "Given" : "Not Given"}</h1>
-                </div>
-              </Link>
-            )
-          })}
+      <div className="min-w-screen m-2">
+        <h1 className="text-3xl font-semibold mb-4">Your Interviews</h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {interviews?.map((interview, index) => (
+            <Link key={index} to={`/${interview.id}`} className="block">
+              <div className="bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition duration-300">
+                <h1 className="text-lg font-semibold mb-2">Interviewee: {interview.intervieweeName}</h1>
+                <p className="text-sm text-gray-300 mb-1">Interviewer: {interview.interviewerName}</p>
+                <p className="text-sm text-gray-300 mb-1">Start Time: {moment(interview.startTime).format('MMMM Do YYYY, h:mm:ss a')}</p>
+                <p className="text-sm text-gray-300 mb-1">Duration: {interview.duration} minutes</p>
+                <p className="text-sm text-gray-300 mb-1">Topics: {interview.topics?.join(', ')}</p>
+                <p className="text-sm text-gray-300">Feedback: {interview.feedback ? "Given" : "Not Given"}</p>
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
     </div>
-
-
-  )
-}
-
-export default Interviews
+  );
+  }
+  
+  export default Interviews;
+  

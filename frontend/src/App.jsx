@@ -33,7 +33,7 @@ function App() {
         <Route path="/discuss" element={<Discuss></Discuss>}></Route>
         {/* <Route path="/login" element={<SignIn></SignIn>}></Route> */}
         <Route path="/register" element={<SignUp></SignUp>}></Route>
-        <Route path="/interview" element={<Interviews />}></Route>
+        {/* <Route path="/interview" element={<Interviews />}></Route> */}
         <Route path="/profile" element={<Profile />}></Route>
         <Route path="/questions" element={<Question/>}></Route>
         <Route path="/questions/:id" element={<QuestionById/>}></Route>
