@@ -6,12 +6,15 @@ import { revokeInterview } from "../../controllers/Interview/revokeInterview.js"
 import { updateInterview } from "../../controllers/Interview/updateInterview.js";
 import { checkRole } from "../../middlewares/checkRole.js";
 import { getInterview } from "../../controllers/Interview/getInterview.js";
+import { getInterviewById } from "../../controllers/Interview/getInterviewById.js";
 
 const queries = {}
 
 const mutations = {
 
     getInterview : (_, payload, context) => checkRole({_, payload, context}, getInterview),
+
+    getInterviewById : (_, payload, context) => checkRole({_, payload, context}, getInterviewById),
 
     createInterview : (_, payload, context) => checkRole({_, payload, context}, createInterview),
 
