@@ -41,7 +41,7 @@ function App() {
         <Route path="/students" element={<AllUsers/>}></Route>
         <Route path="/onBoarding" element={<Onboarding/>}></Route>
         <Route path="/interview" element={<Interview/>}></Route>
-        <Route path="/interview_detail" element={<InterviewDetail/>}></Route>
+        <Route path="/interview/:id" element={<InterviewDetail/>}></Route>
         <Route path="/*" element={<PageNotFound/>}></Route>
 
       </Routes>

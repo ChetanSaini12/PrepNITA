@@ -113,6 +113,7 @@ function Interviews() {
     }, 1000);
     // setRefresh(!refresh);
   }
+  
 
   return (
     <div className="w-screen min-h-screen  text-white flex flex-col items-center justify-center">
@@ -147,7 +148,7 @@ function Interviews() {
         <h1 className="text-3xl font-semibold mb-4">Your Interviews</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {interviews?.map((interview, index) => (
-            <Link key={index} to={`/${interview.id}`} className="block">
+            <Link key={index} to={`/interview/${interview.id}`} className="block">
               <div className="bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition duration-300">
                 <h1 className="text-lg font-semibold mb-2">Interviewee: {interview.intervieweeName}</h1>
                 <p className="text-sm text-gray-300 mb-1">Interviewer: {interview.interviewerName}</p>
