@@ -7,7 +7,7 @@ import { useMutation } from "@apollo/client";
 import { REGISTER_USER, SEND_VERIFY_EMAIL, VERIFY_EMAIL } from "../gqlOperatons/mutations";
 import { Loader } from "./Loader";
 import { useDispatch, useSelector } from "react-redux";
-import { LoginUser, setLoading } from "../app/user/userSlice";
+import { LoginUser, setLoading, setToken } from "../app/user/userSlice";
 import { VerifyToken } from "../utils/verifyToken";
 import Lottie from 'react-lottie';
 import animationData from '../../src/lotties/startup.json';
@@ -145,7 +145,7 @@ function SignUp() {
 
         const { id, username, role } = user.data.registerUser.user;
         const { token } = user.data.registerUser;
-
+        dispatch(setToken(token));
         dispatch(LoginUser({
         id, email, username, role
         }));

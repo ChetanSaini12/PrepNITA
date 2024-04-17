@@ -1,11 +1,15 @@
 import { LoginUser, LogoutUser, setLoading } from '../app/user/userSlice';
 import { GET_USER_STATUS } from '../gqlOperatons/queries';
-import { client } from '../index';
+import  MyApolloProvider  from '../index';
 
 // export const useVerifyToken = () => {
 //   const dispatch = useDispatch();
 
+
 export const VerifyToken = async (dispatch) => {
+    const client=MyApolloProvider.client;
+    // console.log("client at verifyToken", client)
+
     const response = { verified: false ,userInformation:{},authentication:{} };
     console.log("Enter in verifyToken");
 

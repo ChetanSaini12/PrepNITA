@@ -10,14 +10,16 @@ import OAuth from '../Components/OAuth';
 import Lottie from 'react-lottie';
 import animationData from '../../src/lotties/startup.json';
 import { useMutation, useQuery } from '@apollo/client';
-import { client } from '../index';
+import  MyApolloProvider from '../index';
 import { GET_USER_STATUS, GET_USER_STATUS_WITH_ALL_DETAILS } from '../gqlOperatons/queries';
 import { VerifyToken } from '../utils/verifyToken';
 import { CircularProgressbar } from 'react-circular-progressbar';
 
 import TakeUserDetails from '../Components/TakeUserDetails';
 import { UPDATE_USER } from '../gqlOperatons/mutations';
+
 export const Profile = () => {
+  const client=MyApolloProvider.client;
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const defaultOptions = {
@@ -34,6 +36,7 @@ export const Profile = () => {
   const [editMode, setEditMode] = useState(false);
   const [imageFileUploadProgress, setImageFIleUploadProgress] = useState(0);
   const [userInfo, setUserInfo] = useState(null);
+  const [moreDetails, setMoreDetails] = useState(false);
 
   const [updateUser] = useMutation(UPDATE_USER, {
     onError(error) {
@@ -108,6 +111,7 @@ export const Profile = () => {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   }
+
   const handleEditMode = async () => {
     dispatch(setLoading(true));
     try {
@@ -121,23 +125,37 @@ export const Profile = () => {
     setEditMode(true);
   };
 
+  const handleMoreDetails = (e) => {
+    e.preventDefault();
+    setMoreDetails(!moreDetails);
+  };
+
+
   if (isLoading || ready === false) return <Loader />;
   if (!isLoading && loggedIn === false) navigate('/register');
   if (editMode) {
 
     // const userInfo = await client.query({ query: GET_USER_STATUS_WITH_ALL_DETAILS });
 
-    return (<TakeUserDetails
-      handleChange={handleChange}
-      handleSubmit={handleSubmit}
-      loggedIn={loggedIn}
-      imageFileUploadProgress={imageFileUploadProgress}
-      isLoading={isLoading}
-      profilePic={profilePic}
-      Button_Text="Save"
-      formData={formData}
-      setFormData={setFormData}
-    />
+    return (
+      <div>
+        <div className='flex justify-end mx-10 my-2'>
+        <button className='text-red-700 text-xl  bg-white px-2 py-1 rounded-sm hover:bg-red-300 hover:text-white'
+        onClick={()=>setEditMode(false)}
+        > X </button>
+        </div>
+        <TakeUserDetails
+          handleChange={handleChange}
+          handleSubmit={handleSubmit}
+          loggedIn={loggedIn}
+          imageFileUploadProgress={imageFileUploadProgress}
+          isLoading={isLoading}
+          profilePic={profilePic}
+          Button_Text="Save"
+          formData={formData}
+          setFormData={setFormData}
+        />
+      </div>
     );
     // return "helloo";
   }
@@ -195,8 +213,10 @@ export const Profile = () => {
 
             </form>
 
-
-            <Button className='my-5' onClick={handleEditMode}>Edit</Button>
+            <div className='flex justify-between'>
+              <Button className='my-5' onClick={handleMoreDetails}>{moreDetails ? "See Less " : "See More "}</Button>
+              <Button className='my-5' onClick={handleEditMode}>Edit</Button>
+            </div>
 
           </div>
         </div>
