@@ -146,7 +146,7 @@ const TakeUserDetails = (props) => {
                     ></TextInput>
                 </div>
                 <div>
-                    <Label value="Hostler*"></Label>
+                    <Label value="Hosteller*"></Label>
                     <Select
                         id="hostler"
                         name="hostler"
