@@ -11,7 +11,7 @@ import Lottie from 'react-lottie';
 import animationData from '../../src/lotties/startup.json';
 import { useMutation, useQuery } from '@apollo/client';
 import MyApolloProvider from '../index';
-import { GET_USER_STATUS, GET_USER_STATUS_WITH_ALL_DETAILS } from '../gqlOperatons/queries';
+import { GET_USER_FOR_PROFILE, GET_USER_STATUS, GET_USER_STATUS_WITH_ALL_DETAILS } from '../gqlOperatons/queries';
 import { VerifyToken } from '../utils/verifyToken';
 import { CircularProgressbar } from 'react-circular-progressbar';
 
@@ -36,7 +36,7 @@ export const Profile = () => {
   const [editMode, setEditMode] = useState(false);
   const [imageFileUploadProgress, setImageFIleUploadProgress] = useState(0);
   const [userInfo, setUserInfo] = useState(null);
-  const [moreDetails, setMoreDetails] = useState(false);
+  // const [moreDetails, setMoreDetails] = useState(false);
 
   const [updateUser] = useMutation(UPDATE_USER, {
     onError(error) {
@@ -53,7 +53,15 @@ export const Profile = () => {
     VerifyToken(dispatch).then((data) => {
       console.log("userdata in profile", data);
       if (data.verified) {
-        setUserData(data.userInformation);
+        MyApolloProvider.client.query({ query: GET_USER_FOR_PROFILE }).then((res) => {
+          console.log("User Data in Profile", res);
+          setUserData(res.data.getMe.userInformation);
+          // setFormData(res.data.getMe.userInformation);
+        }).catch((error) => {
+          console.log("error in getting user data at profile page ", error);
+        });
+        // setUserData(data.userInformation);
+
         dispatch(setLoading(false));
         setReady(true);
       }
@@ -125,12 +133,6 @@ export const Profile = () => {
     setEditMode(true);
   };
 
-  const handleMoreDetails = (e) => {
-    e.preventDefault();
-    setMoreDetails(!moreDetails);
-  };
-
-
   if (isLoading || ready === false) return <Loader />;
   if (!isLoading && loggedIn === false) navigate('/register');
   if (editMode) {
@@ -160,145 +162,150 @@ export const Profile = () => {
     // return "helloo";
   }
   else {
-    return (
-
-      // <div className='min-h-screen mt-20 justify-center'>
-         <div className=' flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5 '> 
-        <div className="flex-1 ">
-
-          <img src={userData.profilePic || "https://images.pexels.com/photos/2690774/pexels-photo-2690774.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"} alt="Profile Picture" className={`rounded-full h-48 w-48 object-cover border-8  border-[lightgray] translate-x-56 `} />
-          <form className="flex flex-col gap-4"
-          //  onSubmit={handleSubmit}
-          >
-            <div>
-              <Label value="Your Username"></Label>
-              <TextInput
-                type="string"
-                placeholder="jhon_Doe"
-                id="username"
-                defaultValue={userData.username}
-                readOnly
-              // onChange={handleChange}
-              ></TextInput>
-            </div>
-            <div>
-              <Label value="Your Email"></Label>
-              <TextInput
-                type="email"
-                placeholder="name@company.com"
-                id="email"
-                defaultValue={userData.email}
-                readOnly
-              ></TextInput>
-            </div>
-            <div>
-              <Label value="Name"></Label>
-              <TextInput
-                type="text"
-                placeholder="Name"
-                id="name"
-                defaultValue={userData.name}
-                readOnly
-              ></TextInput>
-            </div>
-            <div>
-              <Label value="Your Contact"></Label>
-              <TextInput
-                type="string"
-                placeholder="+91-XXXXXXXXXX"
-                id="contactNumber"
-                defaultValue={userData.mobileNum}
-                readOnly
-              ></TextInput>
-            </div>
-
-          </form>
-
-          <div className='flex justify-between'>
-            <Button className='my-5' onClick={handleMoreDetails}>{moreDetails ? "See Less " : "See More "}</Button>
-            <Button className='my-5' onClick={handleEditMode}>Edit</Button>
-          </div>
-
-        </div>
-        {/* </div> */}
-        <div>
-
-        </div>
-      </div>
-
-
-    );
-
     // return (
-    //   <div className="flex flex-col justify-center items-center my-4 gap-6">
-    //     <div className='flex justify-center items-center gap-8'>
-    //       <img
-    //         src={userData.profilePic || "https://images.pexels.com/photos/2690774/pexels-photo-2690774.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"}
-    //         alt="Profile Picture"
-    //         className="rounded-full h-40 w-40 object-cover border border-[blue] mx-auto"
-    //       />
-    //       <div className=''>
-    //         <h1 className='text-2xl font-semibold text-blue-500 '>
-    //           {userData.name}
-    //         </h1>
-    //         <h2 className='text-sm   mb-4'>
-    //           {"🆔" + userData.username}
-    //         </h2>
+
+    //   // <div className='min-h-screen mt-20 justify-center'>
+    //      <div className=' flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5 '> 
+    //     <div className="flex-1 ">
+
+    //       <img src={userData.profilePic || "https://images.pexels.com/photos/2690774/pexels-photo-2690774.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"} alt="Profile Picture" className={`rounded-full h-48 w-48 object-cover border-8  border-[lightgray] translate-x-56 `} />
+    //       <form className="flex flex-col gap-4"
+    //       //  onSubmit={handleSubmit}
+    //       >
     //         <div>
-    //           ☏{"  " + userData.mobileNum}
+    //           <Label value="Your Username"></Label>
+    //           <TextInput
+    //             type="string"
+    //             placeholder="jhon_Doe"
+    //             id="username"
+    //             defaultValue={userData.username}
+    //             readOnly
+    //           // onChange={handleChange}
+    //           ></TextInput>
     //         </div>
     //         <div>
-    //           📧{"  " + userData.email}
+    //           <Label value="Your Email"></Label>
+    //           <TextInput
+    //             type="email"
+    //             placeholder="name@company.com"
+    //             id="email"
+    //             defaultValue={userData.email}
+    //             readOnly
+    //           ></TextInput>
     //         </div>
     //         <div>
-    //           {userData.gender === "MALE" ? "👦🏻 Male " : "👧🏻 Female"}{"  🏚️ " + userData.state}
+    //           <Label value="Name"></Label>
+    //           <TextInput
+    //             type="text"
+    //             placeholder="Name"
+    //             id="name"
+    //             defaultValue={userData.name}
+    //             readOnly
+    //           ></TextInput>
     //         </div>
+    //         <div>
+    //           <Label value="Your Contact"></Label>
+    //           <TextInput
+    //             type="string"
+    //             placeholder="+91-XXXXXXXXXX"
+    //             id="contactNumber"
+    //             defaultValue={userData.mobileNum}
+    //             readOnly
+    //           ></TextInput>
+    //         </div>
+
+    //       </form>
+
+    //       <div className='flex justify-between'>
+    //         <Button className='my-5' onClick={handleMoreDetails}>{moreDetails ? "See Less " : "See More "}</Button>
+    //         <Button className='my-5' onClick={handleEditMode}>Edit</Button>
     //       </div>
 
     //     </div>
-    //     <div className='min-w-full flex justify-center  gap-5 border'>
-    //      <h1 className='w-1/2'> Academics</h1>
-    //      <h1 className='w-1/2'> Coding Profiles</h1>
-    //      {/* <h1> Academics</h1> */}
-    //     </div>
-    //     {/* <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-screen"> */}
-    //     <div className='min-w-full flex flex-col gap-5'>
-    //       {/* <div className="col-span-2 md:col-span-1"> */}
-    //       <LabelAndTextInput label="College Name" value={userData.email} />
-    //       <LabelAndTextInput label="Enrollment" value={userData.username} />
-    //       <LabelAndTextInput label="Graduation Year" value={userData.name} />
-    //       <LabelAndTextInput label="Course" value={userData.mobileNum} />
-    //       <LabelAndTextInput label="Department" value={userData.username} />
-    //       <LabelAndTextInput label="Cgpa" value={userData.email} />
-    //       <LabelAndTextInput label="Hostel" value={userData.name} />
-    //       {/* </div> */}
-    //     </div>
-    //     <div className='text-2xl font-semibold'>
-    //       Coding profiles
-    //     </div>
-    //     <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-screen">
-    //       {/* <div className="col-span-2 md:col-span-1"> */}
-    //       <LabelAndTextInput label="Leetcode profile" value={userData.mobileNum} />
-    //       <LabelAndTextInput label="Leetcode profile" value={userData.username} />
-    //       <LabelAndTextInput label="Leetcode profile" value={userData.email} />
-    //       <LabelAndTextInput label="Leetcode profile" value={userData.name} />
-    //       {/* </div> */}
-    //     </div>
-    //     <div className="flex justify-between w-full mt-5 max-w-4xl">
-    //       <Button onClick={handleMoreDetails}>{moreDetails ? "See Less " : "See More "}</Button>
-    //       <Button onClick={handleEditMode}>Edit</Button>
+    //     {/* </div> */}
+    //     <div>
+
     //     </div>
     //   </div>
-    // )
+
+
+    // );
+
+    return (
+      <div className="flex flex-col justify-center items-start my-4 gap-5 mx-2">
+        <div className=' flex justify-start sm:justify-center  items-center gap-4 sm:gap-6'>
+          <img
+            src={userData.profilePic || "https://images.pexels.com/photos/2690774/pexels-photo-2690774.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"}
+            alt="Profile Picture"
+            className="rounded-full w-20 sm:w-40 sm:h-40  object-cover border border-[blue] "
+          />
+          <div className=''>
+            <h1 className='text-lg  sm:text-lg  font-semibold text-blue-500 '>
+              {userData.name}
+            </h1>
+            <h2 className='text-sm   mb-4'>
+              {"🆔" + userData.username}
+            </h2>
+            <div>
+              ☏{"  " + userData.mobileNum}
+            </div>
+            <div>
+              📧{"  " + userData.email}
+            </div>
+            <div>
+              {userData.gender === "MALE" ? "👦🏻 Male " : "👧🏻 Female"}{"  🏚️ " + userData.state}
+            </div>
+          </div>
+
+        </div>
+        <div className=' w-full flex justify-evenly  gap-5 border border-sky-500 rounded-sm bg-sky-600 '>
+          {/* <h1 className='w-1/2'> Academics</h1>
+          <h1 className='w-1/2'> Coding Profiles</h1> */}
+          {/* <h1> Academics</h1> */}
+        </div>
+        {/* <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-screen"> */}
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-auto w-full'>
+          <div className=' flex flex-col gap-3'>
+            {/* <div className="col-span-2 md:col-span-1"> */}
+            <div className='text-lg font-semibold p-2 text-sky-500'>Academics</div>
+            <LabelAndTextInput label="College Name" value={userData.college} />
+            {/* <div className='border'></div> */}
+            <LabelAndTextInput label="Enrollment" value={userData.collegeId} />
+            <LabelAndTextInput label="Graduation Year" value={userData.graduationYear} />
+            <LabelAndTextInput label="Course" value={userData.course} />
+            <LabelAndTextInput label="Department" value={userData.department} />
+            <LabelAndTextInput label="Cgpa" value={userData.cgpa} />
+            <LabelAndTextInput label="Hosteller" value={userData.hosteler ? "YES" : "NO"} />
+            {/* </div> */}
+          </div>
+          {/* <div className='text-2xl font-semibold'>
+          Coding profiles
+          </div> */}
+          <div className="flex flex-col gap-3">
+            {/* <div className="col-span-2 md:col-span-1"> */}
+            <div className='text-lg font-semibold p-2 text-sky-500'>Coding profiles</div>
+            <LabelAndTextInput label="Leetcode profile" value={userData.leetcodeProfile||"Not Provided"} />
+            <LabelAndTextInput label="Leetcode profile" value={userData.codeforcesProfile||"Not Provided"} />
+            <LabelAndTextInput label="Leetcode profile" value={userData.githubProfile||"Not Provided"} />
+            <LabelAndTextInput label="Leetcode profile" value={userData.linkedinProfile||"Not Provided"} />
+            {/* </div> */}
+          </div>
+        </div>
+        <div className="flex justify-start w-full mt-5 max-w-4xl gap-5">
+          <Button className='' onClick={handleEditMode}>Edit</Button>
+        </div>
+      </div>
+    )
   }
 
 };
 
-// const LabelAndTextInput = ({ label, value }) => {
-//   return (
-//     <div className='flex justify-center items-center p-2 px-50 '>
-//      <div className='text-lg w-1/2  '>{label}</div>
-//      <div className='text-lg w-1/2 '>{value}</div>
-//     </div>
-//   );
-// };
+const LabelAndTextInput = ({ label, value }) => {
+  return (
+    <div className='flex justify-start  flex-wrap pl-2 gap-3 '>
+      <div className=' text-sm md:text-lg lg:text-lg break-words  text-wrap  font-semibold '>{label+" : "}</div>
+      <div className=' text-sm md:text-lg lg:text-lg break-words text-wrap'>{value}</div>
+    </div>
+
+  );
+};
