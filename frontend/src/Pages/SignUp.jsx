@@ -105,6 +105,7 @@ function SignUp() {
       }
 
       const { isVerified, isBoarded } = user.data.registerUser.user.authentication;
+      console.log("isVerified : ", isVerified, "isBoarded : ", isBoarded,user);
       if (!isVerified) {
         console.log("email : ", email);
         sendVerifyEmail({
@@ -132,14 +133,15 @@ function SignUp() {
           });
       }
       else if (!isBoarded) {
-        const { id, username, role } = user.data.registerUser.user;
+        const { id} = user.data.registerUser.user;
+        const {username, role} = user.data.registerUser.user.userInformation;
         console.log("User not onboarded! Please onboard your account");
         localStorage.setItem("token", user.data.registerUser.token);
         dispatch(LoginUser({
-          id, email, username, role
+          id, email, username, role,token:user.data.registerUser.token,
         }));
         dispatch(setLoading(false));
-        return navigate('/onboarding');
+         navigate('/onboarding');
       }
       else {
 

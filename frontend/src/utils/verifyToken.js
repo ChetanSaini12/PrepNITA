@@ -1,6 +1,8 @@
+import { useSearchParams } from 'react-router-dom';
 import { LoginUser, LogoutUser, setLoading } from '../app/user/userSlice';
 import { GET_USER_STATUS } from '../gqlOperatons/queries';
 import  MyApolloProvider  from '../index';
+import { useSelector } from 'react-redux';
 
 // export const useVerifyToken = () => {
 //   const dispatch = useDispatch();
@@ -12,6 +14,7 @@ export const VerifyToken = async (dispatch) => {
 
     const response = { verified: false ,userInformation:{},authentication:{} };
     console.log("Enter in verifyToken");
+    // let token=useSelector(state=>state.user.token);
 
     if (localStorage.getItem("token")) {
         try {
@@ -34,6 +37,7 @@ export const VerifyToken = async (dispatch) => {
                     id: data.getMe.id,
                     username: data.getMe.userInformation.username,
                     role: data.getMe.userInformation.role,
+                    token:localStorage.getItem("token"),
                     // profilePic: data.getMe.userInformation.profilePic
 
                 }));
