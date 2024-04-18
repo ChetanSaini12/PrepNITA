@@ -30,7 +30,7 @@ const MyApolloProvider = ({ children }) => {
   const userMiddleware = setContext(async (_, { headers }) => ({
     headers: {
       ...headers,
-      authorization: token
+      authorization: token||localStorage.getItem("token")
     }
   }));
   const client = new ApolloClient({
