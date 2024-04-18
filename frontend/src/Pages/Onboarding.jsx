@@ -29,8 +29,10 @@ function Onboarding() {
     const checkToken = async () => {
       try {
         const response = await VerifyToken(dispatch);
-        if (response.verified) {
+        // console.log("res", response);
+        if (response.authentication.isBoarded) {
           dispatch(setLoading(false));
+          console.log("1");
           navigate('/');
         }
 
@@ -79,12 +81,13 @@ function Onboarding() {
         if (!user || !user.data) {
           console.log("Error in onBoardUser user:", user.errors.message || "Internal Server Error");
           dispatch(setLoading(false));
-          // return toast.error("Failed to Onboard User ! Try again ");
+           toast.error("Failed to Onboard User ! Try again ");
           // return setError(user.errors.message || "Internal Server Error");
         }
         else {
 
           dispatch(setLoading(false));
+          console.log("2");
           return navigate("/");
         }
       })
@@ -104,7 +107,9 @@ function Onboarding() {
   };
 
   if (isLoading) return <Loader />;
-  if (!isLoading && (!loggedIn || (!username))) {
+  if (!isLoading && (!loggedIn)) {
+    // console.log("isLding", isLoading, loggedIn, username);
+    // console.log("3");
     return navigate('/');
   }
   // const { handleChange, handleSubmit, loggedIn, imageFileUploadProgress, isLoading,Button_Text } = props;
