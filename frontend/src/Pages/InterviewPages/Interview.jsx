@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import SidebarComponent from '../Components/Sidebar'
+import SidebarComponent from '../../Components/Sidebar'
 import { Button, TextInput } from 'flowbite-react'
-import DateTimePicker from '../Components/DatePicker'
+import DateTimePicker from '../../Components/DatePicker'
 import moment from 'moment';
-import { CREATE_INTERVIEW, GET_INTERVIEW } from '../gqlOperatons/Interview/mutations';
+import { CREATE_INTERVIEW, GET_INTERVIEW } from '../../gqlOperatons/Interview/mutations';
 import toast from 'react-hot-toast';
 import { useMutation } from '@apollo/client';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { Loader } from './Loader';
-import { setLoading } from '../app/user/userSlice';
+import { Loader } from '../Loader';
+import { setLoading } from '../../app/user/userSlice';
 
 function Interviews() {
   const { loggedIn, isLoading } = useSelector((state) => state.user);

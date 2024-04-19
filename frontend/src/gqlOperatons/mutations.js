@@ -36,6 +36,34 @@ export const ONBOARD_USER = gql`
 
   `;
 
+export const GET_USER_BY_ID = gql`
+    mutation getUserByIdMutation($id:Int!){
+      getUserById(id:$id){
+        userInformation{
+          name
+          username
+          email
+          mobileNum
+          gender
+          role
+          state
+          college
+          department
+          course
+          collegeId
+          graduationYear
+          cgpa
+          hosteler
+          profilePic 
+          leetcodeProfile    
+          codeforcesProfile  
+          linkedinProfile    
+          githubProfile      
+      }
+      }
+    }
+  `;
+
 
 export const LOGIN_USER = gql`
   mutation loginUserMutation($username:String,$email:String,$password:String!){

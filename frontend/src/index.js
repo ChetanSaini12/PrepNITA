@@ -48,26 +48,6 @@ const MyApolloProvider = ({ children }) => {
   );
 };
 
-
-// export const client = new ApolloClient({
-//   link:from([MyApolloProvider.userMiddleware,httpLink]),
-//   cache: new InMemoryCache(),
-// });
-
-
-
-
-// client for graphql
-// export const client = new ApolloClient({
-//   uri: BASE_URL + "/graphql",
-//   cache: new InMemoryCache(),
-//   headers: {
-//     authorization: localStorage.getItem("token") || "",
-//   },
-// });
-
-// console.log("CLIENT : ", client);
-
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   // <React.StrictMode>
@@ -77,7 +57,7 @@ root.render(
         <ThemeProvider>
           <Auth>
             <App />
-            <Toaster />
+            <Toaster position="bottom-center" />
           </Auth>
         </ThemeProvider>
       </MyApolloProvider>
@@ -87,7 +67,4 @@ root.render(
 );
 
 export default MyApolloProvider;
-
-// console.log("client at index",MyApolloProvider.client)
-// export default client;
 reportWebVitals();
