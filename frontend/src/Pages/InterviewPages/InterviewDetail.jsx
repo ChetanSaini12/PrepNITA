@@ -1,10 +1,10 @@
 import { useMutation } from '@apollo/client';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { GET_INTERVIEW_BY_ID } from '../gqlOperatons/Interview/mutations';
+import { GET_INTERVIEW_BY_ID } from '../../gqlOperatons/Interview/mutations';
 import { useDispatch, useSelector } from 'react-redux';
-import { setLoading } from '../app/user/userSlice';
-import { Loader } from './Loader';
+import { setLoading } from '../../app/user/userSlice';
+import { Loader } from '../Loader';
 import toast from 'react-hot-toast';
 import moment from 'moment';
 
