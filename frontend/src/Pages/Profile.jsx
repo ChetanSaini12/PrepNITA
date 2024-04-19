@@ -162,75 +162,6 @@ export const Profile = () => {
     // return "helloo";
   }
   else {
-    // return (
-
-    //   // <div className='min-h-screen mt-20 justify-center'>
-    //      <div className=' flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5 '> 
-    //     <div className="flex-1 ">
-
-    //       <img src={userData.profilePic || "https://images.pexels.com/photos/2690774/pexels-photo-2690774.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"} alt="Profile Picture" className={`rounded-full h-48 w-48 object-cover border-8  border-[lightgray] translate-x-56 `} />
-    //       <form className="flex flex-col gap-4"
-    //       //  onSubmit={handleSubmit}
-    //       >
-    //         <div>
-    //           <Label value="Your Username"></Label>
-    //           <TextInput
-    //             type="string"
-    //             placeholder="jhon_Doe"
-    //             id="username"
-    //             defaultValue={userData.username}
-    //             readOnly
-    //           // onChange={handleChange}
-    //           ></TextInput>
-    //         </div>
-    //         <div>
-    //           <Label value="Your Email"></Label>
-    //           <TextInput
-    //             type="email"
-    //             placeholder="name@company.com"
-    //             id="email"
-    //             defaultValue={userData.email}
-    //             readOnly
-    //           ></TextInput>
-    //         </div>
-    //         <div>
-    //           <Label value="Name"></Label>
-    //           <TextInput
-    //             type="text"
-    //             placeholder="Name"
-    //             id="name"
-    //             defaultValue={userData.name}
-    //             readOnly
-    //           ></TextInput>
-    //         </div>
-    //         <div>
-    //           <Label value="Your Contact"></Label>
-    //           <TextInput
-    //             type="string"
-    //             placeholder="+91-XXXXXXXXXX"
-    //             id="contactNumber"
-    //             defaultValue={userData.mobileNum}
-    //             readOnly
-    //           ></TextInput>
-    //         </div>
-
-    //       </form>
-
-    //       <div className='flex justify-between'>
-    //         <Button className='my-5' onClick={handleMoreDetails}>{moreDetails ? "See Less " : "See More "}</Button>
-    //         <Button className='my-5' onClick={handleEditMode}>Edit</Button>
-    //       </div>
-
-    //     </div>
-    //     {/* </div> */}
-    //     <div>
-
-    //     </div>
-    //   </div>
-
-
-    // );
-
     return (
       <div className="flex flex-col justify-center items-start my-4 gap-5 mx-2">
         <div className=' flex justify-start sm:justify-center  items-center gap-4 sm:gap-6'>
@@ -240,7 +171,7 @@ export const Profile = () => {
             className="rounded-full w-20 sm:w-40 sm:h-40  object-cover border border-[blue] "
           />
           <div className=''>
-            <h1 className='text-lg  sm:text-lg  font-semibold text-blue-500 '>
+            <h1 className='text-sm  sm:text-xl  font-semibold text-blue-500 '>
               {userData.name}
             </h1>
             <h2 className='text-sm   mb-4'>
@@ -259,17 +190,11 @@ export const Profile = () => {
 
         </div>
         <div className=' w-full flex justify-evenly  gap-5 border border-sky-500 rounded-sm bg-sky-600 '>
-          {/* <h1 className='w-1/2'> Academics</h1>
-          <h1 className='w-1/2'> Coding Profiles</h1> */}
-          {/* <h1> Academics</h1> */}
         </div>
-        {/* <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-screen"> */}
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-auto w-full'>
           <div className=' flex flex-col gap-3'>
-            {/* <div className="col-span-2 md:col-span-1"> */}
             <div className='text-lg font-semibold p-2 text-sky-500'>Academics</div>
             <LabelAndTextInput label="College Name" value={userData.college} />
-            {/* <div className='border'></div> */}
             <LabelAndTextInput label="Enrollment" value={userData.collegeId} />
             <LabelAndTextInput label="Graduation Year" value={userData.graduationYear} />
             <LabelAndTextInput label="Course" value={userData.course} />
@@ -278,16 +203,14 @@ export const Profile = () => {
             <LabelAndTextInput label="Hosteller" value={userData.hosteler ? "YES" : "NO"} />
             {/* </div> */}
           </div>
-          {/* <div className='text-2xl font-semibold'>
-          Coding profiles
-          </div> */}
+
           <div className="flex flex-col gap-3">
             {/* <div className="col-span-2 md:col-span-1"> */}
             <div className='text-lg font-semibold p-2 text-sky-500'>Coding profiles</div>
             <LabelAndTextInput label="Leetcode profile" value={userData.leetcodeProfile||"Not Provided"} />
-            <LabelAndTextInput label="Leetcode profile" value={userData.codeforcesProfile||"Not Provided"} />
-            <LabelAndTextInput label="Leetcode profile" value={userData.githubProfile||"Not Provided"} />
-            <LabelAndTextInput label="Leetcode profile" value={userData.linkedinProfile||"Not Provided"} />
+            <LabelAndTextInput label="Codeforces profile" value={userData.codeforcesProfile||"Not Provided"} />
+            <LabelAndTextInput label="Github profile" value={userData.githubProfile||"Not Provided"} />
+            <LabelAndTextInput label="Linkedin profile" value={userData.linkedinProfile||"Not Provided"} />
             {/* </div> */}
           </div>
         </div>
