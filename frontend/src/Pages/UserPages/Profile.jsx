@@ -37,12 +37,12 @@ export const Profile = () => {
   const [editMode, setEditMode] = useState(false);
   const [imageFileUploadProgress, setImageFIleUploadProgress] = useState(0);
   const [userInfo, setUserInfo] = useState(null);
+  const [ERROR, setError] = useState(null);
   // const [moreDetails, setMoreDetails] = useState(false);
 
   const [updateUser] = useMutation(UPDATE_USER, {
     onError(error) {
-      console.log("Error in updating user", error);
-      toast.error("Error in updating user");
+      return setError(error);
     }
   });
 
@@ -50,37 +50,43 @@ export const Profile = () => {
 
 
   useEffect(() => {
-    dispatch(setLoading(true));
-    VerifyToken(dispatch).then((data) => {
-      console.log("userdata in profile", data);
-      if (data.verified) {
-        MyApolloProvider.client.query({ query: GET_USER_FOR_PROFILE }).then((res) => {
-          console.log("User Data in Profile", res);
-          setUserData(res.data.getMe.userInformation);
-          // setFormData(res.data.getMe.userInformation);
-        }).catch((error) => {
-          console.log("error in getting user data at profile page ", error);
-        });
-        // setUserData(data.userInformation);
+    (async () => {
 
+      dispatch(setLoading(true));
+      try {
+        const data =await VerifyToken(dispatch);
+        // console.log("userdata in profile", data);
+        if (data.verified) {
+          try {
+            const res = await MyApolloProvider.client.query({ query: GET_USER_FOR_PROFILE });
+            // console.log("User Data in Profile", res);
+            setUserData(res.data.getMe.userInformation);
+            dispatch(setLoading(false));
+            setReady(true);
+            // setFormData(res.data.getMe.userInformation);
+          } catch (error) {
+            console.log("error in getting user data at profile page ", error);
+            setReady(true);
+            return setError(error);
+            dispatch(setLoading(false));
+          }
+        }
+        else {
+          dispatch(setLoading(false));
+          setReady(true);
+        }
+      } catch (error) {
+        console.log("Error in profile:", error);
         dispatch(setLoading(false));
         setReady(true);
+        return setError(error);
       }
-      else {
-        setLoading(false);
-        setReady(true);
-        dispatch(setLoading(false));
-      }
-    }).catch((error) => {
-      console.log("Error in profile:", error);
-      dispatch(setLoading(false));
-      setReady(true);
-    });
+    })();
 
   }, []);
 
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     dispatch(setLoading(true));
     console.log("Form Data at Updating user ", formData);
     e.preventDefault();
@@ -89,34 +95,33 @@ export const Profile = () => {
       collegeId, graduationYear, cgpa, college, department, course, state,
       hosteler, leetcodeProfile, codeforcesProfile, linkedinProfile, githubProfile } = formData;
     try {
-      updateUser({
+      const res = await updateUser({
         variables: {
           user: {
             name, username, mobileNum, gender, collegeId, graduationYear: parseInt(graduationYear, 10), cgpa: parseFloat(cgpa), college,
             department, course, state, hosteler: hosteler === 'true', leetcodeProfile, codeforcesProfile, linkedinProfile, githubProfile
           }
         }
-      }).then(res => {
-        console.log("User Updated ** ", res);
-        if (res.errors) {
-          dispatch(setLoading(false));
-        }
-        else {
-          toast.success("User Updated");
-          dispatch(setLoading(false));
-          setEditMode(false);
-          setUserData(res.data.updateUserProfile.userInformation);
-        }
       })
-        .catch(err => {
-          console.log("Error in updating user", err);
-          toast.error("Error in updating user");
-          dispatch(setLoading(false));
-        });
-    } catch (error) {
-
+      console.log("User Updated ** ", res);
+      if (res.errors) {
+        dispatch(setLoading(false));
+        return setError(res.errors[0].message)
+      }
+      else {
+        toast.success("User Updated");
+        setUserData(res.data.updateUserProfile.userInformation);
+        dispatch(setLoading(false));
+        setEditMode(false);
+      }
+    } catch (err) {
+      console.log("Error in updating user", err);
+      // toast.error("Error in updating user");
+      return setError(err);
+      dispatch(setLoading(false));
     }
-  }
+  };
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   }
@@ -129,17 +134,20 @@ export const Profile = () => {
       setFormData(res.data.getMe.userInformation);
       dispatch(setLoading(false));
     } catch (error) {
+      return setError(error);
       dispatch(setLoading(false));
     }
     setEditMode(true);
   };
 
+  if (ERROR) {
+    console.log("Error in Profile Page", ERROR);
+    return toast.error(ERROR.message?ERROR.message:"Something went wrong");
+  }
   if (isLoading || ready === false) return <Loader />;
   if (!isLoading && loggedIn === false) navigate('/register');
   if (editMode) {
-
     // const userInfo = await client.query({ query: GET_USER_STATUS_WITH_ALL_DETAILS });
-
     return (
       <div>
         <div className='flex justify-end mx-10 my-2'>

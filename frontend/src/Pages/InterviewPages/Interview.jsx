@@ -16,7 +16,7 @@ function Interviews() {
   const [dateTime, setDateTime] = useState(new Date());
   const [Duration, setDuration] = useState(30);
   const [Topics, setTopics] = useState("");
-  const [Error, setError] = useState(null);
+  const [ERROR, setError] = useState(null);
   const [data, setdata] = useState(null);
   const [interviews, setInterviews] = useState(null);
   const [refresh, setRefresh] = useState(false);
@@ -28,14 +28,14 @@ function Interviews() {
   const [createInterview] = useMutation(CREATE_INTERVIEW, {
     onError: (error) => {
       console.log("error in creating interview mutation ", error);
-      setError(error.message);
+      return setError(error);
     },
   });
 
   const [getInterviews] = useMutation(GET_INTERVIEW, {
     onError: (error) => {
       console.log("error in getting interviews ", error);
-      setError(error.message);
+      return setError(error);
     },
   });
 
@@ -43,77 +43,94 @@ function Interviews() {
   useEffect(() => {
     // console.log(loggedIn);
     dispatch(setLoading(true));
-    getInterviews().then((res) => {
-      console.log("Interviews data ", res);
-      setInterviews(res.data.getInterview);
-      dispatch(setLoading(false));
-    })
-      .catch((error) => {
+    (async () => {
+      try {
+        const { data, errors } = await getInterviews();
+        console.log("Interviews data ", data);
+        if (errors) {
+          dispatch(setLoading(false));
+          return setError(errors);
+        }
+        else if (data) {
+          setInterviews(data.getInterview);
+          dispatch(setLoading(false));
+        }
+        else {
+          dispatch(setLoading(false));
+          return setError("Something went wrong in fetching interviews");
+        }
+      } catch (error) {
         console.log("Error in getting interviews ", error);
-        setError(error.message);
         dispatch(setLoading(false));
-
-        // setError(error.message);
-      });
-    // setdata(null);
-
-
+        return setError(error);
+      }
+    })();
   }, [data]);
 
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log("interview Data ", dateTime.toISOString(), " ", Duration);
     dispatch(setLoading(true));
-    createInterview({
-      variables: {
-        Interview: {
-          startTime: dateTime.toISOString(),
-          duration: Duration,
-          topics: Topics?.split(','),
-        }
-      },
-    }).then((res) => {
-      console.log("Interview created ", res);
-      if (res.errors) setError(res.errors ? res.errors.message : "Error in creating interview");
-      else {
-
-        setdata(res.data.createInterview);
+    try {
+      const { data, errors } = await createInterview({
+        variables: {
+          Interview: {
+            startTime: dateTime.toISOString(),
+            duration: Duration,
+            topics: Topics?.split(','),
+          }
+        },
+      });
+      if (errors) {
+        console.log("Error in creating interview ", errors);
+        return setError(errors);
       }
-      dispatch(setLoading(false));
+      else if (data) {
+        console.log("Interview created ", data);
+        setdata(data.createInterview);
+        dispatch(setLoading(false));
+        toast.success("Interview created successfully with id " + data.createInterview.id);
+      }
+      else {
+        dispatch(setLoading(false));
+        return setError("Something went wrong in creating interview");
+      }
 
-    }).catch((error) => {
+    } catch (error) {
       console.log("Error in creating interview ", error);
-      setError(error.message);
       dispatch(setLoading(false));
-    });
+      return setError(error);
+    }
 
   };
 
-
+  if (ERROR) {
+    console.log("Error in Interviews ", ERROR);
+     toast.error(ERROR.message ? ERROR.message : " Something went wrong ! ");
+  }
   if (isLoading) return <Loader />;
   if (!isLoading && !loggedIn) {
     return navigate('/register');
   }
   // console.log("data ", data);
-  if (Error) {
-    toast.error(Error);
-    setTimeout(() => {
-      setError(null);
-      setdata(null);
+  // if (Error) {
+  //   toast.error(Error);
+  //   setTimeout(() => {
+  //     setError(null);
+  //     setdata(null);
 
-    }, 1000);
-    // setRefresh(!refresh);
-  }
-  else if (data) {
-    toast.success("Interview created successfully");
-    setTimeout(() => {
-      setdata(null);
-      setError(null);
-    }, 1000);
-    // setRefresh(!refresh);
-  }
-  
+  //   }, 1000);
+  //   // setRefresh(!refresh);
+  // }
+  // else if (data) {
+  //   toast.success("Interview created successfully");
+  //   setTimeout(() => {
+  //     setdata(null);
+  //     setError(null);
+  //   }, 1000);
+  //   // setRefresh(!refresh);
+  // }
+
 
   return (
     <div className="w-screen min-h-screen  text-white flex flex-col items-center justify-center">
@@ -163,7 +180,6 @@ function Interviews() {
       </div>
     </div>
   );
-  }
-  
-  export default Interviews;
-  
+}
+
+export default Interviews;

@@ -13,55 +13,58 @@ const InterviewDetails = () => {
 
   let { id } = useParams();
   // id = parseInt(id);
-  const [Error, setError] = useState(null);
+  const [ERROR, setError] = useState(null);
   const [interview, setInterview] = useState(null);
   const { isLoading } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
-  const [getInterviewById] = useMutation(GET_INTERVIEW_BY_ID,{
-    onError:(error)=>{
-      console.log("onError ",error);
-      setError(error);
+  const [getInterviewById] = useMutation(GET_INTERVIEW_BY_ID, {
+    onError: (error) => {
+      console.log("onError ", error);
+      return setError(error);
     }
   });
 
   useEffect(() => {
     dispatch(setLoading(true));
-    getInterviewById({
-      variables: {
-        interviewId: parseInt(id),
-      }
-    }).then((res) => {
-      console.log("res at interview details page ", res);
-      if (res.errors) {
-        setError(res.errors.message);
-        dispatch(setLoading(false));
-      }
-      else {
-        setInterview(res.data.getInterviewById);
-        dispatch(setLoading(false));
+    (async () => {
+      try {
+        const { data, errors } = await getInterviewById({
+          variables: {
+            interviewId: parseInt(id),
+          }
+        });
+        console.log("res ",data,errors);
 
-      }
-    })
-      .catch((err) => {
-        console.log("error at interview page ", err);
-        setError(err);
+        if (errors) {
+          dispatch(setLoading(false));
+          return setError(errors);
+        }
+        else if (data) {
+          console.log("data at interview details page ", data);
+          setInterview(data.getInterviewById);
+          dispatch(setLoading(false));
+        }
+
+      } catch (error) {
+        console.log("error at interview page ", error);
         dispatch(setLoading(false));
-      });
+        return setError(error);
+      }
+
+    })();
 
   }, [id]);
 
+  if (ERROR) {
+    console.log("error at interview page ", ERROR);
+    toast.error(ERROR.message ? ERROR.message : "Something went wrong !");
+  }
   if (isLoading) return <Loader />;
-  if (!isLoading) {
-    console.log("interview", interview);
-  }
-  if (Error) {
-    toast.error(Error);
-  }
   return (
 
     <div className='w-screen h-screen flex flex-col'>
-      <h1> Interviw details </h1>
+      <h1 className='text-3xl flex justify-center my-2'> Interviw detail page  </h1>
 
       {interview && (
         <div className="bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition duration-300">
@@ -73,12 +76,12 @@ const InterviewDetails = () => {
           <p className="text-sm text-gray-300">Feedback: {interview.feedback ? "Given" : "Not Given"}</p>
         </div>
       )}
-      {Error &&(
+      {ERROR && (
         <div className='flex justify-center items-center' >
-          <h1 className='text-lg'> Something Went Wrong !  </h1>
-          <br/>
+          <h1 className='text-lg my-5'> Something Went Wrong !  </h1>
+          <br />
           {/* <p> {Error} </p> */}
-          </div>
+        </div>
       )}
 
 
