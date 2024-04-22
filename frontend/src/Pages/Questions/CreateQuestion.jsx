@@ -15,8 +15,11 @@ const CreateQuestion = () => {
 
     const [formData, setFormData] = useState({});
     const [refresh, setRefresh] = useState(false);
+    const [ERROR, setError] = useState(null);
     const theme = useSelector((state) => state.theme);
     const { loggedIn, isLoading } = useSelector((state) => state.user);
+
+    dispatch(setLoading(false));    
 
     const handleChange = ((e) => {
         if (e.target.id === "tags") {
@@ -35,53 +38,58 @@ const CreateQuestion = () => {
     const [createQuestion] = useMutation(CREATE_QUESTION, {
         onError: (error) => {
             console.log("mutation error at create question ", error);
-            dispatch(setLoading(false));
-            toast.error("Error in creating question");
+            return setError(error);
         },
     });
 
-    const handleSubmit = (e) => {
+    const handleSubmit =async (e) => {
         e.preventDefault();
         dispatch(setLoading(true));
         console.log("Form Data : ", formData);
-        createQuestion({
-            variables: {
-                Question: {
-                    description: formData.description,
-                    answer: formData.answer,
-                    tags: formData.tags,
-                    // links: [
-                    //     {
-                    //         "title": formData.title,
-                    //         "url": "url1"
-                    //     }
-                    // ],
+            try {
+                const { data, errors } = await createQuestion({
+                    variables: {
+                        Question: {
+                            description: formData.description,
+                            answer: formData.answer,
+                            tags: formData.tags,
+                            // links: [
+                            //     {
+                            //         "title": formData.title,
+                            //         "url": "url1"
+                            //     }
+                            // ],
 
+                        }
+                    },
+                });
+                console.log("res", data, errors);
+                if (errors) {
+                    console.log("error in creating question", errors);
+                    dispatch(setLoading(false));
+                    return setError(errors);
+                } else if (data) {
+                    dispatch(setLoading(false));
+                    toast.success("Question created successfully with id : " + data.createQuestion.id);
+                    // document.getElementById('questionForm').reset();
+                    setFormData({});
                 }
-            },
-        }).then((res) => {
-            console.log("res", res);
-            if (!res.data) {
-                console.log("error in creating question", res.errors);
-                dispatch(setLoading(false));
-            } else {
-                dispatch(setLoading(false));
-                toast.success("Question created successfully ")
-                // document.getElementById('questionForm').reset();
-                setFormData({});
-            }
-
-            setRefresh(!refresh);
-        })
-            .catch((err) => {
-                console.log("errr", err);
+                else dispatch(setLoading(false));
                 setRefresh(!refresh);
-                toast.error("Error in creating question");
-                dispatch(setLoading(false));
-            });
 
+            } catch (err) {
+                console.log("errr", err);
+                dispatch(setLoading(false));
+                setRefresh(!refresh);
+                return setError(err);
+            }
+      
     };
 
+    if(ERROR){
+        toast.error(ERROR.message?ERROR.message:"Something went wrong");
+        setError(null);
+    }
     if (isLoading) return <Loader />;
     return (
         <>
@@ -131,7 +139,7 @@ const CreateQuestion = () => {
                     </form>
 
                     {/* //....................PREVIEW OF THE QUESTION..................................                     */}
-                    <div classNamme="">
+                    {/* <div classNamme="">
                         <h1 className='my-5 text-3xl text-teal-400'>Preview of the Question </h1>
 
                         <div className="preview-content flex flex-col gap-3">
@@ -154,7 +162,7 @@ const CreateQuestion = () => {
                             </div>
 
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div></>
     )

@@ -7,6 +7,7 @@ import PageNotFound from '../404Page';
 import { useDispatch, useSelector } from 'react-redux';
 import { setLoading } from '../../app/user/userSlice';
 import { Loader } from '../Loader';
+import toast from 'react-hot-toast';
 
 
 export const ProfileById = () => {
@@ -16,42 +17,48 @@ export const ProfileById = () => {
     const dispatch = useDispatch();
     const [userData, setUserData] = useState(null);
     const { isLoading } = useSelector((state) => state.user);
-    const [getUserById] = useMutation(GET_USER_BY_ID, {
-        onError(error) {
-            console.log("error in profile by id ", error);
-        }
-    });
+    const [ERROR, setError] = useState(null);
 
+    const [getUserById] = useMutation(GET_USER_BY_ID);
     useEffect(() => {
         dispatch(setLoading(true));
-        getUserById({
-            variables: {
-                id: parseInt(id)
-            }
-        })
-            .then((res) => {
-                console.log("data in profile by id ", res);
-                if (!res.data||res.errors) {
-                    console.log("error in profile by id (1) ", res.errors);
+        (async () => {
+            try {
+                const {data,errors} = await getUserById({
+                    variables: {
+                        id: parseInt(id)
+                    }
+                });
+                // console.log("data in profile by id ", res);
+                if (errors) {
+                    console.log("error in profile by id (1) ", errors);
+                    dispatch(setLoading(false));
+                    return setError(errors);
                 }
                 else {
-                    setUserData(res.data.getUserById.userInformation);
+                    setUserData(data.getUserById.userInformation);
+                    dispatch(setLoading(false));
                 }
-                dispatch(setLoading(false));
-
-            })
-            .catch((err) => {
+            } catch (err) {
                 console.log("error in profile by id (2) ", err);
                 dispatch(setLoading(false));
-            });
+                return setError(err);
+            }
+        })();
+
     }, []);
 
-    if (isLoading)return <Loader />;
-        return (
-            <div>
-                {userData ? (<UserProfile userData={userData} />)
-                    : (<PageNotFound />)}
-            </div>
-        )
-    
+    if(ERROR){
+        console.log("error in profile by id ", ERROR);
+         toast.error(ERROR.message?ERROR.message:"Something went wrong");
+    }
+    if (isLoading) return <Loader />;
+    return (
+        <div>
+            {userData ? (<UserProfile userData={userData} />)
+                : (<PageNotFound />)
+            }
+        </div>
+    )
+
 }

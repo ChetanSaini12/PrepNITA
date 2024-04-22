@@ -4,8 +4,6 @@ import { GET_USER_STATUS } from '../gqlOperatons/queries';
 import  MyApolloProvider  from '../index';
 import { useSelector } from 'react-redux';
 
-// export const useVerifyToken = () => {
-//   const dispatch = useDispatch();
 
 
 export const VerifyToken = async (dispatch) => {
@@ -29,9 +27,9 @@ export const VerifyToken = async (dispatch) => {
             if (errors) {
                 console.log("Error in verifyToken 1:", errors);
                 dispatch(setLoading(false));
-                response.verified = false;
+               return  response.verified = false;
             } else if (data) {
-                console.log("Data from verifyToken * :", data);
+                console.log("Data from verifyToken 1 :", data);
                   
                 dispatch(LoginUser({
                     id: data.getMe.id,
@@ -39,12 +37,11 @@ export const VerifyToken = async (dispatch) => {
                     role: data.getMe.userInformation.role,
                     token:localStorage.getItem("token"),
                     // profilePic: data.getMe.userInformation.profilePic
-
                 }));
-                dispatch(setLoading(false));
                 response.verified = true;
                 response.userInformation = data.getMe.userInformation;
                 response.authentication = data.getMe.authentication;
+                dispatch(setLoading(false));
             }
             else {
                 console.log("waiting at verifyToken ");
@@ -53,6 +50,7 @@ export const VerifyToken = async (dispatch) => {
         } catch (error) {
             console.log("Error in verifyToken try catch :", error.message);
             dispatch(setLoading(false));
+            return response.verified=false;
             // dispatch(LogoutUser());
             // response.verified = false;
         }
@@ -61,6 +59,7 @@ export const VerifyToken = async (dispatch) => {
         dispatch(setLoading(false));
         dispatch(LogoutUser());
         console.log("token not present at verifyToken 2 ");
+        return response.verified=false;
     }
 
     return response;
