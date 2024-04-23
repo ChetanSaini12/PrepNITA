@@ -19,7 +19,7 @@ function Interviews() {
   const [ERROR, setError] = useState(null);
   const [data, setdata] = useState(null);
   const [interviews, setInterviews] = useState(null);
-  const [refresh, setRefresh] = useState(false);
+  const [ready, setReady] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -42,6 +42,7 @@ function Interviews() {
 
   useEffect(() => {
     // console.log(loggedIn);
+    setReady(false);
     dispatch(setLoading(true));
     (async () => {
       try {
@@ -64,6 +65,7 @@ function Interviews() {
         dispatch(setLoading(false));
         return setError(error);
       }
+      setReady(true);
     })();
   }, [data]);
 
@@ -83,6 +85,7 @@ function Interviews() {
       });
       if (errors) {
         console.log("Error in creating interview ", errors);
+        dispatch(setLoading(false));
         return setError(errors);
       }
       else if (data) {
@@ -112,25 +115,6 @@ function Interviews() {
   if (!isLoading && !loggedIn) {
     return navigate('/register');
   }
-  // console.log("data ", data);
-  // if (Error) {
-  //   toast.error(Error);
-  //   setTimeout(() => {
-  //     setError(null);
-  //     setdata(null);
-
-  //   }, 1000);
-  //   // setRefresh(!refresh);
-  // }
-  // else if (data) {
-  //   toast.success("Interview created successfully");
-  //   setTimeout(() => {
-  //     setdata(null);
-  //     setError(null);
-  //   }, 1000);
-  //   // setRefresh(!refresh);
-  // }
-
 
   return (
     <div className="w-screen min-h-screen  text-white flex flex-col items-center justify-center">
@@ -163,6 +147,8 @@ function Interviews() {
 
       <div className="min-w-screen m-2">
         <h1 className="text-3xl font-semibold mb-4">Your Interviews</h1>
+        {!ready&&<h1 className=' text-2xl flex justify-center'>Loading...</h1>}
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {interviews?.map((interview, index) => (
             <Link key={index} to={`/interview/${interview.id}`} className="block">
