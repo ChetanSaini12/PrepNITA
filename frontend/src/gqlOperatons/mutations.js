@@ -132,8 +132,22 @@ mutation updateUserMutation($user:UserInputOptional){
       username
       email
       mobileNum
+      gender
       role
-    }
+      state
+      college
+      department
+      course
+      collegeId
+      graduationYear
+      cgpa
+      hosteler
+      profilePic 
+      leetcodeProfile    
+      codeforcesProfile  
+      linkedinProfile    
+      githubProfile      
+  }
   }
 }
 

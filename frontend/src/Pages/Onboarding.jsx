@@ -66,7 +66,8 @@ function Onboarding() {
     const { name, username, mobileNum, gender, collegeId, graduationYear, cgpa, college,
       department, course, state, hosteler } = formData;
 
-    const leetcodeProfile = formData.leetcodeProfile || ""; const codeforcesProfile = formData.codeforcesProfile || ""; const linkedinProfile = formData.linkedinProfile || ""; const githubProfile = formData.githubProfile || "";
+    const leetcodeProfile = formData.leetcodeProfile || ""; const codeforcesProfile = formData.codeforcesProfile || "";
+     const linkedinProfile = formData.linkedinProfile || ""; const githubProfile = formData.githubProfile || "";
 
     try {
       const { data, errors } = await onBoardUser({
