@@ -202,7 +202,7 @@ const TakeUserDetails = (props) => {
                         type="text"
                         placeholder="https://leetcode.com/username/"
                         id="leetcodeProfile"
-                        value={formData.leetcodeProfile?formData.leetcodeProfile:""}
+                        value={formData?.leetcodeProfile?formData.leetcodeProfile:""}
                         onChange={handleChange}
                     ></TextInput>
                 </div>
@@ -212,7 +212,7 @@ const TakeUserDetails = (props) => {
                         type="text"
                         placeholder="https://codeforces.com/username/"
                         id="codeforcesProfile"
-                        value={formData.codeforcesProfile?formData.codeforcesProfile:""}
+                        value={formData?.codeforcesProfile?formData.codeforcesProfile:""}
                         onChange={handleChange}
                     ></TextInput>
                 </div>
@@ -221,8 +221,8 @@ const TakeUserDetails = (props) => {
                     <TextInput
                         type="text"
                         placeholder="https://linkedin.com/username/"
-                        id="linkedProfile"
-                        value={formData.linkedProfile?formData.linkedProfile:""}
+                        id="linkedinProfile"
+                        value={formData?.linkedinProfile?formData.linkedinProfile:""}
                         onChange={handleChange}
                     ></TextInput>
                 </div>
@@ -232,7 +232,7 @@ const TakeUserDetails = (props) => {
                         type="text"
                         placeholder="https://github.com/username/ "
                         id="githubProfile"
-                        value={formData.githubProfile?formData.githubProfile:""}
+                        value={formData?.githubProfile?formData.githubProfile:""}
                         onChange={handleChange}
                     ></TextInput>
                 </div>

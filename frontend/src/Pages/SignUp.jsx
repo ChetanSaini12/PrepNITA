@@ -286,7 +286,7 @@ function SignUp() {
               id="email"
               // value={EMAIL}
               defaultValue={EMAIL}
-              onChange={handleChange}
+              onChange={handleChangeForEmalModel}
               className="min-w-2xl mx-auto items-center justify-center gap-5"
             ></TextInput>
           </div>

@@ -54,21 +54,29 @@ export const Profile = () => {
 
       dispatch(setLoading(true));
       try {
-        const data =await VerifyToken(dispatch);
-        // console.log("userdata in profile", data);
+        const data = await VerifyToken(dispatch);
         if (data.verified) {
           try {
-            const res = await MyApolloProvider.client.query({ query: GET_USER_FOR_PROFILE });
-            // console.log("User Data in Profile", res);
-            setUserData(res.data.getMe.userInformation);
-            dispatch(setLoading(false));
+            const res = await MyApolloProvider.client.query({
+              //  query: GET_USER_FOR_PROFILE 
+              query: GET_USER_STATUS_WITH_ALL_DETAILS
+            });
+            if (!res.data || res.errors) {
+              setReady(true);
+              return setError(res.errors || { message: " something went wrong " });
+            }
+            else {
+              console.log("User Data in Profile", res);
+              setUserData(res.data.getMe.userInformation);
+              dispatch(setLoading(false));
+            }
             setReady(true);
             // setFormData(res.data.getMe.userInformation);
           } catch (error) {
             console.log("error in getting user data at profile page ", error);
+            dispatch(setLoading(false));
             setReady(true);
             return setError(error);
-            dispatch(setLoading(false));
           }
         }
         else {
@@ -88,7 +96,7 @@ export const Profile = () => {
 
   const handleSubmit = async (e) => {
     dispatch(setLoading(true));
-    console.log("Form Data at Updating user ", formData);
+    // console.log("Form Data at Updating user ", formData);
     e.preventDefault();
     const { username,
       name, mobileNum, profilePic, gender,
@@ -103,46 +111,64 @@ export const Profile = () => {
           }
         }
       })
-      console.log("User Updated ** ", res);
-      if (res.errors) {
+      if (res.errors || !res.data) {
         dispatch(setLoading(false));
-        return setError(res.errors[0].message)
+        console.log("Error in updating user", res.errors);
+        return setError(res.errors || { message: "something went wrong " })
+      }
+      else if (res.data) {
+        console.log("User Updated ** ", res);
+        setUserData(res.data.updateUserProfile.userInformation);
+        setFormData(res.data.updateUserProfile.userInformation);
+        dispatch(setLoading(false));
+        toast.success("User Updated");
+        return setEditMode(false);
       }
       else {
-        toast.success("User Updated");
-        setUserData(res.data.updateUserProfile.userInformation);
-        dispatch(setLoading(false));
-        setEditMode(false);
+        console.log("Error in updating user");
+        return setError({ message: "Error in updating user" });
       }
     } catch (err) {
       console.log("Error in updating user", err);
       // toast.error("Error in updating user");
-      return setError(err);
       dispatch(setLoading(false));
+      return setError(err);
     }
   };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
+    // console.log("Form Data at Changing", formData);
   }
 
   const handleEditMode = async () => {
-    dispatch(setLoading(true));
-    try {
-      const res = await client.query({ query: GET_USER_STATUS_WITH_ALL_DETAILS });
-      // setUserInfo(res.data.getMe);
-      setFormData(res.data.getMe.userInformation);
-      dispatch(setLoading(false));
-    } catch (error) {
-      return setError(error);
-      dispatch(setLoading(false));
-    }
+    // dispatch(setLoading(true));
+    console.log("enter in editmode ");
+    setFormData(userData);
     setEditMode(true);
+    // try {
+    //   const res = await client.query({ query: GET_USER_STATUS_WITH_ALL_DETAILS });
+    //   // setUserInfo(res.data.getMe);
+    //   if (res.errors || !res.data) {
+    //     console.log("Error in getting user data", res.errors);
+    //     dispatch(setLoading(false));
+    //     return setError(res.errors || { message: "Something went wrong" });
+    //   }
+    //   else {
+    //     console.log("or ye hai data ",res.data.getMe.userInformation);
+    //     setFormData(res.data.getMe.userInformation);
+    //     dispatch(setLoading(false));
+    //   }
+    //   setEditMode(true);
+    // } catch (error) {
+    //   dispatch(setLoading(false));
+    //   return setError(error);
+    // }
   };
 
   if (ERROR) {
     console.log("Error in Profile Page", ERROR);
-    return toast.error(ERROR.message?ERROR.message:"Something went wrong");
+    return toast.error(ERROR.message ? ERROR.message : "Something went wrong");
   }
   if (isLoading || ready === false) return <Loader />;
   if (!isLoading && loggedIn === false) navigate('/register');

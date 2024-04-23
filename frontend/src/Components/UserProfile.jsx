@@ -1,7 +1,10 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 export const UserProfile = ({userData}) => {
   // console.log("userData in user profile component ",userData)
+  useEffect(()=>{
+    
+  },[userData]);
   return (
         <div className="flex flex-col justify-center items-start my-4 gap-5 mx-2">
           <div className=' flex justify-start sm:justify-center  items-center gap-4 sm:gap-6'>
@@ -52,6 +55,7 @@ export const UserProfile = ({userData}) => {
               <LabelAndTextInput label="Github profile" value={userData.githubProfile||"Not Provided"} />
               <LabelAndTextInput label="Linkedin profile" value={userData.linkedinProfile||"Not Provided"} />
               {/* </div> */}
+              
             </div>
           </div>
         </div>
