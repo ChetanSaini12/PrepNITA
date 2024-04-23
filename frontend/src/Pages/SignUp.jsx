@@ -21,6 +21,7 @@ function SignUp() {
   const [ERROR, setError] = useState(null);
 
   const [emailModel, setEmailModel] = useState(false);
+  const [EMAIL, setEmail] = useState("");
 
   const { loggedIn, isLoading } = useSelector((state) => state.user);
 
@@ -29,8 +30,9 @@ function SignUp() {
     ; (async () => {
       try {
         const response = await VerifyToken(dispatch);
-        // console.log("response at signup page ", response);
+        console.log("response at signup page ", response);
         if (response.verified) {
+          setEmail(response.userInformation.email);
           if (!response.authentication.isVerified) {
             dispatch(setLoading(false));
             setEmailModel(true);
@@ -44,10 +46,14 @@ function SignUp() {
             navigate('/');
           }
         }
+        else {
+          //first time user 
+          dispatch(setLoading(false));
+        }
       } catch (error) {
         console.log("Error in Auth try catch:", error.message);
-        toast.error(error.message, { duration: 4000 });
         dispatch(setLoading(false));
+        return setError(error);
       }
     })();
   }, []); // Added dependencies for useEffect
@@ -55,13 +61,16 @@ function SignUp() {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
+  const handleChangeForEmalModel = (e) => {
+    setEmail(e.target.value);
+  };
 
   const [signUpUser] = useMutation(REGISTER_USER, {
     onError: (mutationError) => {
       console.log("Error in signUpUser mutation 1:", mutationError.message);
       dispatch(setLoading(false));
       // return toast.error(mutationError.message, { duration: 4000 });
-     return setError(mutationError.message);
+      return setError(mutationError);
     },
   });
 
@@ -70,7 +79,7 @@ function SignUp() {
       console.log("Error in signUpUser mutation 2:", mutationError.message);
       dispatch(setLoading(false));
       // return toast.error(mutationError.message, { duration: 4000 });
-     return setError(mutationError.message);
+      return setError(mutationError);
     },
   });
 
@@ -79,7 +88,7 @@ function SignUp() {
       console.log("Error in signUpUser mutation 3:", mutationError.message);
       dispatch(setLoading(false));
       // return toast.error(mutationError.message, { duration: 4000 });
-     return setError(mutationError.message);
+      return setError(mutationError);
     },
   });
 
@@ -91,7 +100,7 @@ function SignUp() {
     if (!email || !password) {
       dispatch(setLoading(false));
       // return toast.error("Please Fillout All The Fields", { duration: 4000 });
-     return setError("Please Fillout All The Fields");
+      return setError({ message: "Please Fillout All The Fields" });
     }
     try {
       const user = await signUpUser({
@@ -105,7 +114,7 @@ function SignUp() {
         dispatch(setLoading(false));
         console.log("user not found ");
         // return toast.error(user.errors.message || "Internal Server Error", { duration: 4000 });
-       return setError(user.errors.message || "Internal Server Error");
+        return setError(user.errors || { message: "Internal Server Error" });
       }
 
       const { isVerified, isBoarded } = user.data.registerUser.user.authentication;
@@ -122,19 +131,20 @@ function SignUp() {
           if (!response || !response.data || !response.data.sendVerifyMail) {
             dispatch(setLoading(false));
             // return toast.error(response.errors.message || "Email not sent! Please try again later.", { duration: 4000 });
-           return setError(response.errors.message || "Email not sent! Please try again later.");
+            return setError(response.errors || { message: "Email not sent! Please try again later." });
           }
           else {
             dispatch(setLoading(false));
             toast.success(response.data.sendVerifyMail + " Please verify your email", { duration: 4000 });
             //return setError(response.data.sendVerifyMail + " Please verify your email");
+            setEmail(email);
             setEmailModel(true);
           }
         } catch (catchError) {
           dispatch(setLoading(false));
           console.log("Error in sendVerifyEmail catch block: *111 ", catchError);
           // return toast.error(catchError.message || catchError, { duration: 4000 });;
-         return setError(catchError.message || catchError);;
+          return setError(catchError || { message: "someting went wrong " });
         }
       }
       else if (!isBoarded) {
@@ -149,7 +159,7 @@ function SignUp() {
         navigate('/onboarding');
       }
       else {
-
+        /// everything is  done ,  just want to login 
         const { id, username, role } = user.data.registerUser.user;
         const { token } = user.data.registerUser;
         dispatch(setToken(token));
@@ -163,8 +173,8 @@ function SignUp() {
     } catch (catchError) {
       console.log("Error in signUpUser catch block:", catchError);
       // return toast.error(catchError.message || catchError, { duration: 4000 });
-     return setError(catchError);
       dispatch(setLoading(false));
+      return setError(catchError || { message: "someting went wrong " });
     };
   };
 
@@ -175,8 +185,8 @@ function SignUp() {
 
     if (!email || !otp) {
       dispatch(setLoading(false));
-      return toast.error("Please Fillout All The Fields", { duration: 4000 });
-      // return setError("Please Fillout All The Fields");
+      // return toast.error("Please Fillout All The Fields", { duration: 4000 });
+      return setError({ message: "Please Fillout All The Fields" });
     }
 
     try {
@@ -192,13 +202,18 @@ function SignUp() {
         dispatch(setLoading(false));
         console.log("user not found ");
         // return toast.error(user.errors.message || "Internal Server Error", { duration: 4000 });
-        return setError(user.errors.message || "Internal Server Error");
+        return setError(user.errors || { message: "Internal Server Error" });
       }
       else {
-        dispatch(setLoading(false));
-        toast.success("Email Verified Successfully ! You can Login Now ", { duration: 4000 });
         //return setError("Email Verified Successfully ! You can Login Now ");
-        return setEmailModel(false);
+        setEmailModel(false);
+        dispatch(LoginUser({
+          token: user.data.checkOTPForEmail.token, id: user.data.checkOTPForEmail.user.id, email: user.data.checkOTPForEmail.user.userInformation.email,
+          username: user.data.checkOTPForEmail.user.userInformation.username, role: user.data.checkOTPForEmail.user.userInformation.role
+        }))
+        dispatch(setLoading(false));
+        toast.success("Email Verified Successfully ! You can onBoard Now ", { duration: 4000 });
+        navigate('/onboarding');
       }
     } catch (catchError) {
       console.log("Error in signUpUser catch block:", catchError);
@@ -208,7 +223,7 @@ function SignUp() {
     };
   };
 
-  const handleEmailModel = async(e) => {
+  const handleEmailModel = async (e) => {
     e.preventDefault();
     dispatch(setLoading(true));
     const { email } = formData;
@@ -228,15 +243,15 @@ function SignUp() {
         dispatch(setLoading(false));
         if (!response.data || !response.data.sendVerifyMail)
           // return toast.error(response.errors.message || "Email not sent! Please try again later.", { duration: 4000 });
-        return setError(response.errors.message || "Email not sent! Please try again later.");
+          return setError(response.errors.message || "Email not sent! Please try again later.");
         else
-         toast.success(response.data.sendVerifyMail, { duration: 4000 });
+          toast.success(response.data.sendVerifyMail, { duration: 4000 });
         // return setError(response.data.sendVerifyMail);
       } catch (catchError) {
         console.log("Error in sendVerifyEmail catch block:", catchError);
         dispatch(setLoading(false));
         // return toast.error(catchError.message || catchError, { duration: 4000 });
-       return setError(catchError);
+        return setError(catchError);
       }
     };
   };
@@ -252,12 +267,11 @@ function SignUp() {
 
   if (isLoading) return <Loader />
   if (ERROR) {
-    toast.error(ERROR);
-    console.log("error ",ERROR)
-    // return <h1>Error hai yha par {error} </h1>
-   return setError(null);
+    console.log("error ", ERROR)
+    toast.error(ERROR.message ? ERROR.message : "something went wrong");
+    setError(null);
   }
-   if (emailModel) return (
+  if (emailModel) return (
     // <div className="min-h-screen mt-20 "></div>
     <div className="min-h-screen flex p-3 max-w-2xl mx-auto items-center justify-center gap-5">
       <div className="flex-1 flex-col shadow-lg shadow-black p-10 pt-20 -mt-20">
@@ -270,6 +284,8 @@ function SignUp() {
               type="email"
               placeholder="name@gmail.com"
               id="email"
+              // value={EMAIL}
+              defaultValue={EMAIL}
               onChange={handleChange}
               className="min-w-2xl mx-auto items-center justify-center gap-5"
             ></TextInput>
@@ -305,7 +321,7 @@ function SignUp() {
         </form>
         <div className="flex items-center justify-center text-md mt-5">
           <button className="bg-blue-200 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={() => { setEmailModel(false);return setError(null) }}>
+            onClick={() => { setEmailModel(false); return setError(null) }}>
             Back
           </button>
         </div>
