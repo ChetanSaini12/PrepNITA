@@ -131,7 +131,7 @@ const CreateQuestion = () => {
                     </form>
 
                     {/* //....................PREVIEW OF THE QUESTION..................................                     */}
-                    <div classNamme="">
+                    {/* <div classNamme="">
                         <h1 className='my-5 text-3xl text-teal-400'>Preview of the Question </h1>
 
                         <div className="preview-content flex flex-col gap-3">
@@ -154,7 +154,7 @@ const CreateQuestion = () => {
                             </div>
 
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div></>
     )
