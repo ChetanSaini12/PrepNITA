@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react'
+import React, { useEffect } from 'react';
 
 export const UserProfile = ({userData}) => {
   // console.log("userData in user profile component ",userData)
-  useEffect(()=>{
+  // useEffect(()=>{
     
-  },[userData]);
+  // },[userData]);
+  console.log("hosteller", userData);
   return (
         <div className="flex flex-col justify-center items-start my-4 gap-5 mx-2">
           <div className=' flex justify-start sm:justify-center  items-center gap-4 sm:gap-6'>
@@ -26,8 +27,9 @@ export const UserProfile = ({userData}) => {
               <div>
                 📧{"  " + userData.email}
               </div>
-              <div>
-                {userData.gender === "MALE" ? "👦🏻 Male " : "👧🏻 Female"}{"  🏚️ " + userData.state}
+              <div className='flex gap-2'>
+                {/* {<img className= ' rounded-sm bg-white h-5 w-5' src={genderIcon}></img>} */}
+                {userData.gender === "MALE" ? "👦🏻 Male " :userData.gender==="FEMALE"? "👧🏻 Female":""}{"   🏚️  " + userData.state?.toLowerCase()}
               </div>
             </div>
   

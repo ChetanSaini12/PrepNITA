@@ -11,7 +11,7 @@ import { Button } from 'flowbite-react';
 const QuestionById = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const params=useParams();
+  const params = useParams();
   let id = parseInt(params.id);
 
   const { isLoading, loggedIn } = useSelector((state) => state.user);
@@ -27,10 +27,10 @@ const QuestionById = () => {
 
   useEffect(() => {
     dispatch(setLoading(true));
-    (async() => {
+    (async () => {
       try {
         const { data, errors } = await getQuestion({ variables: { QuestionId: id } });
-        console.log("response of question by id ", data,errors);
+        console.log("response of question by id ", data, errors);
         if (errors) {
           // toast.error("Question not found with this id ");
           dispatch(setLoading(false));
@@ -45,6 +45,8 @@ const QuestionById = () => {
         }
         else {
           dispatch(setLoading(false));
+          return setError({ message: "Something went wrong" });
+
         }
         // setQuestion(res.data.getQuestionById);
 
@@ -55,11 +57,11 @@ const QuestionById = () => {
     })();
   }, [id]);
 
-  const handleUpVote = (e) => {
+  const handleUpVote = async (e) => {
     e.preventDefault();
     dispatch(setLoading(true));
     try {
-      const { data, errors } = upVote({
+      const { data, errors } = await upVote({
         variables: { QuestionId: id }
       });
 
@@ -69,7 +71,8 @@ const QuestionById = () => {
         return setError(errors);
       }
       else if (data) {
-        setUpvote(upvote + 1);
+        setUpvote(data.upVoteQuestion.upvotes);
+        setDownvote(data.upVoteQuestion.downvotes);
         dispatch(setLoading(false));
       }
       else dispatch(setLoading(false));
@@ -78,11 +81,11 @@ const QuestionById = () => {
       return setError(error);
     }
   };
-  const handleDownVote = (e) => {
+  const handleDownVote = async (e) => {
     e.preventDefault();
     dispatch(setLoading(true));
     try {
-      const { data, errors } = downVote({
+      const { data, errors } = await downVote({
         variables: { QuestionId: id }
       });
       if (errors) {
@@ -90,7 +93,8 @@ const QuestionById = () => {
         return setError(errors);
       }
       else if (data) {
-        setDownvote(downvote + 1);
+        setUpvote(data.downVoteQuestion.upvotes);
+        setDownvote(data.downVoteQuestion.downvotes);
         dispatch(setLoading(false));
       }
       else dispatch(setLoading(false));
@@ -136,7 +140,8 @@ const QuestionById = () => {
           {/* ...................UP Vote or Down Vote .............................. */}
           <div className="flex gap-5  mb-4" >
             <button onClick={handleUpVote}
-              className= 'w-8 h-8 bg-white rounded-md hover:bg-green-200'>
+              className='w-8 h-8 bg-white rounded-md hover:bg-green-200'>
+                {/* <i class="fa-solid fa-thumbs-up"></i> */}
               <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAACF0lEQVR4nO2ZPUgcQRTHf6IIMWrwA0ULbQxpIqSwEgXTWCiCRIu0YmOpRZrEJgTBVHapQho7QSwPTSOmE60UPwohjQbxE0VEMLkw8D+YYs+du9yaGdg/PFhu3syb38y+3bm3kCpVqlRSGTAObAK3wE/gC9BAIJP/CmQjbBd4huf6oMleAW+BJ8Ar7Yb5/RseawD4LTPXttqAe+AaqMJDPQcutMpmF6K0r/aXeKZqYFuTW1QeROlUPq14pDJgwUrS2jx+7fI5wTNNa2LnQMcDfm/kl8Ej9SsxTdIOxvjOCOATHibtewf/ZfkO80iqBD4DR3leSlmHpLV1HDNO1sEuge8Rj+hIzToOWuO4IGslAMhaFnsrHsqxO097bqDHVB0wCdwp9oM7ETfB/wGQ05Rim9spSIBGKyeCBGgIHWBEsVdDBZhX7HchApRbh8IXIQK8tg6OhAgwp7jmRRskwEHMC9ZrgE7FPFYuBAcwrZim6kGIAOuKORQiQCvwB7hxrWr4BjCheEuuHXwDyCjeWIgA1aqxmv/ezSECjCrWj0I6+QQw73J48xWg3PXwVixAE8mqT3H2Cu3oCrCVMMSc4pgSTyIASULUA2eK0VVo51xZpSeirdc6VG3p+kBljqclKqr1ABsae6WYQVwKWzNa+dzXlyRsH2gpdhVmrZ2w7ZfaKuRbpfrojlV0+he70/eGjyF8U0uVKhWl0V+Fmz8hJyRYQAAAAABJRU5ErkJggg==" />
             </button>
 
@@ -150,7 +155,7 @@ const QuestionById = () => {
         </div >
       ) :
       (<div className='w-screen min-h-screen shadow-md rounded-md p-6'>
-      <h1 className='text-3xl flex justify-center'>Something went wrong </h1>
+        <h1 className='text-3xl flex justify-center'>Something went wrong </h1>
       </div>)
   )
 }
