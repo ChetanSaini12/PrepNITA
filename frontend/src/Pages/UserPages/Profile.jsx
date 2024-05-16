@@ -102,12 +102,13 @@ export const Profile = () => {
       name, mobileNum, profilePic, gender,
       collegeId, graduationYear, cgpa, college, department, course, state,
       hosteler, leetcodeProfile, codeforcesProfile, linkedinProfile, githubProfile } = formData;
+      // console.log("hostel",hosteler);
     try {
       const res = await updateUser({
         variables: {
           user: {
             name, username, mobileNum, gender, collegeId, graduationYear: parseInt(graduationYear, 10), cgpa: parseFloat(cgpa), college,
-            department, course, state, hosteler: hosteler === 'true', leetcodeProfile, codeforcesProfile, linkedinProfile, githubProfile
+            department, course, state, hosteler: hosteler === "true", leetcodeProfile, codeforcesProfile, linkedinProfile, githubProfile
           }
         }
       })
@@ -137,13 +138,13 @@ export const Profile = () => {
   };
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value });
+      setFormData({ ...formData, [e.target.id]: e.target.value });
     // console.log("Form Data at Changing", formData);
   }
 
   const handleEditMode = async () => {
     // dispatch(setLoading(true));
-    console.log("enter in editmode ");
+    // console.log("enter in editmode ");
     setFormData(userData);
     setEditMode(true);
     // try {
@@ -168,7 +169,7 @@ export const Profile = () => {
 
   if (ERROR) {
     console.log("Error in Profile Page", ERROR);
-    return toast.error(ERROR.message ? ERROR.message : "Something went wrong");
+    toast.error(ERROR.message ? ERROR.message : "Something went wrong");
   }
   if (isLoading || ready === false) return <Loader />;
   if (!isLoading && loggedIn === false) navigate('/register');

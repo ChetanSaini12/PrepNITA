@@ -66,18 +66,7 @@ export const GET_QUESTION_BY_ID = gql`
 export const UP_VOTE_QUESTION = gql`
     mutation upVoteQuestionMutation($QuestionId:Int!){
         upVoteQuestion(QuestionId:$QuestionId){
-            id 
-            description
-            answer
-             
-            tags 
-            links {
-                id
-                title
-                url
-                questionId
-              }
-            isApproved 
+            id
             upvotes 
             downvotes
         }
@@ -88,18 +77,7 @@ export const DOWN_VOTE_QUESTION = gql`
     mutation downVoteQuestionMutation($QuestionId:Int!){
         downVoteQuestion(QuestionId:$QuestionId){
             id 
-        
-            description
-            answer
-             
-            tags 
-            links {
-                id
-                title
-                url
-                questionId
-              }
-            isApproved 
+ 
             upvotes 
             downvotes
         }
