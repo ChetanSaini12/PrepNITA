@@ -1,4 +1,4 @@
-export const typedefs = `#graphql
+export const typeDefs = `#graphql
     type Quiz {
         id : Int
         createdBy : Int
@@ -6,6 +6,7 @@ export const typedefs = `#graphql
         description : String
         questions : [QuizQuestion]
         isVisible : Boolean
+        isApproved : Boolean
         startTime : DateTime
         endTime : DateTime
         QuizAttendees : [QuizAttendees]

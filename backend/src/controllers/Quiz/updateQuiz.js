@@ -1,4 +1,6 @@
+import { GraphQLError } from 'graphql'
 import { prisma } from '../../../prisma/index.js'
+import { getQuizByIdHelper } from './getQuizByIdHelper.js'
 
 export const updateQuiz = async (_, payload, context) => {
   try {
@@ -33,6 +35,7 @@ export const updateQuiz = async (_, payload, context) => {
     ) {
       throw error
     } else {
+      console.log('ERROR WHILE UPDATING QUIZ : ', error);
       throw new GraphQLError('Error while updating quiz!!', {
         extensions: {
           code: 'UPDATE_QUIZ_FAILED',

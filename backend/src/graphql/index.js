@@ -3,6 +3,7 @@ import { User } from './User/index.js'
 import { Question } from './Questions/index.js'
 import {DateTimeResolver, DateTimeTypeDefinition} from 'graphql-scalars'
 import { Interview } from './Interview/index.js'
+import { Quiz } from './Quiz/index.js'
 
 async function createApolloGraphqlServer() {
   const gqlserver = new ApolloServer({
@@ -11,16 +12,19 @@ async function createApolloGraphqlServer() {
       User.typeDefs,
       Question.typeDefs,
       Interview.typeDefs,
+      Quiz.typeDefs,
       `
       type Query {
         ${User.queries}
         ${Question.queries}
         ${Interview.queries}
+        ${Quiz.queries}
       }
       type Mutation {
         ${User.mutations}
         ${Question.mutations}
         ${Interview.mutations}
+        ${Quiz.mutations}
       }
     `]
     ,
@@ -30,11 +34,13 @@ async function createApolloGraphqlServer() {
           ...User.resolvers.queries,
           ...Question.resolvers.queries,
           ...Interview.resolvers.queries,
+          ...Quiz.resolvers.queries,
         },
         Mutation : {
           ...User.resolvers.mutations,
           ...Question.resolvers.mutations,
           ...Interview.resolvers.mutations,
+          ...Quiz.resolvers.mutations,
         }
     },
     includeStacktraceInErrorResponses : false

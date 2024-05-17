@@ -32,8 +32,10 @@ export const createQuiz = async (_, payload, context) => {
       error.extensions &&
       error.extensions.code === 'NOT_AUTHORISED_FOR_QUIZ'
     ) {
+      console.log("ERROR WHILE CREATING QUIZ : ", error );
       throw error
     } else {
+      console.log("ERROR WHILE CREATING QUIZ : ", error );
       throw new GraphQLError('Error while creating quiz!!', {
         extensions: {
           code: 'CREATE_QUIZ_FAILED',
