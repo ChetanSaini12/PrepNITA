@@ -1,3 +1,31 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* styles.css */
+
+:root {
+    /* Color Variables */
+    --primary-color: #1f252d;
+    --secondary-color: #52b36d;
+    --accent-color: #d0916f;
+    --element-color: #417a55;
+    --helper-color: #4ea8d0;
+    --text-color: #FEFEFA;
+    /* --text-color:white; */
+
+
+    /* Font Variables */
+    --main-font-family: 'Arial', sans-serif;
+    --heading-font-family: 'Roboto', sans-serif;
+
+    /* Spacing Variables */
+    --default-padding: 16px;
+    --medium-spacing: 8px;
+    --small-spacing: 4px;
+
+    /* Border Variables */
+    --border-radius: 4px;
+    --border-width: 1px;
+}
+
