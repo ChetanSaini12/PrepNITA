@@ -7,6 +7,9 @@ import { setLoading } from '../../app/user/userSlice';
 import { Loader } from '../Loader';
 import toast from 'react-hot-toast';
 import moment from 'moment';
+import { Chart as ChartJS } from 'chart.js/auto';
+import { Bar, Doughnut, Pie } from 'react-chartjs-2';
+// import { ArcElement, } from "chart.js";
 
 
 const InterviewDetails = () => {
@@ -17,6 +20,15 @@ const InterviewDetails = () => {
   const [interview, setInterview] = useState(null);
   const { isLoading } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+
+  const dummyFeedBack = {
+    communication: 4,
+    development: 3,
+    dsa: 2,
+    csfundamentals: 5,
+    notes: ["Good communication skills", "Good in development", "Need to improve in DSA", "Excellent in CS Fundamentals"],
+    points: 14
+  };
 
   const [getInterviewById] = useMutation(GET_INTERVIEW_BY_ID, {
     onError: (error) => {
@@ -34,7 +46,7 @@ const InterviewDetails = () => {
             interviewId: parseInt(id),
           }
         });
-        console.log("res ",data,errors);
+        console.log("res ", data, errors);
 
         if (errors) {
           dispatch(setLoading(false));
@@ -63,7 +75,7 @@ const InterviewDetails = () => {
   if (isLoading) return <Loader />;
   return (
 
-    <div className='w-screen h-screen flex flex-col'>
+    <div className='w-screen min-h-screen flex flex-col'>
       <h1 className='text-3xl flex justify-center my-2'> Interviw detail page  </h1>
 
       {interview && (
@@ -76,6 +88,84 @@ const InterviewDetails = () => {
           <p className="text-sm text-gray-300">Feedback: {interview.feedback ? "Given" : "Not Given"}</p>
         </div>
       )}
+      {dummyFeedBack && (
+        <>
+          <div className=' mx-2 md:mx-48 lg:mx-60 my-5 flex justify-center'>
+            <Bar
+              data={
+                {
+                  labels: ['Communication', 'Development', 'DSA', 'CS Fundamentals'],
+                  datasets: [
+                    {
+                      label: 'Feedback',
+                      data: [dummyFeedBack.communication, dummyFeedBack.development, dummyFeedBack.dsa, dummyFeedBack.csfundamentals],
+                      backgroundColor: [
+                        'rgba(255, 99, 132, 0.5)',
+                        'rgba(54, 162, 235, 0.5)',
+                        'rgba(255, 206, 86, 0.5)',
+                        'rgba(75, 192, 192, 0.5)',
+                      ],
+                      borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                      ],
+                      borderWidth: 1,
+                      minBarThickness: 10,
+                      barThickness: 50,
+                      minBarLength: 2,
+
+
+                    },
+                  ],
+                }
+              }
+            />
+          </div>
+          <div className='flex justify-center max-h-52 my-5'>
+            <Doughnut
+              data={
+                {
+                  labels: ['Skills','Scope of improvement'],
+                  datasets: [
+                    {
+                      
+                      data: [dummyFeedBack.points, 20-dummyFeedBack.points],
+                      backgroundColor: [
+                        'rgba(255, 99, 132, 0.5)',
+                        'rgba(54, 162, 235, 0.5)',
+                      ],
+                      borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                      ],
+                      borderWidth: 1,
+                      minBarThickness: 10,
+                      barThickness: 50,
+                      minBarLength: 2,
+
+
+                    },
+                  ],
+                }
+              }
+            />
+          </div>
+
+          <div className='flex flex-col justify-center items-center'>
+            <h1 className='text-3xl my-2 text-blue-500'> Notes </h1>
+            <l>
+              {dummyFeedBack.notes.map((note, index) => (
+                <li key={index} className='text-lg my-2'> {note} </li>
+              ))}
+            </l>
+          </div>
+
+        </>
+
+      )}
+
       {ERROR && (
         <div className='flex justify-center items-center' >
           <h1 className='text-lg my-5'> Something Went Wrong !  </h1>
