@@ -19,6 +19,8 @@ const InterviewDetails = () => {
   const [ERROR, setError] = useState(null);
   const [interview, setInterview] = useState(null);
   const { isLoading } = useSelector((state) => state.user);
+  const { theme } = useSelector((state) => state.theme);
+  // console.log("theme", theme);
   const dispatch = useDispatch();
 
   const dummyFeedBack = {
@@ -76,62 +78,112 @@ const InterviewDetails = () => {
   return (
 
     <div className='w-screen min-h-screen flex flex-col'>
-      <h1 className='text-3xl flex justify-center my-2'> Interviw detail page  </h1>
+      {/* <h1 className=' text-3xl flex justify-center my-2'> Interview detail page  </h1> */}
 
       {interview && (
-        <div className="bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition duration-300">
-          <h1 className="text-lg font-semibold mb-2">Interviewee: {interview.intervieweeName !== null ? interview.intervieweeName : ""}</h1>
-          <p className="text-sm text-gray-300 mb-1">Interviewer: {interview.interviewerName ? interview.interviewerName : ""}</p>
-          <p className="text-sm text-gray-300 mb-1">Start Time: {moment(interview.startTime).format('MMMM Do YYYY, h:mm:ss a')}</p>
-          <p className="text-sm text-gray-300 mb-1">Duration: {interview.duration} minutes</p>
-          <p className="text-sm text-gray-300 mb-1">Topics: {interview.topics?.join(', ')}</p>
-          <p className="text-sm text-gray-300">Feedback: {interview.feedback ? "Given" : "Not Given"}</p>
+        
+        <div className=" flex flex-col items-center justify-start p-5 ">
+          {interview.isCompleted&&(
+            <h1 className='text-lg md:text-xl bg-green-400 p-2 rounded-md'>Interview Completed </h1>
+          )}
+          {interview.isCompleted===false &&(
+            <h1 className='text-lg md:text-xl bg-red-400 p-2 rounded-md'>Interview Pending </h1>
+          )}
+          <div className="mx-5 md:mx-20 p-10  flex flex-col gap-3">
+            <div>
+              <span className="text-lg md:text-xl mr-5 ">Your Name : </span>
+              <span className=" md:text-lg">{interview.intervieweeName !== null ? interview.intervieweeName : "N/A"}</span>
+            </div>
+            <div>
+              <span className="text-lg md:text-xl mr-5 ">Interview taken by : </span>
+              <span className=" md:text-lg">{interview.interviewerName ? interview.interviewerName : "N/A"}</span>
+            </div>
+            <div>
+              <span className="text-lg md:text-xl mr-5 ">Start Time : </span>
+              <span className=" md:text-lg">{moment(interview.startTime).format('MMMM Do YYYY, h:mm:ss a')}</span>
+            </div>
+            <div>
+              <span className="text-lg md:text-xl mr-5 ">Duration : </span>
+              <span className=" md:text-lg">{interview.duration} minutes</span>
+            </div>
+            <div>
+              <span className="text-lg md:text-xl mr-5 ">Topics : </span>
+              <span className=" md:text-lg">{interview.topics?.join(', ') || "N/A"}</span>
+            </div>
+            <div>
+              <span className="text-lg md:text-xl mr-5 ">Feedback: </span>
+              <span className=" md:text-lg">{interview.feedback ? "Given" : "Not Given"}</span>
+            </div>
+          </div>
+          <div className='w-full border '></div>
         </div>
       )}
+
       {dummyFeedBack && (
         <>
-          <div className=' mx-2 md:mx-48 lg:mx-60 my-5 flex justify-center'>
+          <div className='max-h-96 mx-2  flex justify-center'>
             <Bar
-              data={
-                {
-                  labels: ['Communication', 'Development', 'DSA', 'CS Fundamentals'],
-                  datasets: [
-                    {
-                      label: 'Feedback',
-                      data: [dummyFeedBack.communication, dummyFeedBack.development, dummyFeedBack.dsa, dummyFeedBack.csfundamentals],
-                      backgroundColor: [
-                        'rgba(255, 99, 132, 0.5)',
-                        'rgba(54, 162, 235, 0.5)',
-                        'rgba(255, 206, 86, 0.5)',
-                        'rgba(75, 192, 192, 0.5)',
-                      ],
-                      borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                      ],
-                      borderWidth: 1,
-                      minBarThickness: 10,
-                      barThickness: 50,
-                      minBarLength: 2,
-
-
+              data={{
+                labels: ['Communication', 'Development', 'DSA', 'CS Fundamentals'],
+                // labels: interview.topics.map((topic) => topic),
+                datasets: [
+                  {
+                    label: 'Feedback',
+                    data: [dummyFeedBack.communication, dummyFeedBack.development, dummyFeedBack.dsa, dummyFeedBack.csfundamentals],
+                    backgroundColor: [
+                      'rgba(255, 99, 132, 0.5)',
+                      'rgba(54, 162, 235, 0.5)',
+                      'rgba(255, 206, 86, 0.5)',
+                      'rgba(75, 192, 192, 0.5)',
+                    ],
+                    borderColor: [
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(54, 162, 235, 1)',
+                      'rgba(255, 206, 86, 1)',
+                      'rgba(75, 192, 192, 1)',
+                    ],
+                    borderWidth: 1,
+                    minBarThickness: 10,
+                    barThickness: 50,
+                    minBarLength: 2,
+                  },
+                ],
+              }}
+              options={{
+                scales: {
+                  x: {
+                    ticks: {
+                      color: theme === 'dark' ? "white" : "black" // Change x-axis text color
+                    }
+                  },
+                  y: {
+                    ticks: {
+                      color: theme === 'dark' ? "white" : "black" // Change y-axis text color
+                    }
+                  }
+                },
+                plugins: {
+                  legend: {
+                    labels: {
+                      color: theme === 'dark' ? "white" : "black", // Change dataset label color
                     },
-                  ],
-                }
-              }
+                  },
+                },
+              }}
             />
+
           </div>
-          <div className='flex justify-center max-h-52 my-5'>
+          <div className='flex flex-col justify-center items-center max-h-52 my-10 '>
+            <h1 className='text-2xl -'>Overall Perfomance</h1>
+            <br />
             <Doughnut
               data={
                 {
-                  labels: ['Skills','Scope of improvement'],
+                  labels: ['Skills', 'Scope of improvement'],
                   datasets: [
                     {
-                      
-                      data: [dummyFeedBack.points, 20-dummyFeedBack.points],
+
+                      data: [dummyFeedBack.points, 20 - dummyFeedBack.points],
                       backgroundColor: [
                         'rgba(255, 99, 132, 0.5)',
                         'rgba(54, 162, 235, 0.5)',
@@ -144,17 +196,26 @@ const InterviewDetails = () => {
                       minBarThickness: 10,
                       barThickness: 50,
                       minBarLength: 2,
+                      labelColor: 'white',
 
 
                     },
                   ],
-                }
-              }
+                }}
+              options={{
+                plugins: {
+                  legend: {
+                    labels: {
+                      color: theme === 'dark' ? "white" : "black", // Change dataset label color
+                    },
+                  },
+                },
+              }}
             />
           </div>
 
-          <div className='flex flex-col justify-center items-center'>
-            <h1 className='text-3xl my-2 text-blue-500'> Notes </h1>
+          <div className='flex flex-col justify-center items-center '>
+            {/* <h1 className='text-3xl my-2 text-blue-500'> Comments on Candidate </h1> */}
             <l>
               {dummyFeedBack.notes.map((note, index) => (
                 <li key={index} className='text-lg my-2'> {note} </li>
@@ -168,7 +229,7 @@ const InterviewDetails = () => {
 
       {ERROR && (
         <div className='flex justify-center items-center' >
-          <h1 className='text-lg my-5'> Something Went Wrong !  </h1>
+          <h1 className='text-lg '> Something Went Wrong !  </h1>
           <br />
           {/* <p> {Error} </p> */}
         </div>
