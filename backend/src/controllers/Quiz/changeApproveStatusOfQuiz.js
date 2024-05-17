@@ -1,5 +1,6 @@
 import { GraphQLError } from 'graphql'
 import { prisma } from '../../../prisma/index.js'
+import { getQuizByIdHelper } from './getQuizByIdHelper.js'
 
 export const changeApproveStatusOfQuiz = async (_, payload, context) => {
   try {
@@ -14,6 +15,7 @@ export const changeApproveStatusOfQuiz = async (_, payload, context) => {
       console.log(
         `Approve Status Changed of Quiz with ID : ${payload.quizId} - ${updatedIsApproved}`
       )
+      console.log("APPROVED QUIZ : ", JSON.stringify(quiz));
       return quiz
     }
     console.log(
@@ -34,6 +36,7 @@ export const changeApproveStatusOfQuiz = async (_, payload, context) => {
     ) {
       throw error
     } else {
+      console.log("Quiz Approve Status Change Failed : " , error);
       throw new GraphQLError(
         'Error while changing approve status of quiz!!',
         {

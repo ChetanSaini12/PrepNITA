@@ -60,7 +60,7 @@ model UserContribution {
   articles           Article[]
   interview          Interview[]
   questions          Question[]
-  quizes             Quiz?
+  quizes             Quiz[]
   contributionUser   User        @relation(fields: [userId], references: [id], map: "user_contribution_user_fk")
 }
 
@@ -80,7 +80,7 @@ model Question {
   createdBy   Int
   tags        String[]
   isApproved  Boolean          @default(false)
-  isVisibile  Boolean          @default(false)
+  isVisible  Boolean          @default(false)
   upvotes     Int              @default(0)
   downvotes   Int              @default(0)
   links       QueAddOnLink[]
@@ -97,12 +97,13 @@ model QueAddOnLink {
 
 model Quiz {
   id          Int              @id @unique @default(autoincrement())
-  createdBy   Int              @unique
+  createdBy   Int              
   title       String
   description String?
   startTime   DateTime
   endTime     DateTime
-  isVisibile  Boolean          @default(false)
+  isApproved  Boolean          @default(false)
+  isVisible  Boolean          @default(false)
   creator     UserContribution @relation(fields: [createdBy], references: [id], map: "quiz_user_contribution_fk")
   attendees   QuizAttendance[]
   questions   QuizQuestion[]
