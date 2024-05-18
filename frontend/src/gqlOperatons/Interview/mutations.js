@@ -120,25 +120,8 @@ export const DELETE_INTERVIEW = gql`
 export const ASSIGN_INTERVIEW = gql`
     mutation assignInterviewMutation($interviewId:Int!){
         assignInterview(interviewId : $interviewId){
-            id
-            intervieweeId
             interviewerId
-            startTime
-            duration
-            topics
-            isCompleted
-            intervieweeName
             interviewerName
-            feedback {
-                id
-                interviewId
-                communication
-                development
-                dsa
-                csfundamentals
-                notes
-                points
-            }
         }
     }
 
