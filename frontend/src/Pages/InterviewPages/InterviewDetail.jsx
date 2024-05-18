@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { GET_INTERVIEW_BY_ID } from '../../gqlOperatons/Interview/mutations';
+import { ASSIGN_INTERVIEW, GET_INTERVIEW_BY_ID } from '../../gqlOperatons/Interview/mutations';
 import { useDispatch, useSelector } from 'react-redux';
 import { setLoading } from '../../app/user/userSlice';
 import { Loader } from '../Loader';
@@ -20,6 +20,7 @@ const InterviewDetails = () => {
   const [interview, setInterview] = useState(null);
   const { isLoading } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
+  const [fetch, setFetch] = useState(false);
   // console.log("theme", theme);
   const dispatch = useDispatch();
 
@@ -34,7 +35,14 @@ const InterviewDetails = () => {
 
   const [getInterviewById] = useMutation(GET_INTERVIEW_BY_ID, {
     onError: (error) => {
-      console.log("onError ", error);
+      // console.log("onError 1 ", error);
+      return setError(error);
+    }
+  });
+
+  const [assingInterview] = useMutation(ASSIGN_INTERVIEW, {
+    onError: (error) => {
+      // console.log("onError 2 ", error);
       return setError(error);
     }
   });
@@ -68,7 +76,30 @@ const InterviewDetails = () => {
 
     })();
 
-  }, [id]);
+  }, [id, fetch]);
+
+  const assignInterviewHandler = async (e) => {
+    e.preventDefault();
+    const userConfirmed = window.confirm('Do you want to take the interview?');
+    if (!userConfirmed) return;
+    dispatch(setLoading(true));
+    const { data, errors } = await assingInterview({
+      variables: {
+        interviewId: parseInt(id),
+      }
+    });
+    if (errors) {
+      console.log("error at interview page ", errors);
+      dispatch(setLoading(false));
+      return setError(errors);
+    }
+    else if (data) {
+      dispatch(setLoading(false));
+      setFetch(!fetch);
+      toast.success("Interview assigned to you successfully !");
+    }
+
+  };
 
   if (ERROR) {
     console.log("error at interview page ", ERROR);
@@ -81,21 +112,21 @@ const InterviewDetails = () => {
       {/* <h1 className=' text-3xl flex justify-center my-2'> Interview detail page  </h1> */}
 
       {interview && (
-        
+
         <div className=" flex flex-col items-center justify-start p-5 ">
-          {interview.isCompleted&&(
+          {interview.isCompleted && (
             <h1 className='text-lg md:text-xl bg-green-400 p-2 rounded-md'>Interview Completed </h1>
           )}
-          {interview.isCompleted===false &&(
-            <h1 className='text-lg md:text-xl bg-red-400 p-2 rounded-md'>Interview Pending </h1>
+          {interview.isCompleted === false && (
+            <h1 className='text-md md:text-lg bg-red-400 p-2 rounded-md'>Interview Pending </h1>
           )}
           <div className="mx-5 md:mx-20 p-10  flex flex-col gap-3">
             <div>
-              <span className="text-lg md:text-xl mr-5 ">Your Name : </span>
+              <span className="text-lg md:text-xl mr-5 ">Student Name : </span>
               <span className=" md:text-lg">{interview.intervieweeName !== null ? interview.intervieweeName : "N/A"}</span>
             </div>
             <div>
-              <span className="text-lg md:text-xl mr-5 ">Interview taken by : </span>
+              <span className="text-lg md:text-xl mr-5 ">Interviewer  : </span>
               <span className=" md:text-lg">{interview.interviewerName ? interview.interviewerName : "N/A"}</span>
             </div>
             <div>
@@ -115,7 +146,14 @@ const InterviewDetails = () => {
               <span className=" md:text-lg">{interview.feedback ? "Given" : "Not Given"}</span>
             </div>
           </div>
-          <div className='w-full border '></div>
+          {interview?.interviewerId ===null && (
+            <div className=''>
+              <span>You want to take interview this student ? </span>
+              <button className='font-semibold underline mx-2'
+                onClick={assignInterviewHandler}
+              >Assign to me </button>
+            </div>
+          )}
         </div>
       )}
 

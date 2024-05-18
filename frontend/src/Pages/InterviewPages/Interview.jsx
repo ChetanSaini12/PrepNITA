@@ -20,6 +20,7 @@ function Interviews() {
   const [data, setdata] = useState(null);
   const [interviews, setInterviews] = useState(null);
   const [ready, setReady] = useState(false);
+  const [buttonIndex, setButtonIndex] = useState(0);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -109,7 +110,7 @@ function Interviews() {
 
   if (ERROR) {
     console.log("Error in Interviews ", ERROR);
-     toast.error(ERROR.message ? ERROR.message : " Something went wrong ! ");
+    toast.error(ERROR.message ? ERROR.message : " Something went wrong ! ");
   }
   if (isLoading) return <Loader />;
   if (!isLoading && !loggedIn) {
@@ -117,9 +118,9 @@ function Interviews() {
   }
 
   return (
-    <div className="w-screen min-h-screen  text-white flex flex-col items-center justify-center">
-      <div className="max-w-xl w-full bg-gray-800 rounded-lg shadow-lg p-6 mt-5 mb-8">
-        <h1 className="text-3xl font-semibold mb-4">Schedule an Interview</h1>
+    <div className="w-screen min-h-screen   flex flex-col items-center justify-center">
+      <div className="max-w-xl w-full bg-gray-500 dark:bg-gray-800 rounded-lg shadow-lg p-6 mt-5 mb-8">
+        <h1 className="text-3xl text-white font-semibold mb-4">Schedule an Interview</h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           <TextInput
             type="number"
@@ -145,23 +146,74 @@ function Interviews() {
         </form>
       </div>
 
-      <div className="min-w-screen m-2">
-        <h1 className="text-3xl font-semibold mb-4">Your Interviews</h1>
-        {!ready&&<h1 className=' text-2xl flex justify-center'>Loading...</h1>}
+      <div className="mx-2 mb-5 ">
+        <h1 className="text-3xl font-semibold mb-4">All Interviews </h1>
+        <div className='flex justify-start gap-2 md:gap-5 my-4 mx-1 text-sm md:text-md '>
+          <Button   size="sm" className='text-sm p-0' onClick={() => { setButtonIndex(0) }}>All</Button>
+          <Button   size="sm" className='text-sm p-0' onClick={() => { setButtonIndex(1) }} >Completed</Button>
+          <Button   size="sm" className='text-sm p-0' onClick={() => { setButtonIndex(2) }} >Assigned</Button>
+          <Button   size="sm" className='text-sm p-0' onClick={() => { setButtonIndex(3) }} >Not Assigned</Button>
+        </div>
+        {!ready && <h1 className=' text-2xl flex justify-center'>Loading...</h1>}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {interviews?.map((interview, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-5 text-wrap">
+          {buttonIndex === 0 && interviews?.map((interview, index) => (
             <Link key={index} to={`/interview/${interview.id}`} className="block">
-              <div className="bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition duration-300">
+              <div className=" dark:bg-gray-800 rounded-lg shadow-md p-3 md:p-6 hover:shadow-lg transition duration-300">
                 <h1 className="text-lg font-semibold mb-2">Interviewee: {interview.intervieweeName}</h1>
-                <p className="text-sm text-gray-300 mb-1">Interviewer: {interview.interviewerName}</p>
-                <p className="text-sm text-gray-300 mb-1">Start Time: {moment(interview.startTime).format('MMMM Do YYYY, h:mm:ss a')}</p>
-                <p className="text-sm text-gray-300 mb-1">Duration: {interview.duration} minutes</p>
-                <p className="text-sm text-gray-300 mb-1">Topics: {interview.topics?.join(', ')}</p>
-                <p className="text-sm text-gray-300">Feedback: {interview.feedback ? "Given" : "Not Given"}</p>
+                <p className="text-sm  mb-1">Interviewer: {interview.interviewerName}</p>
+                <p className="text-sm  mb-1">Start Time: {moment(interview.startTime).format('MMMM Do YYYY, h:mm:ss a')}</p>
+                <p className="text-sm  mb-1">Duration: {interview.duration} minutes</p>
+                <p className="text-sm  mb-1">Topics: {interview.topics?.join(', ')}</p>
+                <p className="text-sm ">Feedback: {interview.feedback ? "Given" : "Not Given"}</p>
               </div>
             </Link>
           ))}
+          {buttonIndex === 1 && interviews
+            ?.filter(interview => interview.isCompleted)
+            .map((interview, index) => (
+              <Link key={index} to={`/interview/${interview.id}`} className="block">
+                <div className="dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition duration-300">
+                  <h1 className="text-lg font-semibold mb-2">Interviewee: {interview.intervieweeName}</h1>
+                  <p className="text-sm mb-1">Interviewer: {interview.interviewerName}</p>
+                  <p className="text-sm mb-1">Start Time: {moment(interview.startTime).format('MMMM Do YYYY, h:mm:ss a')}</p>
+                  <p className="text-sm mb-1">Duration: {interview.duration} minutes</p>
+                  <p className="text-sm mb-1">Topics: {interview.topics?.join(', ')}</p>
+                  <p className="text-sm">Feedback: {interview.feedback ? "Given" : "Not Given"}</p>
+                </div>
+              </Link>
+            ))}
+
+          {buttonIndex === 2 && interviews
+            ?.filter(interview => interview.interviewerName !== null && !interview.isCompleted)
+            .map((interview, index) => (
+              <Link key={index} to={`/interview/${interview.id}`} className="block">
+                <div className="dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition duration-300">
+                  <h1 className="text-lg font-semibold mb-2">Interviewee: {interview.intervieweeName}</h1>
+                  <p className="text-sm mb-1">Interviewer: {interview.interviewerName}</p>
+                  <p className="text-sm mb-1">Start Time: {moment(interview.startTime).format('MMMM Do YYYY, h:mm:ss a')}</p>
+                  <p className="text-sm mb-1">Duration: {interview.duration} minutes</p>
+                  <p className="text-sm mb-1">Topics: {interview.topics?.join(', ')}</p>
+                  <p className="text-sm">Feedback: {interview.feedback ? "Given" : "Not Given"}</p>
+                </div>
+              </Link>
+            ))}
+
+          {buttonIndex === 3 && interviews
+            ?.filter(interview => interview.interviewerName === null && !interview.isCompleted)
+            .map((interview, index) => (
+              <Link key={index} to={`/interview/${interview.id}`} className="block">
+                <div className="dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition duration-300">
+                  <h1 className="text-lg font-semibold mb-2">Interviewee: {interview.intervieweeName}</h1>
+                  <p className="text-sm mb-1">Interviewer: {interview.interviewerName}</p>
+                  <p className="text-sm mb-1">Start Time: {moment(interview.startTime).format('MMMM Do YYYY, h:mm:ss a')}</p>
+                  <p className="text-sm mb-1">Duration: {interview.duration} minutes</p>
+                  <p className="text-sm mb-1">Topics: {interview.topics?.join(', ')}</p>
+                  <p className="text-sm">Feedback: {interview.feedback ? "Given" : "Not Given"}</p>
+                </div>
+              </Link>
+            ))}
+
         </div>
       </div>
     </div>
