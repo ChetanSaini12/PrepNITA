@@ -1,5 +1,5 @@
 export const mutations = `#graphql
-    getInterview : [Interview]
+    getInterview(intervieweeId : Int, interviewerId : Int) : [Interview]
 
     getInterviewById(interviewId : Int!) : Interview
 
