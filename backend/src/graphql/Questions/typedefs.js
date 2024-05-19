@@ -8,7 +8,7 @@ export const typeDefs = `#graphql
         tags : [String]
         links : [QueAddOnLink]
         isApproved : Boolean
-        isVisibile : Boolean
+        isVisible : Boolean
         upvotes : Int
         downvotes : Int
     }

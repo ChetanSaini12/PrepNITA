@@ -1,5 +1,6 @@
 import { addQuestionsToQuiz } from "../../controllers/Quiz/addQuestiontoQuiz.js"
 import { changeApproveStatusOfQuiz } from "../../controllers/Quiz/changeApproveStatusOfQuiz.js"
+import { changeVisibleStatusOfQuiz } from "../../controllers/Quiz/changeVisibleStatusOfQuiz.js"
 import { createQuiz } from "../../controllers/Quiz/createQuiz.js"
 import { deleteQuiz } from "../../controllers/Quiz/deleteQuiz.js"
 import { deleteQuizQuestion } from "../../controllers/Quiz/deleteQuizQuestion.js"
@@ -20,6 +21,8 @@ const mutations = {
     getAllQuiz : (_, payload) => getAllQuiz(_, payload),
 
     changeApproveStatusOfQuiz : (_, payload, context) => checkRole({_, payload, context}, changeApproveStatusOfQuiz),
+
+    changeVisibleStatusOfQuiz : (_, payload, context) => checkRole({_, payload, context}, changeVisibleStatusOfQuiz),
 
     updateQuiz : (_, payload, context) => checkRole({_, payload, context}, updateQuiz),
 

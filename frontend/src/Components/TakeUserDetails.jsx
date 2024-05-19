@@ -195,7 +195,7 @@ const TakeUserDetails = (props) => {
                         onChange={handleChange}
                         value={formData.department ? formData.department : ""}
                     >
-                        <option selected>Choose your College </option>
+                        <option selected>Choose Your Department </option>
                         <option value="COMPUTER_SCIENCE_AND_ENGINEERING">CSE</option>
                         <option value="ELECTRONICS_AND_COMMUNICATIONS_ENGINEERING">ECE</option>
                         <option value="ELECTRICAL_ENGINEERING">EE</option>
