@@ -1,6 +1,8 @@
+import { addQuestionsToQuiz } from "../../controllers/Quiz/addQuestiontoQuiz.js"
 import { changeApproveStatusOfQuiz } from "../../controllers/Quiz/changeApproveStatusOfQuiz.js"
 import { createQuiz } from "../../controllers/Quiz/createQuiz.js"
 import { deleteQuiz } from "../../controllers/Quiz/deleteQuiz.js"
+import { deleteQuizQuestion } from "../../controllers/Quiz/deleteQuizQuestion.js"
 import { getAllQuiz } from "../../controllers/Quiz/getAllQuiz.js"
 import { getQuizById } from "../../controllers/Quiz/getQuizById.js"
 import { updateQuiz } from "../../controllers/Quiz/updateQuiz.js"
@@ -19,7 +21,11 @@ const mutations = {
 
     changeApproveStatusOfQuiz : (_, payload, context) => checkRole({_, payload, context}, changeApproveStatusOfQuiz),
 
-    updateQuiz : (_, payload, context) => checkRole({_, payload, context}, updateQuiz)
+    updateQuiz : (_, payload, context) => checkRole({_, payload, context}, updateQuiz),
+
+    addQuestionToQuiz : (_, payload, context) => checkRole({_, payload, context}, addQuestionsToQuiz),
+
+    deleteQuestionOfQuiz : (_, payload, context) => checkRole({_, payload, context}, deleteQuizQuestion)
 }
 
 export const resolvers = {queries, mutations}
