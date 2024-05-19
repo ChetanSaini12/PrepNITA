@@ -120,7 +120,7 @@ function Interviews() {
   return (
     <div className="w-screen min-h-screen   flex flex-col items-center justify-center">
       <div className="max-w-xl w-full bg-gray-500 dark:bg-gray-800 rounded-lg shadow-lg p-6 mt-5 mb-8">
-        <h1 className="text-3xl text-white font-semibold mb-4">Schedule an Interview</h1>
+        <h1 className="text-lg md:text-2xl text-white  font-semibold mb-4">Schedule an Interview</h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           <TextInput
             type="number"
@@ -156,10 +156,11 @@ function Interviews() {
         </div>
         {!ready && <h1 className=' text-2xl flex justify-center'>Loading...</h1>}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-5 text-wrap">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5 text-wrap">
           {buttonIndex === 0 && interviews?.map((interview, index) => (
             <Link key={index} to={`/interview/${interview.id}`} className="block">
-              <div className=" dark:bg-gray-800 rounded-lg shadow-md p-3 md:p-6 hover:shadow-lg transition duration-300">
+              <div className="mx-2 bg-gray-200 dark:bg-gray-800 rounded-lg shadow-md py-5 px-10 md:p-6 hover:shadow-lg hover:bg-gray-300
+             dark:hover:bg-gray-700 transition duration-300 min-w-80  min-h-36">
                 <h1 className="text-lg font-semibold mb-2">Interviewee: {interview.intervieweeName}</h1>
                 <p className="text-sm  mb-1">Interviewer: {interview.interviewerName}</p>
                 <p className="text-sm  mb-1">Start Time: {moment(interview.startTime).format('MMMM Do YYYY, h:mm:ss a')}</p>

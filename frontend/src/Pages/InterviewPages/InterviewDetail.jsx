@@ -108,17 +108,17 @@ const InterviewDetails = () => {
   if (isLoading) return <Loader />;
   return (
 
-    <div className='w-screen min-h-screen flex flex-col'>
+    <div className='w-screen min-h-screen flex flex-col mt-8 mb-5'>
       {/* <h1 className=' text-3xl flex justify-center my-2'> Interview detail page  </h1> */}
 
       {interview && (
 
-        <div className=" flex flex-col items-center justify-start p-5 ">
+        <div className="bg-gray-200 dark:bg-gray-800 flex flex-col items-center justify-start p-5 ">
           {interview.isCompleted && (
-            <h1 className='text-lg md:text-xl bg-green-400 p-2 rounded-md'>Interview Completed </h1>
+            <h1 className='text-lg md:text-xl bg-green-400 p-1 rounded-md'>Interview Completed </h1>
           )}
           {interview.isCompleted === false && (
-            <h1 className='text-md md:text-lg bg-red-400 p-2 rounded-md'>Interview Pending </h1>
+            <h1 className='text-md md:text-lg bg-red-400 p-1 rounded-md'>Interview Pending </h1>
           )}
           <div className="mx-5 md:mx-20 p-10  flex flex-col gap-3">
             <div>
@@ -159,7 +159,7 @@ const InterviewDetails = () => {
 
       {dummyFeedBack && (
         <>
-          <div className='max-h-96 mx-2  flex justify-center'>
+          <div className='max-h-96 mx-2 my-14  flex justify-center'>
             <Bar
               data={{
                 labels: ['Communication', 'Development', 'DSA', 'CS Fundamentals'],
@@ -252,7 +252,7 @@ const InterviewDetails = () => {
             />
           </div>
 
-          <div className='flex flex-col justify-center items-center '>
+          <div className='flex flex-col justify-center items-center mb-5'>
             {/* <h1 className='text-3xl my-2 text-blue-500'> Comments on Candidate </h1> */}
             <l>
               {dummyFeedBack.notes.map((note, index) => (
