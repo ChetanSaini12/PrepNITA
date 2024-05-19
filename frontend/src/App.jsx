@@ -21,6 +21,8 @@ import PageNotFound from "./Pages/404Page.jsx";
 import QuestionById from "./Pages/Questions/QuestionById.jsx";
 import "particles.js/particles";
 import { ProfileById } from "./Pages/UserPages/ProfileById.jsx";
+import Interviewhome from "./Pages/InterviewPages/Interviewhome.jsx";
+import AdminInterview from "./Pages/InterviewPages/adminInterview.jsx";
 import { CreateQuiz } from "./Pages/Quiz/CreateQuiz.jsx";
 
 function App() {
@@ -53,6 +55,8 @@ function App() {
             <Route path="/students" element={<AllUsers />}></Route>
             <Route path="/onboarding" element={<Onboarding />}></Route>
             <Route path="/interview" element={<Interview />}></Route>
+            <Route path="/interviewdummy" element={<Interviewhome />}></Route>
+            <Route path="/interviewdummyadmin" element={<AdminInterview />}></Route>
             <Route path="/interview/:id" element={<InterviewDetail />}></Route>
             <Route path="/*" element={<PageNotFound />}></Route>
           </Routes>

@@ -9,6 +9,8 @@ export const mutations = `#graphql
     getAllQuiz : [Quiz]
 
     changeApproveStatusOfQuiz(quizId : Int!) : Quiz
+    
+    changeVisibleStatusOfQuiz(quizId : Int!) : Quiz
 
     updateQuiz(quizId : Int!, Quiz : quizInput) : Quiz 
 

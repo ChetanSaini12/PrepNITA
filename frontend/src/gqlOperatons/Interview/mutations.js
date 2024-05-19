@@ -2,8 +2,8 @@ import { gql } from '@apollo/client';
 
 
 export const GET_INTERVIEW = gql`
-    mutation getInterview{
-        getInterview{
+    mutation getInterview($intervieweeId: Int, $interviewerId: Int){
+        getInterview(intervieweeId: $intervieweeId, interviewerId: $interviewerId){
             id
             intervieweeId
             interviewerId
