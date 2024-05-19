@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Dashboard from "./Pages/Dashboard";
 import Home from "./Pages/Home";
 import Header from "./Components/Header";
-import Quizes from "./Pages/Quizes";
+import Quizes from "./Pages/Quiz/Quizes.jsx";
 import Discuss from "./Pages/Discuss";
 import SignUp from "./Pages/SignUp";
 // import SignIn from "./Pages/SignIn";
@@ -23,6 +23,7 @@ import "particles.js/particles";
 import { ProfileById } from "./Pages/UserPages/ProfileById.jsx";
 import Interviewhome from "./Pages/InterviewPages/Interviewhome.jsx";
 import AdminInterview from "./Pages/InterviewPages/adminInterview.jsx";
+import { CreateQuiz } from "./Pages/Quiz/CreateQuiz.jsx";
 
 function App() {
   window.particlesJS.load("particles", "/particlesjs-config.json");
@@ -43,6 +44,7 @@ function App() {
             <Route path="/faltu" element={<AllUsers />}></Route>
             <Route path="/dashboard" element={<Dashboard></Dashboard>}></Route>
             <Route path="/quizes" element={<Quizes></Quizes>}></Route>
+            <Route path="/quiz/new" element={<CreateQuiz></CreateQuiz>}></Route>
             <Route path="/discuss" element={<Discuss></Discuss>}></Route>
             <Route path="/register" element={<SignUp></SignUp>}></Route>
             <Route path="/profile" element={<Profile />}></Route>

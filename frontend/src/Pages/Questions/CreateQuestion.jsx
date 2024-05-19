@@ -93,8 +93,8 @@ const CreateQuestion = () => {
     if (isLoading) return <Loader />;
     return (
         <>
-            <div className='p-3 max-w-3xl mx-auto min-h-screen'>
-                <h1 className='text-center text-3xl my-7 font-semibold'>
+            <div className='p-3 max-w-3xl mx-auto min-h-screen mt-2 mb-4'>
+                <h1 className='text-center text-lg:md:text-2xl my-4 font-semibold'>
                     Create a Question</h1>
                 <div className="question_container">
                     <form id='questionForm' onSubmit={handleSubmit} className='flex flex-col gap-4 border border-teal-500 rounded-tl-3xl rounded-br-3xl p-3 '>
