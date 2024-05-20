@@ -64,6 +64,18 @@ export const GET_USER_BY_ID = gql`
     }
   `;
 
+  export const GET_USER_BY_ID2 = gql`
+    mutation getUserByIdMutation($id:Int!){
+      getUserById(id:$id){
+        userInformation{
+          name
+          profilePic  
+          linkedinProfile         
+      }
+      }
+    }
+  `;
+
 
 export const LOGIN_USER = gql`
   mutation loginUserMutation($username:String,$email:String,$password:String!){

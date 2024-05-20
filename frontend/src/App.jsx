@@ -24,6 +24,7 @@ import { ProfileById } from "./Pages/UserPages/ProfileById.jsx";
 import Interviewhome from "./Pages/InterviewPages/Interviewhome.jsx";
 import AdminInterview from "./Pages/InterviewPages/adminInterview.jsx";
 import { CreateQuiz } from "./Pages/Quiz/CreateQuiz.jsx";
+import QuizDetail from "./Pages/Quiz/QuizDetail.jsx";
 
 function App() {
   window.particlesJS.load("particles", "/particlesjs-config.json");
@@ -45,6 +46,7 @@ function App() {
             <Route path="/dashboard" element={<Dashboard></Dashboard>}></Route>
             <Route path="/quizes" element={<Quizes></Quizes>}></Route>
             <Route path="/quiz/new" element={<CreateQuiz></CreateQuiz>}></Route>
+            <Route path="/quiz/id/:id" element={<QuizDetail></QuizDetail>}></Route>
             <Route path="/discuss" element={<Discuss></Discuss>}></Route>
             <Route path="/register" element={<SignUp></SignUp>}></Route>
             <Route path="/profile" element={<Profile />}></Route>

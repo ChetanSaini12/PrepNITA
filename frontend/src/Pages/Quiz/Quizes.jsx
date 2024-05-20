@@ -6,7 +6,7 @@ import { setLoading } from '../../app/user/userSlice';
 import toast from 'react-hot-toast';
 import { Loader } from '../Loader';
 import moment from 'moment';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 function Quizes() {
@@ -81,33 +81,35 @@ function Quizes() {
       </div>
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5 text-wrap'>
         {quizes && quizes.map((quiz) => (
-          <div key={quiz.id} className="mx-2 bg-gray-200 dark:bg-gray-800 rounded-lg shadow-md py-5 px-10 md:p-6 hover:shadow-lg hover:bg-gray-300
+          <Link to={`/quiz/id/${parseInt(quiz.id)}`}>
+            <div key={quiz.id} className="mx-2 bg-gray-200 dark:bg-gray-800 rounded-lg shadow-md py-5 px-10 md:p-6 hover:shadow-lg hover:bg-gray-300
              dark:hover:bg-gray-700 transition duration-300 min-w-80  min-h-36">
-            <div className='flex flex-col gap-5'>
-              <div className='underline underline-offset-4 text-lg font-semibold flex justify-center -mt-4 '>{quiz.title}</div>
-              {/* <div>author ✍🏼 {quiz.createdBy}</div> */}
-              {/* <div>{quiz.startTime}</div> */}
-              <div className='flex  justify-between'>
-                <div className=''>📅 {moment(quiz.startTime).format('DD MMMM YY')}</div>
-                <div className=''>🕗 {moment(quiz.startTime).format('HH:mm:ss')} IST</div>
-              </div>
-              <div className='flex justify-between'>
-                <div>Duration</div>
-                <div>
-                  {(() => {
-                    const days = moment(quiz.endTime).diff(moment(quiz.startTime), 'days');
-                    const hours = moment(quiz.endTime).diff(moment(quiz.startTime), 'hours') % 24;
-                    const minutes = moment(quiz.endTime).diff(moment(quiz.startTime), 'minutes') % 60;
-                    const seconds = moment(quiz.endTime).diff(moment(quiz.startTime), 'seconds') % 60;
+              <div className='flex flex-col gap-5'>
+                <div className='underline underline-offset-4 text-lg font-semibold flex justify-center -mt-4 '>{quiz.title}</div>
+                {/* <div>author ✍🏼 {quiz.createdBy}</div> */}
+                {/* <div>{quiz.startTime}</div> */}
+                <div className='flex  justify-between'>
+                  <div className=''>📅 {moment(quiz.startTime).format('DD MMMM YY')}</div>
+                  <div className=''>🕗 {moment(quiz.startTime).format('HH:mm:ss')} IST</div>
+                </div>
+                <div className='flex justify-between'>
+                  <div>Duration</div>
+                  <div>
+                    {(() => {
+                      const days = moment(quiz.endTime).diff(moment(quiz.startTime), 'days');
+                      const hours = moment(quiz.endTime).diff(moment(quiz.startTime), 'hours') % 24;
+                      const minutes = moment(quiz.endTime).diff(moment(quiz.startTime), 'minutes') % 60;
+                      const seconds = moment(quiz.endTime).diff(moment(quiz.startTime), 'seconds') % 60;
 
-                    return `${days ? days + " Days " : ""}${hours ? hours + " Hours " : ""}${minutes ? minutes + " Minutes " : ""}${seconds ? seconds + " Seconds" : ""}`;
-                  })()}
+                      return `${days ? days + " Days " : ""}${hours ? hours + " Hours " : ""}${minutes ? minutes + " Minutes " : ""}${seconds ? seconds + " Seconds" : ""}`;
+                    })()}
+                  </div>
+
                 </div>
 
               </div>
-
             </div>
-          </div>
+          </Link>
         ))}
 
       </div>

@@ -56,3 +56,32 @@ export const GET_ALL_QUIZ = gql`
     }
 
 `;
+
+export const GET_QUIZ_BY_ID = gql`
+    mutation getQuizByIdMutation($QuizId: Int!){
+        getQuizById(QuizId: $QuizId){
+            id 
+            createdBy
+            title
+            description
+            questions {
+                id
+                quizId
+                description
+                options
+                correctOption
+            }
+            isVisible
+            isApproved
+            startTime
+            endTime
+            QuizAttendees {
+                id
+                quizId
+                userId
+                score
+            }
+        }
+    }
+
+`;
