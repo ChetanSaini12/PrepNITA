@@ -19,7 +19,6 @@ const DateTimePicker = ({ setDateTime , text="Select Date and Time" }) => {
         <div className='text-2xl text-black'>
             <h2 className='text-white '>Select Date and Time</h2>
             <DatePicker
-                className='bg-transparent dark:text-white'
                 selected={selectedDate}
                 onChange={handleDateChange}
                 showTimeSelect
