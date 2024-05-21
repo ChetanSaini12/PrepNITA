@@ -2,21 +2,28 @@
 
 import { useMutation, useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
-import { All_USER } from "../gqlOperatons/mutations";
+import { All_USER } from "../../gqlOperatons/mutations";
 import toast from "react-hot-toast";
-import { Loader } from "./Loader";
-import SearchBar from "../Components/SearchBar";
+import { Loader } from "../Loader";
+import SearchBar from "../../Components/SearchBar";
 import { Dropdown, Select, TextInput } from "flowbite-react";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoading } from "../../app/user/userSlice";
 
 function AllUsers() {
   // const { data, loading: queryLoading, error: queryError } = useQuery(ALL_USER);
+  const { isLoading } = useSelector((state) => state.user);
   const [data, setData] = useState(null);
   const [formData, setFormData] = useState({});
   const [filter, setFilter] = useState({});
   const [fetch, setFetch] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [callBackend, setCallBackend] = useState(true);
   const [optionsIndex, setOptionsIndex] = useState(0);
+  const [ERROR, setError] = useState(null);
+  const dispatch = useDispatch();
+
+  const { theme } = useSelector(state => state.theme)
+  //  console.log("theme ",theme);
 
   const options = [
     "username",
@@ -42,7 +49,8 @@ function AllUsers() {
   const [searchUser] = useMutation(All_USER, {
     onError: (error) => {
       console.log("error in allUser ", error || error.message);
-      toast.error(error || error.message);
+      return setError(error);
+      // toast.error(error || error.message);
     },
   });
 
@@ -51,7 +59,7 @@ function AllUsers() {
       setFilter({ ...filter, [e.target.id]: e.target.value == "yes" ? true : false });
     }
     else if (e.target.id === "cgpa") {
-      setFilter({ ...filter, [e.target.id]: parseFloat(e.target.value) });
+      setFilter({ ...filter, [e.target.id]: (e.target.value) });
     }
     else if (e.target.id === "graduation_year") {
       setFilter({ ...filter, [e.target.id]: parseInt(e.target.value) });
@@ -62,24 +70,48 @@ function AllUsers() {
     // setFetch(!fetch);
   };
 
+
   const handleFilter = (e) => {
     e.preventDefault();
     if (filter[options[optionsIndex]] === undefined || filter[options[optionsIndex]] === "") {
       filter[options[optionsIndex]] = " ";
       setFilter(filter);
       // setFormData(...formData, { [options[optionsIndex]]: " " });
-      toast.error("Please enter the value for the selected filter");
+      return setError({ message: "Please enter the value for the selected filter" });
     }
-    else if (typeof(filter[options[optionsIndex]])=="number" &&isNaN(filter[options[optionsIndex]])) {
+    else if (typeof (filter[options[optionsIndex]]) == "number" && isNaN(filter[options[optionsIndex]])) {
       filter[options[optionsIndex]] = 0;
       setFilter(filter);
       // setFormData(...formData, { [options[optionsIndex]]: " " });
-      toast.error("Please enter the value for the selected filter 2");
+      return setError({ message: "Enter a valid value " });
     }
-    else
+    else if (options[optionsIndex] === "cgpa") {
+      let val = parseFloat(filter[options[optionsIndex]]);
+      // console.log("cgpa wala key ",val,typeof(val));
+
+      if (isNaN(val) || val === "NaN" || !(val >= 0 && val <= 10)) {
+        filter[options[optionsIndex]] = 0;
+
+        setFilter(filter);
+        // console.log("yha dekh ", filter[options[optionsIndex]]);
+        // setFormData(...formData, { [options[optionsIndex]]: " " });
+        return setError({ message: "Enter a valid value " });
+
+      }
+      else {
+        // setFilter({ ...filter, [options[optionsIndex]]:val});
+        // console.log("yha dekh ", filter[options[optionsIndex]]);
+        filter[options[optionsIndex]] = parseFloat(val);
+        setFilter(filter);
+        setFormData(filter);
+      }
+      setFetch(!fetch);
+    }
+    else {
       setFormData(filter);
-    setFetch(!fetch);
-  };
+      setFetch(!fetch);
+    }
+  }
   const deleteFilter = (props) => {
     if (filter) {
       console.log("delete filetr 1", filter[props]);
@@ -114,23 +146,52 @@ function AllUsers() {
   };
 
   useEffect(() => {
-    setLoading(true);
-    // if (callBackend) {
-    searchUser({
-      variables: {
-        user: formData,
-      },
-    }).then(user => {
-      console.log("user in AllUser", user);
-      setLoading(false);
-      setData(user.data.getAllUser);
-      console.log("data ",data);
-    })
-      .catch(error => {
+    (async () => {
+      try {
+        dispatch(setLoading(true));
+        const { data, errors } = await searchUser({
+          variables: {
+            user: formData,
+          },
+        });
+        if (errors) {
+          console.log("error in allUser catch block ", errors.message);
+          dispatch(setLoading(false));
+          return setError(errors);
+        }
+        else if (data) {
+          console.log("user in AllUser", data);
+          dispatch(setLoading(false));
+          setData(data.getAllUser);
+        }
+        else{
+          dispatch(setLoading(false));
+          return setError({message:"Server side error "});
+        }
+      } catch (error) {
         console.log("error in allUser catch block ", error || error.message);
-        setLoading(false);
-        toast.error(error || error.message);
-      });
+        dispatch(setLoading(false));
+        return setError(error);
+      }
+    })();
+
+    // dispatch(setLoading(true));
+    // // if (callBackend) {
+    // searchUser({
+    //   variables: {
+    //     user: formData,
+    //   },
+    // }).then(user => {
+    //   console.log("user in AllUser", user);
+    //   dispatch(setLoading(false));
+    //   setData(user.data.getAllUser);
+    //   console.log("data ", data);
+    // })
+    //   .catch(error => {
+    //     console.log("error in allUser catch block ", error || error.message);
+    //     dispatch(setLoading(false));
+    //     toast.error(error || error.message);
+    //   });
     // }
 
 
@@ -143,12 +204,17 @@ function AllUsers() {
     setFormData(filter);
   }, [fetch]);
 
+  if (ERROR) {
+    toast.error(ERROR.message ? ERROR.message : "Something went wrong");
+    return setError(null);
+  }
+
   return (
     <>
-      {loading && <Loader />}
+      {isLoading && <Loader />}
       < div className="flex min-h-screen items-center flex-col" >
         <div className="mb-5">
-          Search Bar
+          {/* Search Bar */}
           <form className="flex gap-2 " onSubmit={handleSubmitSearch}   >
             <Select
               className="text-black"
@@ -224,7 +290,7 @@ function AllUsers() {
             {options[optionsIndex] === "cpga" && (
               <TextInput
                 // required
-                type="float"
+                type="text"
                 placeholder={options[optionsIndex]}
                 id={options[optionsIndex]}
                 value={parseFloat(filter[options[optionsIndex]]) || ""}
@@ -247,7 +313,7 @@ function AllUsers() {
             <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Search</button>
           </form>
         </div>
-        <h1>.....your filters........</h1>
+        <h1>Your filters...</h1>
         <div className="flex flex-wrap gap-3 my-2 ">
           {formData && Object.keys(formData).map((key, index) => (
             <>
@@ -267,58 +333,41 @@ function AllUsers() {
 
         {
           data && data.length !== 0 ? (
-            <>
-              <div className="w-full ">
-                <table className="flex flex-col justify-start mx-20 gap-3">
-                  <thead>
-                    <tr className=" flex justify-between">
-                      <th>ID</th>
-                      <th>Username</th>
-                      <th>Name</th>
-                      <th>Email</th>
-                      <th>Mobile Num</th>
+            <div className="w-full">
+              <table className="w-full table-auto ">
+                <thead>
+                  <tr className='mx-0 px-0 border' >
+                    <th className=" text-left pl-6 py-2">ID</th>
+                    <th className=" text-left pl-6 py-2">Username</th>
+                    <th className=" text-left pl-6 py-2">Name</th>
+                    <th className=" text-left pl-6 py-2">Email</th>
+                    <th className=" text-left pl-6 py-2">Mobile Num</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.map((user, index) => (
+                    <tr key={index} className={`${theme === 'dark' ? (index % 2 === 0 ? 'bg-gray-700' : '') :
+                      theme === 'light' ? (index % 2 === 0 ? 'bg-gray-300' : '') : ''
+                      }`}
+                    >
+                      <td className=" px-4 py-2">{index + 1}</td>
+                      <td className=" px-4 py-2">{user.userInformation.username}</td>
+                      <td className=" px-4 py-2">{user.userInformation.name}</td>
+                      <td className=" px-4 py-2">{user.userInformation.email}</td>
+                      <td className=" px-4 py-2">{user.userInformation.mobileNum}</td>
                     </tr>
-                    <div className="border my-2"></div>
-                  </thead>
-                  <tbody>
-                    {data?.map((user, index) => (
-                      <tr key={index} className="flex justify-between my-2">
-                        <td>{index + 1}</td>
-                        <td>{user.userInformation.username}</td>
-                        {/* <td>{"hello"}</td> */}
-                        <td>{user.userInformation.name}</td>
-                        <td>{user.userInformation.email}</td>
-                        <td>{user.userInformation.mobileNum}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </>
-
+                  ))}
+                </tbody>
+              </table>
+            </div>
           ) : (
-            <>
-              <div>User not exist !!</div>
-            </>
+            <div className="text-center text-red-500">User not found!</div>
           )
         }
+
       </div >
-      <div className="bg-primary-color text-text-color p-default-padding">AllUsers</div>
-      {data && (
-        <>
-          {data.getAllUser?.map((user) => (
-            <div key={user.id} className="bg-secondary-color text-text-color p-default-padding my-medium-spacing rounded border border-element-color">
-              <div className="mb-small-spacing">USERNAME : {user.username}</div>
-              <div className="mb-small-spacing">FIRSTNAME : {user.firstName}</div>
-              <div className="mb-small-spacing">LASTNAME : {user.lastName}</div>
-              <div className="mb-small-spacing">EMAIL : {user.email}</div>
-              <div className="mb-small-spacing">MOBILENUM : {user.mobileNum}</div>
-            </div>
-          ))}
-        </>
-      )}
-      {/* {queryLoading && <div className="text-text-color">Loading...</div>}
-      {queryError && <div className="text-text-color">{queryError.message}</div>} */}
+
+
     </>
   );
 }

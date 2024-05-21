@@ -20,6 +20,34 @@ export const GET_USER_STATUS = gql`
         }
     }
 `;
+export const GET_USER_FOR_PROFILE = gql`
+    query GetUserStatus{
+        getMe{
+            id
+            userInformation{
+                name
+                username
+                email
+                mobileNum
+                gender
+                role
+                state
+                college
+                department
+                course
+                collegeId
+                graduationYear
+                cgpa
+                hosteler
+                profilePic 
+                leetcodeProfile    
+                codeforcesProfile  
+                linkedinProfile    
+                githubProfile      
+            }
+        }
+    }
+`;
 export const GET_USER_STATUS_WITH_ALL_DETAILS = gql`
     query GetUserStatus{
         getMe{

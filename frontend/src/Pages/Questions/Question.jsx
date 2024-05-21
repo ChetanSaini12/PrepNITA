@@ -7,19 +7,22 @@ import { Loader } from '../Loader';
 import { toast } from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 import { FaCheck, FaTimes } from 'react-icons/fa'
+import { useDispatch, useSelector } from 'react-redux';
+import { setLoading } from '../../app/user/userSlice';
 
 
 const Question = () => {
-    const [Error, setError] = useState(null);
+    const { isLoading } = useSelector((state) => state.user);
+    const [ERROR, setError] = useState(null);
     const [tempQ, setTempQ] = useState(null);
     const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(false);
     const [refresh, setRefresh] = useState(false);
+    const dispatch = useDispatch();
 
     const [getQuestions] = useMutation(GET_ALL_QUESTIONS, {
         onError: (error) => {
             console.log("error from getQuestions ", error);
-            return toast.error("Error fetching questions");
+            return setError(error);
             // toast.error("Error fetching questions");
             // setError(error.message);
         }
@@ -28,23 +31,23 @@ const Question = () => {
     const [changeStatus] = useMutation(CHANGE_APPROVE_STATUS_OF_QUE, {
         onError: (error) => {
             console.log("error from changeStatus ", error);
-            toast.error(error.message || error);
-            // setError(error.message);
+            // toast.error(error.message || error);
+            return setError(error);
         }
     });
 
     const [downVote] = useMutation(DOWN_VOTE_QUESTION, {
         onError: (error) => {
             console.log("error from downVote ", error);
-            toast.error(error.message);
-            // setError(error.message);
+            // toast.error(error.message);
+            return setError(error.message);
         }
     });
     const [upVote] = useMutation(UP_VOTE_QUESTION, {
         onError: (error) => {
             console.log("error from downVote ", error);
-            toast.error(error.message);
-            // setError(error.message);
+            // toast.error(error.message);
+            return setError(error.message);
         }
     });
 
@@ -77,18 +80,27 @@ const Question = () => {
 
 
     useEffect(() => {
-        setLoading(true);
-        getQuestions().then((res) => {
-            console.log("res from getQuestions ", res);
+        dispatch(setLoading(true));
+        (async () => {
+            try {
+                const { data, errors } = await getQuestions();
+                console.log("res from getQuestions ", data);
+                if (errors) {
+                    console.log("error in fetching question ", errors);
+                    dispatch(setLoading(false));
+                   return  setError(errors);
+                }
+                else {
+                    setData(data.getQuestions)
+                    dispatch(setLoading(false)); 
+                }
+                // setData(res.data);
+            } catch (error) {
+                dispatch(setLoading(false));
+                setError(error);
+            }
 
-            setData(res.data.getQuestions)
-            setLoading(false);
-            // setData(res.data);
-        }).catch((err) => {
-            setLoading(false);
-            toast.error(err.message);
-            console.log("err from getQuestions ", err);
-        });
+        })();
     }, []);
 
     useEffect(() => {
@@ -99,10 +111,13 @@ const Question = () => {
 
 
 
-
+    if(ERROR){
+        console.log("error from question page ", ERROR);
+        toast.error(ERROR.message?ERROR.message : "Error fetching questions");
+    };
     return (
         <div className='min-h-screen table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500' >
-            {loading && <Loader />}
+            {isLoading && <Loader />}
             {data && (
                 <>
                     <Table hoverable className='shadow-md'>
@@ -122,10 +137,10 @@ const Question = () => {
                         {data.map((question) => (
                             <Table.Body className='divide-y' key={question.id}>
                                 <Table.Row className='bg-white dark:border-gray-700 dark:bg-gray-800'>
-                                        <Table.Cell>
-                                            {question?.id}
-                                        </Table.Cell>
-                                    
+                                    <Table.Cell>
+                                        {question?.id}
+                                    </Table.Cell>
+
                                     {/* <Table.Cell>
                                     <Link className='font-medium text-gray-900 dark:text-white'>
                                 {question?.links?.title}
@@ -155,7 +170,7 @@ const Question = () => {
                                         {question.isApproved ? (<FaCheck className='text-teal-500'></FaCheck>) : (<FaTimes className='text-red-500'></FaTimes>)}
                                     </Table.Cell>
                                     <Table.Cell>
-                                    <Link to={`/questions/${question?.id}`}className='text-teal-500 hover:underline'>
+                                        <Link to={`/questions/${question?.id}`} className='text-teal-500 hover:underline'>
                                             <span>View </span>
                                         </Link>
                                     </Table.Cell>

@@ -2,9 +2,10 @@ import moment from 'moment';
 import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+
 // import moment from 'moment';
 
-const DateTimePicker = ({ setDateTime }) => {
+const DateTimePicker = ({ setDateTime , text="Select Date and Time" }) => {
     // const currentDate = new Date();
     const [selectedDate, setSelectedDate] = useState(new Date());
 
@@ -23,6 +24,7 @@ const DateTimePicker = ({ setDateTime }) => {
                 onChange={handleDateChange}
                 showTimeSelect
                 dateFormat="Pp"
+                className='border text-gray-900 border-gray-300 rounded p-1 w-full mt-1 outline-none focus:ring-2 focus:ring-blue-200 focus:border-transparent'
             />
         </div>
     );

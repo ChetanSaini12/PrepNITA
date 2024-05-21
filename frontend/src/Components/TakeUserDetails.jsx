@@ -4,10 +4,10 @@ import { CircularProgressbar } from 'react-circular-progressbar';
 
 const TakeUserDetails = (props) => {
     const { handleChange, handleSubmit, loggedIn, imageFileUploadProgress,
-         isLoading,Button_Text ,profilePic,formData,setFormData} = props;
-         
-            // console.log("user-> ",formData);
-         
+        isLoading, Button_Text, profilePic, formData, setFormData } = props;
+
+    // console.log("user-> ",formData);
+
     return (
         <div className="max-w-lg mx-auto p-3 w-full">
             <form className="flex flex-col gap-4 align-items:center" onSubmit={handleSubmit}>
@@ -43,7 +43,7 @@ const TakeUserDetails = (props) => {
                         type="text"
                         placeholder="Username"
                         id="username"
-                        value={formData?.username?formData.username:""}
+                        value={formData?.username ? formData.username : ""}
                         onChange={handleChange}
                     ></TextInput>
                 </div>
@@ -54,7 +54,7 @@ const TakeUserDetails = (props) => {
                         type="text"
                         placeholder="John Doe"
                         id="name"
-                        value={formData?.name?formData.name:""}
+                        value={formData?.name ? formData.name : ""}
                         onChange={handleChange}
                     ></TextInput>
                 </div>
@@ -63,9 +63,11 @@ const TakeUserDetails = (props) => {
                     <TextInput
                         required
                         type="text"
-                        placeholder="+91-0000000000"
+                        placeholder="0000000000"
                         id="mobileNum"
-                        value={formData?.mobileNum?formData.mobileNum:""}
+                        maxLength={10}
+                        minLength={10}
+                        value={formData?.mobileNum ? formData.mobileNum : ""}
                         onChange={handleChange}
                     ></TextInput>
                 </div>
@@ -76,7 +78,7 @@ const TakeUserDetails = (props) => {
                         type="text"
                         placeholder="21UEE055"
                         id="collegeId"
-                        value={formData?.collegeId?formData.collegeId:""}
+                        value={formData?.collegeId ? formData.collegeId : ""}
                         onChange={handleChange}
                     ></TextInput>
                 </div>
@@ -87,16 +89,17 @@ const TakeUserDetails = (props) => {
                         type="Integer"
                         placeholder="2025"
                         id="graduationYear"
-                        value={formData?.graduationYear?formData.graduationYear:""}
+                        value={formData?.graduationYear ? formData.graduationYear : ""}
                         onChange={handleChange}
                     ></TextInput>
                 </div>
                 <div>
                     <Label value="College*"></Label>
                     <Select
+                        required
                         id="college"
                         name="college"
-                        value={formData?.college?formData.college:""}
+                        value={formData?.college ? formData.college : ""}
                         onChange={handleChange}
                     >
                         <option selected>Choose your College </option>
@@ -111,7 +114,7 @@ const TakeUserDetails = (props) => {
                         required
                         id="course"
                         name="course"
-                        value={formData?.course?formData.course:""}
+                        value={formData?.course ? formData.course : ""}
                         onChange={handleChange}
                     >
                         <option selected>Choose your Course </option>
@@ -129,9 +132,12 @@ const TakeUserDetails = (props) => {
                         type="float"
                         placeholder="9.23"
                         id="cgpa"
-                        value={formData?.cgpa?formData.cgpa:""}
+                        pattern='^(?:10(?:\.0+)?|\d(\.\d{1,2})?)$'
+                        value={formData?.cgpa ? formData.cgpa : ""}
                         onChange={handleChange}
                     ></TextInput>
+
+
                 </div>
 
                 <div>
@@ -141,19 +147,21 @@ const TakeUserDetails = (props) => {
                         type="text"
                         placeholder="Rajasthan"
                         id="state"
-                        value={formData?.state?formData.state:""}
+                        value={formData?.state ? formData.state : ""}
                         onChange={handleChange}
                     ></TextInput>
                 </div>
                 <div>
-                    <Label value="Hostler*"></Label>
+                    <Label value="Hosteller*"></Label>
                     <Select
-                        id="hostler"
-                        name="hostler"
-                        value={formData?.hostler?formData.hostler:""}
+                        required
+                        id="hosteler"
+                        name="hosteller"
+                        value={formData?.hosteler ? formData.hosteler : ""}
                         onChange={handleChange}
                     >
-                        {/* <option selected> </option> */}
+                        <option selected>Are you hosteller</option>
+
                         <option value="true">YES</option>
                         <option value="false">NO</option>
 
@@ -162,10 +170,12 @@ const TakeUserDetails = (props) => {
                 <div>
                     <Label value="Gender*"></Label>
                     <Select
+                        required
                         id="gender"
-                        name="gender" 
-                        value={formData.gender?formData.gender:""}
+                        name="gender"
+                        value={formData.gender ? formData.gender : ""}
                         onChange={handleChange}
+                        defaultValue={"Choose your gender"}
                     >
                         <option selected>Choose your gender </option>
                         <option value="MALE">MALE</option>
@@ -179,12 +189,13 @@ const TakeUserDetails = (props) => {
                 <div>
                     <Label value="Department*"></Label>
                     <Select
+                        required
                         id="department"
                         name="department"
-                        value={formData.department?formData.department:""}
                         onChange={handleChange}
+                        value={formData.department ? formData.department : ""}
                     >
-                        <option selected>Choose your College </option>
+                        <option selected>Choose Your Department </option>
                         <option value="COMPUTER_SCIENCE_AND_ENGINEERING">CSE</option>
                         <option value="ELECTRONICS_AND_COMMUNICATIONS_ENGINEERING">ECE</option>
                         <option value="ELECTRICAL_ENGINEERING">EE</option>
@@ -202,8 +213,8 @@ const TakeUserDetails = (props) => {
                         type="text"
                         placeholder="https://leetcode.com/username/"
                         id="leetcodeProfile"
-                        value={formData.leetcodeProfile?formData.leetcodeProfile:""}
                         onChange={handleChange}
+                        value={formData?.leetcodeProfile ? formData.leetcodeProfile : ""}
                     ></TextInput>
                 </div>
                 <div>
@@ -212,8 +223,8 @@ const TakeUserDetails = (props) => {
                         type="text"
                         placeholder="https://codeforces.com/username/"
                         id="codeforcesProfile"
-                        value={formData.codeforcesProfile?formData.codeforcesProfile:""}
                         onChange={handleChange}
+                        value={formData?.codeforcesProfile ? formData.codeforcesProfile : ""}
                     ></TextInput>
                 </div>
                 <div>
@@ -221,9 +232,9 @@ const TakeUserDetails = (props) => {
                     <TextInput
                         type="text"
                         placeholder="https://linkedin.com/username/"
-                        id="linkedProfile"
-                        value={formData.linkedProfile?formData.linkedProfile:""}
+                        id="linkedinProfile"
                         onChange={handleChange}
+                        value={formData?.linkedinProfile ? formData.linkedinProfile : ""}
                     ></TextInput>
                 </div>
                 <div>
@@ -232,7 +243,7 @@ const TakeUserDetails = (props) => {
                         type="text"
                         placeholder="https://github.com/username/ "
                         id="githubProfile"
-                        value={formData.githubProfile?formData.githubProfile:""}
+                        value={formData?.githubProfile ? formData.githubProfile : ""}
                         onChange={handleChange}
                     ></TextInput>
                 </div>
