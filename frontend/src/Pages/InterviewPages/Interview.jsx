@@ -14,7 +14,7 @@ import { setLoading } from '../../app/user/userSlice';
 function Interviews() {
   const { loggedIn, isLoading } = useSelector((state) => state.user);
   const [dateTime, setDateTime] = useState(new Date());
-  const [Duration, setDuration] = useState(30);
+  const [Duration, setDuration] = useState();
   const [Topics, setTopics] = useState("");
   const [ERROR, setError] = useState(null);
   const [data, setdata] = useState(null);

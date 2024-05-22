@@ -85,3 +85,17 @@ export const GET_QUIZ_BY_ID = gql`
     }
 
 `;
+
+export const UPDATE_QUIZ = gql`
+    mutation updateQuizMutation($quizId: Int!, $Quiz: quizInput){
+        updateQuiz(quizId: $quizId, Quiz: $Quiz){
+            id 
+        }
+    }
+`;
+
+export const DELETE_QUIZ=gql`
+    mutation deleteQuizMutation($QuizId:Int!){
+        deleteQuiz(QuizId:$QuizId)
+    }
+`;
