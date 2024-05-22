@@ -56,26 +56,26 @@ function Header() {
             </div>
             <Navbar.Collapse>
                 {/* <Navbar.Link active={path==='/'}  as={'div'}> */}
-                <Navbar.Link className={path === '/' ? "nav-links-active" : "nav-links"} as={'div'}>
+                <Navbar.Link active={path==='/'} as={'div'}>
                     <Link to='/'>Home</Link>
                 </Navbar.Link>
                 {/* <Navbar.Link active={path==='/quizes'} as={'div'}> */}
-                <Navbar.Link className={path === '/quizes' ? "nav-links-active" : "nav-links"} as={'div'}>
+                <Navbar.Link active={path==='/quizes'} as={'div'}>
                     <Link to='/quizes'>Quizes</Link>
                 </Navbar.Link>
                 {/* <Navbar.Link active={path==='/dashboard'} as={'div'}> */}
-                <Navbar.Link className={path === '/dashboard' ? "nav-links-active" : "nav-links"} as={'div'}>
+                <Navbar.Link active={path === '/dashboard'} as={'div'}>
                     <Link to='/dashboard'>Dashboard</Link>
                 </Navbar.Link>
                 {/* <Navbar.Link active={path==='/interview'} as={'div'}> */}
-                <Navbar.Link className={path === '/interview' ? "nav-links-active" : "nav-links"} as={'div'}>
+                <Navbar.Link active={path === '/interview'} as={'div'}>
                     <Link to='/interview'>Interviews</Link>
                 </Navbar.Link>
                 {/* <Navbar.Link active={path==='/discuss'} as={'div'}> */}
-                <Navbar.Link className={path === '/discuss' ? "nav-links-active" : "nav-links"} as={'div'}>
+                <Navbar.Link active={path === '/discuss' } as={'div'}>
                     <Link to='/discuss'>Discuss</Link>
                 </Navbar.Link>
-                <Navbar.Link className={path === '/profile' ? "nav-links-active" : "nav-links"} as={'div'}>
+                <Navbar.Link active={path === '/profile'} as={'div'}>
                     <Link to='/profile'>Profile</Link>
                 </Navbar.Link>
 

@@ -62,7 +62,7 @@ export const UserProfile = ({userData}) => {
               <LabelAndTextInput label="Graduation Year" value={userData.graduationYear} />
               <LabelAndTextInput label="Course" value={userData.course} />
               <LabelAndTextInput label="Department" value={userData.department} />
-              <LabelAndTextInput label="Cgpa" value={userData.cgpa} />
+              <LabelAndTextInput label="CGPA" value={userData.cgpa} />
               <LabelAndTextInput label="Hosteller" value={userData.hosteler ? "YES" : "NO"} />
               {/* </div> */}
             </div>

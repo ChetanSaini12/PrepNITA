@@ -16,8 +16,8 @@ const DateTimePicker = ({ setDateTime , text="Select Date and Time" }) => {
     };
 
     return (
-        <div className='text-2xl text-black'>
-            <h2 className='text-white '>Select Date and Time</h2>
+        <div className='text-2xl'>
+            <h2 >{text}</h2>
             <DatePicker
                 selected={selectedDate}
                 onChange={handleDateChange}

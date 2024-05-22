@@ -8,6 +8,7 @@ import { setLoading } from '../../app/user/userSlice';
 import toast from 'react-hot-toast';
 import DateTimePicker from '../../Components/DatePicker';
 import { Loader } from '../Loader';
+import { FaFlag } from "react-icons/fa";
 
 export const CreateQuiz = () => {
 
@@ -118,12 +119,9 @@ export const CreateQuiz = () => {
                                 onChange={handleChange}
                             />
                         </div>
-
                         <div className='flex justify-between'>
-
-                            <DateTimePicker required setDateTime={setStartDateTime} text='Start date and time ' />
-                            <DateTimePicker required setDateTime={setEndDateTime} text='End date and time ' />
-
+                            <DateTimePicker required setDateTime={setStartDateTime} text='Start :'/>
+                            <DateTimePicker required setDateTime={setEndDateTime} text='Finish :' />
                         </div>
 
 
