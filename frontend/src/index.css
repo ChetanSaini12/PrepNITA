@@ -33,6 +33,8 @@
     --text-color: #FEFEFA; /* Text color for dark mode */
 }
 
+
+
 .white-image {
         filter: brightness(0) saturate(100%) invert(35%) sepia(100%) saturate(2000%) hue-rotate(-50deg);
       
