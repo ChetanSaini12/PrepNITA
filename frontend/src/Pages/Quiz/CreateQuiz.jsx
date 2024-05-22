@@ -119,7 +119,7 @@ export const CreateQuiz = () => {
                             />
                         </div>
 
-                        <div className='flex justify-between'>
+                        <div className='flex flex-col sm:flex-row justify-between'>
 
                             <DateTimePicker required setDateTime={setStartDateTime} text='Start date and time ' />
                             <DateTimePicker required setDateTime={setEndDateTime} text='End date and time ' />
