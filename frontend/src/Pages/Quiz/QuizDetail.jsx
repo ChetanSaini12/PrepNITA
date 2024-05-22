@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { GET_QUIZ_BY_ID, UPDATE_QUIZ } from '../../gqlOperatons/Quiz/mutations';
+import { DELETE_QUIZ, GET_QUIZ_BY_ID, UPDATE_QUIZ } from '../../gqlOperatons/Quiz/mutations';
 import { setLoading } from '../../app/user/userSlice';
 import { Loader } from '../Loader';
 import { useMutation } from '@apollo/client';
@@ -44,9 +44,16 @@ const QuizDetail = () => {
         }
     });
 
-    const [updateQuiz]=useMutation(UPDATE_QUIZ,{
-        onError:(error)=>{
-            console.log("on error at update quiz",error);
+    const [updateQuiz] = useMutation(UPDATE_QUIZ, {
+        onError: (error) => {
+            console.log("on error at update quiz", error);
+            return setError(error);
+        }
+    });
+
+    const [deleteQuiz] = useMutation(DELETE_QUIZ, {
+        onError: (error) => {
+            console.log("on error at delete quiz", error);
             return setError(error);
         }
     });
@@ -104,19 +111,28 @@ const QuizDetail = () => {
 
     }, [refresh]);
 
-    const handleQuizEdit =  (e) => {
+    const handleQuizEdit = (e) => {
         e.preventDefault();
         setActive(false);
         setShowEditMode(true);
     };
-    const handleCancel =  (e) => {
+    const handleCancel = (e) => {
         e.preventDefault();
         setActive(true);
         setShowEditMode(false);
         setTempQuiz(quiz);
     };
 
-    const handleUpdateQuiz = async(e) => {
+    const handleChange = (e) => {
+        setTempQuiz({
+            ...tempQuiz,
+            [e.target.id]: e.target.value
+        });
+        // console.log("temp quiz ", tempQuiz);
+        // console.log("date time ", startDateTime.toISOString());
+    };
+
+    const handleUpdateQuiz = async (e) => {
         e.preventDefault();
         dispatch(setLoading(true));
         try {
@@ -141,7 +157,7 @@ const QuizDetail = () => {
                 setRefresh(!refresh);
                 setActive(true);
                 setShowEditMode(false);
-                 toast.success(" Quiz is updated successfully ! ")
+                toast.success(" Quiz is updated successfully ! ")
             }
         } catch (error) {
             dispatch(setLoading(false));
@@ -151,14 +167,36 @@ const QuizDetail = () => {
 
     };
 
-    const handleChange = (e) => {
-        setTempQuiz({
-            ...tempQuiz,
-            [e.target.id]: e.target.value
-        });
-        // console.log("temp quiz ", tempQuiz);
-        // console.log("date time ", startDateTime.toISOString());
+    const handleDeleteQuiz = async (e) => {
+        e.preventDefault();
+        const userConfirmation = window.confirm("You are deleting this quiz ");
+        if (!userConfirmation) return;
+        dispatch(setLoading(true));
+        try {
+            const { data, errors } = await deleteQuiz({
+                variables: {
+                    QuizId: id,
+                }
+            });
+            if (errors) {
+                dispatch(setLoading(false));
+                return setError(errors);
+            }
+            else if (data) {
+                dispatch(setLoading(false));
+                // console.log("updated quiz ", data);
+                setActive(true);
+                setShowEditMode(false);
+                toast.success(" Quiz is deleted successfully ! ")
+                navigate('/quizes');
+            }
+        } catch (error) {
+            dispatch(setLoading(false));
+            return setError(error);
+        }
     };
+
+
 
     if (isLoading) return <Loader />;
     if (ERROR) {
@@ -201,7 +239,7 @@ const QuizDetail = () => {
                             <div className='flex gap-3'>
                                 <button onClick={handleQuizEdit} className='border border-gray-300 dark:border-gray-700 
                                  hover:border-red-500 dark:hover:border-red-400 px-2 rounded-lg'>Edit </button>
-                                <button className='border border-gray-300 dark:border-gray-700 
+                                <button onClick={handleDeleteQuiz} className='border border-gray-300 dark:border-gray-700 
                                  hover:border-red-500 dark:hover:border-red-400 px-2 rounded-lg'>Delete</button>
                             </div>
                         </div>
@@ -304,7 +342,7 @@ const QuizDetail = () => {
                             />
                         </div>
                         <div className='flex flex-col sm:flex-row justify-between'>
-                            <DateTimePicker  required setDateTime={setStartDateTime} text='Start date and time ' />
+                            <DateTimePicker required setDateTime={setStartDateTime} text='Start date and time ' />
                             <DateTimePicker required setDateTime={setEndDateTime} text='End date and time ' />
                         </div>
                         <Button type='submit' className='my-5'>Update Quiz </Button>

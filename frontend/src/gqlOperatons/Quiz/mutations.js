@@ -93,3 +93,9 @@ export const UPDATE_QUIZ = gql`
         }
     }
 `;
+
+export const DELETE_QUIZ=gql`
+    mutation deleteQuizMutation($QuizId:Int!){
+        deleteQuiz(QuizId:$QuizId)
+    }
+`;
