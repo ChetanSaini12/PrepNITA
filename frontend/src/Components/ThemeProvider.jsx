@@ -17,7 +17,7 @@ function ThemeProvider({ children }) {
 
   return (
     <div className={theme}>
-      <div className='text-gray-800 dark:text-gray-100  min-h-screen'>
+      <div className='text-gray-800 dark:text-gray-100 max-w-screen min-h-screen overflow-x-hidden'>
         {children}
       </div>
     </div>

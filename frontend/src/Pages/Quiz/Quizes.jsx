@@ -71,7 +71,7 @@ function Quizes() {
     toast.error(ERROR.message ? ERROR.message : ERROR || "something went wrong");
   }
   return (
-    <div className='flex flex-col items-center my-5 mx-1 gap-5 w-screen min-h-screen' >
+    <div className='flex flex-col items-center my-5 mx-1 gap-5  max-w-screen min-h-screen' >
       <div>
         <div className='text-lg md:tex-xl '> some heading or intro will be here </div>
         <div className='flex gap-2 '>
@@ -83,14 +83,17 @@ function Quizes() {
         {quizes && quizes.map((quiz) => (
           <Link to={`/quiz/id/${parseInt(quiz.id)}`}>
             <div key={quiz.id} className="mx-2 bg-gray-200 dark:bg-gray-800 rounded-lg shadow-md py-5 px-10 md:p-6 hover:shadow-lg hover:bg-gray-300
-             dark:hover:bg-gray-700 transition duration-300 min-w-80  min-h-36">
+             dark:hover:bg-gray-700 transition duration-300 min-w-72 md:min-w-80  min-h-36">
               <div className='flex flex-col gap-5'>
-                <div className='underline underline-offset-4 text-lg font-semibold flex justify-center -mt-4 '>{quiz.title}</div>
+                <div className='underline underline-offset-4 text-lg font-semibold flex justify-center -mt-4  '>{quiz.title}</div>
                 {/* <div>author ✍🏼 {quiz.createdBy}</div> */}
                 {/* <div>{quiz.startTime}</div> */}
-                <div className='flex  justify-between'>
-                  <div className=''>📅 {moment(quiz.startTime).format('DD MMMM YY')}</div>
-                  <div className=''>🕗 {moment(quiz.startTime).format('HH:mm:ss')} IST</div>
+                <div className='flex  justify-between gap-1 md:gap-2'>
+                  <div className='flex justify-between'>
+                    <span className='text-xl sm:text-3xl'>📅</span> <span className='mt-1'>{moment(quiz.startTime).format('DD MMMM YY')}</span>
+                  </div>
+                  <div className='flex justify-between'>
+                    <span className='text-xl sm:text-3xl '>🕗</span> <span className='text-center mt-1'>{moment(quiz.startTime).format('HH:mm:ss')} IST</span></div>
                 </div>
                 <div className='flex justify-between'>
                   <div>Duration</div>

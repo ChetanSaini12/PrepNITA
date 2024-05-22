@@ -14,7 +14,7 @@ import { setLoading } from '../../app/user/userSlice';
 function Interviews() {
   const { loggedIn, isLoading } = useSelector((state) => state.user);
   const [dateTime, setDateTime] = useState(new Date());
-  const [Duration, setDuration] = useState(30);
+  const [Duration, setDuration] = useState();
   const [Topics, setTopics] = useState("");
   const [ERROR, setError] = useState(null);
   const [data, setdata] = useState(null);
@@ -118,7 +118,7 @@ function Interviews() {
   }
 
   return (
-    <div className="w-screen min-h-screen   flex flex-col items-center justify-center">
+    <div className="min-w-screen min-h-screen   flex flex-col items-center justify-center">
       <div className="max-w-xl w-full bg-gray-500 dark:bg-gray-800 rounded-lg shadow-lg p-6 mt-5 mb-8">
         <h1 className="text-lg md:text-2xl text-white  font-semibold mb-4">Schedule an Interview</h1>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -146,8 +146,8 @@ function Interviews() {
         </form>
       </div>
 
-      <div className="mx-2 mb-5 ">
-        <h1 className="text-3xl font-semibold mb-4">All Interviews </h1>
+      <div className="mx-2 sm:mx-2 mb-5">
+        <h1 className="text-xl sm:text-2xl md:text-3xl mx-2 font-semibold mb-4">All Interviews </h1>
         <div className='flex justify-start gap-2 md:gap-5 my-4 mx-1 text-sm md:text-md '>
           <Button   size="sm" className='text-sm p-0' onClick={() => { setButtonIndex(0) }}>All</Button>
           <Button   size="sm" className='text-sm p-0' onClick={() => { setButtonIndex(1) }} >Completed</Button>
