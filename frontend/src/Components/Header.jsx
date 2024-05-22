@@ -30,10 +30,10 @@ function Header() {
 
 
     return (
-        <Navbar className='bg-gray-300 dark:bg-gray-800'>
+        <Navbar className='border-b-2 dark:bg-gray-800'>
             <Link to="/" className='font-bold text-lg flex-col '>
             
-                <span className='px-2 py-1 bg-gradient-to-r from from-indigo-500  via-purple-500 to-pink-500 rounded-lg text-white text-lg font-bold ab'>PreP</span> NITA
+                <span className='px-2 py-1 bg-gradient-to-r from from-cyan-400  via-cyan-500 to-cyan-900 rounded-lg text-white text-lg font-bold ab'>PreP</span> NITA
             </Link>
             <div className='flex gap-2 md:order-2'>
                 <Button className='w-12 h-10 border-spacing-2 sm:inline' color='grey' pill onClick={() => {

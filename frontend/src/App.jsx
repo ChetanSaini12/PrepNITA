@@ -25,18 +25,27 @@ import Interviewhome from "./Pages/InterviewPages/Interviewhome.jsx";
 import AdminInterview from "./Pages/InterviewPages/adminInterview.jsx";
 import { CreateQuiz } from "./Pages/Quiz/CreateQuiz.jsx";
 import QuizDetail from "./Pages/Quiz/QuizDetail.jsx";
+import { useSelector } from "react-redux";
 
 function App() {
-  window.particlesJS.load("particles", "/particlesjs-config.json");
+  
+  const { theme } = useSelector(state => state.theme);
+  if(theme==="dark"){
+    window.particlesJS.load("particles", "/particlesjs-config.json");
+  }
 
   return (
     <div className="App">
       <div className="relative">
         <div className="fixed top-0 left-0 -z-50">
-          <div
+         {
+          theme==="dark" ?(
+            <div
             id="particles"
-            className="w-screen h-screen bg-white dark:bg-[rgb(16,23,42)] color : "
+            className="w-screen h-screen light:bg-[rgb(0,0,0)] dark:bg-[rgb(16,23,42)] color : "
           />
+          ):(<></>)
+         }
         </div>
         <BrowserRouter>
           <Header />
@@ -65,7 +74,7 @@ function App() {
           <FooterCom></FooterCom>
         </BrowserRouter>
       </div>
-    </div>
+     </div>
   );
 }
 

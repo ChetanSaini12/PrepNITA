@@ -118,10 +118,10 @@ function Interviews() {
   }
 
   return (
-    <div className="w-screen min-h-screen   flex flex-col items-center justify-center">
-      <div className=' max-w-xl w-full flex flex-col sm:flex-row p-3 border border-teal-500 justify-center items-center rounded-tl-3xl rounded-br-3xl m-5 light: bg-gray-700 text-white'>
+    <div className="w-screen min-h-screen flex flex-col items-center justify-center">
+      <div className=' max-w-xl w-full flex flex-col sm:flex-row p-3 border border-teal-500 justify-center items-center rounded-tl-3xl rounded-br-3xl m-5 light: bg-gray-300 dark:bg-gray-700'>
       <div className='flex-1 justify-center flex flex-col '>
-        <h1 className="text-3xl font-semibold mb-4 ">Schedule an Interview</h1>
+        <h1 className="text-3xl font-semibold mb-4  ">Schedule an Interview</h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           <TextInput
             type="number"
@@ -150,7 +150,7 @@ function Interviews() {
       </div>
 
       <div className="mx-2 mb-5 ">
-        <h1 className="text-3xl font-semibold mb-4">All Interviews </h1>
+        <h1 className="text-3xl font-semibold mb-4 ">All Interviews </h1>
         <div className='flex justify-start gap-2 md:gap-5 my-4 mx-1 text-sm md:text-md '>
           <Button   size="sm" className='text-sm p-0' onClick={() => { setButtonIndex(0) }}>All</Button>
           <Button   size="sm" className='text-sm p-0' onClick={() => { setButtonIndex(1) }} >Completed</Button>

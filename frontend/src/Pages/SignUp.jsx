@@ -19,6 +19,7 @@ function SignUp() {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({});
   const [ERROR, setError] = useState(null);
+  
 
   const [emailModel, setEmailModel] = useState(false);
   const [EMAIL, setEmail] = useState("");
@@ -345,7 +346,7 @@ function SignUp() {
                 width={100}
               />
             </div>
-            <span className="px-2 py-1 bg-gradient-to-r from from-indigo-500  via-purple-500 to-pink-500 rounded-lg text-white">
+            <span className="px-2 py-1 bg-gradient-to-r from from-cyan-400  via-cyan-500 to-cyan-900 rounded-lg  text-white">
               PreP
             </span>
             NITA
@@ -359,7 +360,7 @@ function SignUp() {
         <div className="flex-1">
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <div>
-              <FloatingLabel variant="outlined" label="Email" type="email" id="email" onChange={handleChange}></FloatingLabel>
+              <FloatingLabel variant="outlined" label="Email" type="email" id="email" onChange={handleChange} className="text-red"></FloatingLabel>
             </div>
             <div>
               <FloatingLabel variant="outlined" label="Password" type="password" id="password" onChange={handleChange}></FloatingLabel>
