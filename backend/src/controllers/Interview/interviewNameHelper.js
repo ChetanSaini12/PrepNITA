@@ -6,7 +6,8 @@ export const interviewNameAdd = async (interview) => {
       id: interview.intervieweeId,
     },
   });
-  interview['intervieweeName'] = interviewee?.name
+  console.log('interviewee : ', interviewee);
+  interview['intervieweeName'] = interviewee?.name 
   interview['intervieweeEmail'] = interviewee?.email
   if (interview.interviewerId) {
     const interviewer = await prisma.userInformation.findFirst({
