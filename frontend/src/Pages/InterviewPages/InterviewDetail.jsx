@@ -29,6 +29,12 @@ const InterviewDetails = () => {
     development: 3,
     dsa: 2,
     csfundamentals: 5,
+    csfundamentals: 4,
+    csfundamentals: 2,
+    csfundamentals: 3,
+    csfundamentals: 5,
+    csfundamentals: 1,
+
     notes: ["Good communication skills", "Good in development", "Need to improve in DSA", "Excellent in CS Fundamentals"],
     points: 14
   };
@@ -108,7 +114,7 @@ const InterviewDetails = () => {
   if (isLoading) return <Loader />;
   return (
 
-    <div className='w-screen min-h-screen flex flex-col mt-8 mb-5'>
+    <div className='min-w-screen min-h-screen flex flex-col mt-8 mb-5'>
       {/* <h1 className=' text-3xl flex justify-center my-2'> Interview detail page  </h1> */}
 
       {interview && (
@@ -162,12 +168,12 @@ const InterviewDetails = () => {
           <div className='max-h-96 mx-2 my-14  flex justify-center'>
             <Bar
               data={{
-                labels: ['Communication', 'Development', 'DSA', 'CS Fundamentals'],
+                labels: ['Communication', 'Development', 'DSA', 'CS Fundamentals', 'CS Fundamentals', 'CS Fundamentals', 'CS Fundamentals', 'CS Fundamentals', 'CS Fundamentals', 'CS Fundamentals'],
                 // labels: interview.topics.map((topic) => topic),
                 datasets: [
                   {
                     label: 'Feedback',
-                    data: [dummyFeedBack.communication, dummyFeedBack.development, dummyFeedBack.dsa, dummyFeedBack.csfundamentals],
+                    data: [dummyFeedBack.communication, dummyFeedBack.development, dummyFeedBack.dsa, dummyFeedBack.csfundamentals, dummyFeedBack.csfundamentals, dummyFeedBack.csfundamentals, dummyFeedBack.csfundamentals, dummyFeedBack.csfundamentals],
                     backgroundColor: [
                       'rgba(255, 99, 132, 0.5)',
                       'rgba(54, 162, 235, 0.5)',
@@ -181,8 +187,8 @@ const InterviewDetails = () => {
                       'rgba(75, 192, 192, 1)',
                     ],
                     borderWidth: 1,
-                    minBarThickness: 10,
-                    barThickness: 50,
+                    // minBarThickness: 10,
+                    // barThickness: 50,
                     minBarLength: 2,
                   },
                 ],
