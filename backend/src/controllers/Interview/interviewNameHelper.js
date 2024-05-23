@@ -15,9 +15,10 @@ export const interviewNameAdd = async (interview) => {
         id: interview.interviewerId,
       },
     });
+    console.log('Interviewer : ', interviewer);
     interview['interviewerName'] = interviewer?.name
     interview['interviewerEmail'] = interviewer?.email
   }
-
+  console.log('INTERVIEw in function : ', interview);
   return interview
 }
