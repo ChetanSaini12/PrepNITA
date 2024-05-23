@@ -9,7 +9,8 @@ export const getInterviewById = async (_, paylaod, res) => {
                 id : paylaod.interviewId
             }
         })
-        interview = interviewNameAdd(interview)
+        interview = await interviewNameAdd(interview)
+        console.log("Interview fetched for given ID : ", JSON.stringify(interview));
         return interview
     } catch (error) {
         throw new GraphQLError('Error while getting interview by Id', {

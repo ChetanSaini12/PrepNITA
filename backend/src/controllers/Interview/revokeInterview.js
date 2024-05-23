@@ -1,4 +1,7 @@
+import { GraphQLError } from 'graphql'
 import { prisma } from '../../../prisma/index.js'
+import sendEmail from '../../email/send.email.js'
+import { abstractDateTime } from '../../utils/DateTime.js'
 import { interviewNameAdd } from './interviewNameHelper.js'
 
 export const revokeInterview = async (_, payload, context) => {
@@ -9,9 +12,19 @@ export const revokeInterview = async (_, payload, context) => {
         id: payload.interviewId,
       },
     })
+    console.log('Existing interviewer : ', JSON.stringify(exisitngInterview))
+    if (
+      context.isSuperAdmin ||
+      context.userId === exisitngInterview.interviewerId
+    ) {
+      var interview = await prisma.interview.findFirst({
+        where: { id: payload.interviewId },
+        include: {
+          feedback: true,
+        },
+      })
 
-    if (context.isSuperAdmin || context.userId === exisitngInterview.interviewerId) {
-      var interview = prisma.interview.update({
+      await prisma.interview.update({
         where: { id: payload.interviewId },
         data: {
           interviewerId: null,
@@ -21,9 +34,24 @@ export const revokeInterview = async (_, payload, context) => {
         },
       })
 
-      interview = interviewNameAdd(interview)
-
+      // console.log('PHLE WALA : ', );
+      interview = await interviewNameAdd(interview)
+      const dateTime = abstractDateTime(interview.startTime)
+      const interviewDate = dateTime.date
+      const interviewTime = dateTime.time
+      const messageBody = {
+        subject: 'PrepNITA : Interview Revoked',
+        template: './Interview/revokeInterview',
+        context: {
+          interviewerName: interview.interviewerName,
+          candidateName: interview.intervieweeName,
+          interviewDate,
+          interviewTime,
+        },
+      }
       console.log('Revoked Interviewer : ', interview)
+      await sendEmail(interview.intervieweeEmail, messageBody)
+      console.log('Email Sent Successfully!!')
       return interview
     } else {
       throw new GraphQLError(
