@@ -24,8 +24,13 @@
     <p><strong>Interviewer Email: </strong> {{interviewerEmail}}</p>
     <p><strong>Interview Date: </strong> {{interviewDate}}</p>
     <p><strong>Interview Time: </strong> {{interviewTime}}</p>
-    <p><strong>Interview Duration: </strong> {{interviewDuration}}</p>
-    <p><strong>Topics: </strong> {{topics}}</p>
+    <p><strong>Interview Duration: </strong> {{interviewDuration}} Minutes</p>
+    <p><strong>Topics:</strong></p>
+    <ul>
+        {{#each topics}}
+            <li>{{this}}</li>
+        {{/each}}
+    </ul>
     <p>Please ensure you are prepared and available for the interview at the scheduled time.</p>
     <p>Thank you,</p>
     <p>Prep NITA</p>
