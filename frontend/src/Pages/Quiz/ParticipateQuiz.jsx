@@ -58,7 +58,7 @@ const ParticipateQuiz = () => {
     return (
         <div className='min-h-screen flex flex-col gap-4  bg-gray-200 dark:bg-gray-800 '>
             <div className='px-5 py-3 flex justify-end'>
-                <TimerComponent initialTime={600} onTimeUp={handleTimeUp} />
+                <TimerComponent initialTime={30} onTimeUp={handleTimeUp} />
             </div>
             {!quizCompleted ? (
                 <div className='  grid grid-cols-1 sm:grid-cols-2  border-t border-b border-gray-400 dark:border-gray-500  '>
@@ -108,9 +108,9 @@ const ParticipateQuiz = () => {
                 <Button color='red' size={"xs"} className='h-6 sm:h-10  px-0 sm:px-3 '>Finish</Button>
                 <div className='flex gap-3 sm:gap-5'>
                     <button > {"< Previous"}</button>
-                    <button >{"Next >"}</button>
+                    <button onClick={handleNextQuestion} >{"Next >"}</button>
                 </div>
-                <Button color='green' size={"xs"} className='h-6 sm:h-10 px-0 sm:px-3' >Submit</Button>
+                <Button onClick={handleNextQuestion} color='green' size={"xs"} className='h-6 sm:h-10 px-0 sm:px-3' >Submit</Button>
             </div>
 
 
