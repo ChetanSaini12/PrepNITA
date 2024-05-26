@@ -13,7 +13,6 @@ export const AddQuestion = ({ handleCancel, quizId }) => {
     const dispatch = useDispatch();
 
     const [ERROR, setError] = useState(null);
-    const [tempQuestions, setTempQuestions] = useState([]);
     const [tempQuestion, setTempQuestion] = useState({
         description: "",
         options: ["", "", "", ""],
@@ -31,7 +30,7 @@ export const AddQuestion = ({ handleCancel, quizId }) => {
     const handleChangeDescription = (e) => {
         if (e.target.id === "description")
             setTempQuestion({ ...tempQuestion, description: e.target.value });
-        else {
+        else {//change correct option 
             setTempQuestion({ ...tempQuestion, correctOption: e.target.value });
         }
         // console.log("tempQuestion", tempQuestion);
@@ -54,7 +53,6 @@ export const AddQuestion = ({ handleCancel, quizId }) => {
             toast.error("Please fill all the fields");
             return;
         }
-        setTempQuestions([...tempQuestions, tempQuestion]);
         dispatch(setLoading(true));
         try {
             const { data, errors } = await AddQuestion({
