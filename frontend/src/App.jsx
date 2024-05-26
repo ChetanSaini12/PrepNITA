@@ -26,6 +26,7 @@ import AdminInterview from "./Pages/InterviewPages/adminInterview.jsx";
 import { CreateQuiz } from "./Pages/Quiz/CreateQuiz.jsx";
 import QuizDetail from "./Pages/Quiz/QuizDetail.jsx";
 import { useSelector } from "react-redux";
+import ParticipateQuiz from "./Pages/Quiz/ParticipateQuiz.jsx";
 
 function App() {
   
@@ -68,6 +69,7 @@ function App() {
             <Route path="/interview" element={<Interview />}></Route>
             <Route path="/interviewdummy" element={<Interviewhome />}></Route>
             <Route path="/interviewdummyadmin" element={<AdminInterview />}></Route>
+            <Route path="/quiz/view" element={<ParticipateQuiz />}></Route>
             <Route path="/interview/:id" element={<InterviewDetail />}></Route>
             <Route path="/*" element={<PageNotFound />}></Route>
           </Routes>
