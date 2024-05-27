@@ -9,7 +9,9 @@ export const typeDefs = `#graphql
         topics : [String]
         isCompleted : Boolean
         intervieweeName : String
+        intervieweeEmail : String
         interviewerName : String
+        interviewerEmail : String
         feedback : Feedback
     }
 

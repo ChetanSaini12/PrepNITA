@@ -27,7 +27,9 @@ const QuizDetail = () => {
     const [startDateTime, setStartDateTime] = useState(new Date());
     const [endDateTime, setEndDateTime] = useState(new Date());
 
-    const imagePath = '/logo192.png';//for logo of the quiz
+    // const imagePath = '/logo192.png';//for logo of the quiz
+    const imagePath = '/dccLogo.jpg';//for logo of the quiz
+    const locationImg = '/location-dot-solid.svg';//for logo of the quiz
 
 
     const [getQuizById] = useMutation(GET_QUIZ_BY_ID, {
@@ -212,7 +214,7 @@ const QuizDetail = () => {
                   flex flex-col gap-5 '>
                     <div className='flex flex-col gap-4'>
                         <div className='flex gap-5 '>
-                            <img src={imagePath} alt="logoImage" className='w-32 h-32 md:w-32 object-cover border border-gray-100 dark:border-gray-700  rounded-md ' />
+                            <img src={imagePath} alt="logoImage" className='w-32 h-32 md:w-32 object-cover border border-gray-100 dark:border-gray-700  rounded-lg' />
                             <div className='flex flex-col gap-2 mt-1'>
                                 <div className='font-semibold text-lg md:text-xl lg:text-2xl '>{quiz.title}</div>
                                 <span>
@@ -232,7 +234,7 @@ const QuizDetail = () => {
                         <div className='flex justify-between'>
                             {/* <img className='  w-5 object-cove  rounded-md' src='/location.png'></img> */}
                             <div className='flex gap-3'>
-                                <img className="dark:white-image w-5 object-cover rounded-md" src="/location.png" alt="Location">
+                                <img className=" w-5 object-cover rounded-md" src={locationImg} alt="Location">
                                 </img>
                                 <div>Online</div>
                             </div>

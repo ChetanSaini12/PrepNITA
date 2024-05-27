@@ -10,12 +10,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { Loader } from '../Loader';
 import { setLoading } from '../../app/user/userSlice';
+import TopicsInput from './CustomInput';
 
 function Interviews() {
   const { loggedIn, isLoading } = useSelector((state) => state.user);
   const [dateTime, setDateTime] = useState(new Date());
   const [Duration, setDuration] = useState();
-  const [Topics, setTopics] = useState("");
+  const [Topics, setTopics] = useState([]);
   const [ERROR, setError] = useState(null);
   const [data, setdata] = useState(null);
   const [interviews, setInterviews] = useState(null);
@@ -80,7 +81,7 @@ function Interviews() {
           Interview: {
             startTime: dateTime.toISOString(),
             duration: Duration,
-            topics: Topics?.split(','),
+            topics: Topics,
           }
         },
       });
@@ -118,25 +119,26 @@ function Interviews() {
   }
 
   return (
-    <div className="w-screen min-h-screen flex flex-col items-center justify-center">
-      <div className=' max-w-xl w-full flex flex-col sm:flex-row p-3 border border-teal-500 justify-center items-center rounded-tl-3xl rounded-br-3xl m-5 light: bg-gray-300 dark:bg-gray-700'>
+    <div className="min-w-screen min-h-screen flex flex-col items-center justify-center">
+      <div className=' max-w-xl w-full flex flex-col sm:flex-row p-3 border border-teal-500 justify-center items-center rounded-tl-3xl rounded-br-3xl m-5 bg-gray-200 dark:bg-gray-700'>
       <div className='flex-1 justify-center flex flex-col '>
         <h1 className="text-3xl font-semibold mb-4  ">Schedule an Interview</h1>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4" >
           <TextInput
             type="number"
             placeholder="Duration (in minutes)"
             value={Duration}
             required
             onChange={(e) => setDuration(parseInt(e.target.value))}
-            className="block w-full border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-gray-700 text-white"
+            // className="block w-full bg-red-500 border-gray-600 rounded-md shadow-sm focus:ring-cyan-500 focus:border-cyan-500"
           />
-          <TextInput
+          {/* <TextInput
             placeholder="Topics (e.g., CS Fundamentals, OS, ...)"
             value={Topics}
             onChange={(e) => setTopics(e.target.value)}
             className="block w-full border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-gray-700 text-white"
-          />
+          /> */}
+          <TopicsInput Topics={Topics} setTopics={setTopics} />
           <DateTimePicker setDateTime={setDateTime} />
           <Button
             type="submit"
