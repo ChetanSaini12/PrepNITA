@@ -10,6 +10,7 @@ import moment from 'moment';
 import { Button, Textarea } from 'flowbite-react';
 import DateTimePicker from '../../Components/DatePicker';
 import toast from 'react-hot-toast';
+import { AddQuestion } from './AddQuestion';
 // import {favicon} from '../../../public/favicon.ico'
 
 const QuizDetail = () => {
@@ -19,11 +20,13 @@ const QuizDetail = () => {
 
     const [quiz, setQuiz] = useState(null);
     const [tempQuiz, setTempQuiz] = useState({})
+    const [questions, setQuestions] = useState([{}]);
     const [createdBy, setCreatedBy] = useState({});
     const [ERROR, setError] = useState(null);
     const [refresh, setRefresh] = useState(false);
     const [showEditMode, setShowEditMode] = useState(false);
     const [active, setActive] = useState(true);
+    const [showAddQuestion, setShowAddQuestion] = useState(false);
     const [startDateTime, setStartDateTime] = useState(new Date());
     const [endDateTime, setEndDateTime] = useState(new Date());
 
@@ -117,21 +120,33 @@ const QuizDetail = () => {
         e.preventDefault();
         setActive(false);
         setShowEditMode(true);
+        setShowAddQuestion(false);
     };
     const handleCancel = (e) => {
         e.preventDefault();
         setActive(true);
         setShowEditMode(false);
+        setShowAddQuestion(false);
         setTempQuiz(quiz);
     };
+    const handleQuestionButton = (e) => {
+        e.preventDefault();
+        setShowAddQuestion(true);
+        setActive(false);
+        setShowEditMode(false);
+    };
 
-    const handleChange = (e) => {
+    const handleChangeForEdit = (e) => {
         setTempQuiz({
             ...tempQuiz,
             [e.target.id]: e.target.value
         });
         // console.log("temp quiz ", tempQuiz);
         // console.log("date time ", startDateTime.toISOString());
+    };
+
+    const handleChangeForAddQuestion = (e) => {
+
     };
 
     const handleUpdateQuiz = async (e) => {
@@ -198,6 +213,10 @@ const QuizDetail = () => {
         }
     };
 
+    const handleAddQuestion = async (e) => {
+
+    };
+
 
 
     if (isLoading) return <Loader />;
@@ -207,7 +226,7 @@ const QuizDetail = () => {
 
 
     return (
-        <div className=' flex flex-col w-screen min-h-screen items-center gap-2'>
+        <div className=' flex flex-col min-w-screen min-h-screen items-center gap-2'>
             {quiz && active && (
                 // <>
                 <div className=' bg-gray-200 dark:bg-gray-800  w-full md:w-3/4 py-8 px-5 mt-5 mb-5  rounded-md
@@ -231,18 +250,20 @@ const QuizDetail = () => {
                             </div>
 
                         </div>
-                        <div className='flex justify-between'>
+                        <div className='flex justify-between gap-3 flex-wrap'>
                             {/* <img className='  w-5 object-cove  rounded-md' src='/location.png'></img> */}
                             <div className='flex gap-3'>
                                 <img className=" w-5 object-cover rounded-md" src={locationImg} alt="Location">
                                 </img>
                                 <div>Online</div>
                             </div>
-                            <div className='flex gap-3'>
+                            <div className='flex flex-wrap gap-3'>
                                 <button onClick={handleQuizEdit} className='border border-gray-300 dark:border-gray-700 
                                  hover:border-red-500 dark:hover:border-red-400 px-2 rounded-lg'>Edit </button>
                                 <button onClick={handleDeleteQuiz} className='border border-gray-300 dark:border-gray-700 
                                  hover:border-red-500 dark:hover:border-red-400 px-2 rounded-lg'>Delete</button>
+                                <button onClick={handleQuestionButton} className='border border-gray-300 dark:border-gray-700 
+                                 hover:border-red-500 dark:hover:border-red-400 px-2 rounded-lg'>Add question</button>
                             </div>
                         </div>
                     </div>
@@ -317,7 +338,7 @@ const QuizDetail = () => {
 
                 </div>
             )}
-            {quiz && !active && (
+            {quiz && !active && showEditMode && (
                 <div className=' bg-gray-200 dark:bg-gray-800  w-full md:w-3/4 pt-5 pb-8 px-5 mt-5 mb-5  rounded-md
                 flex flex-col gap-5 '>
                     <span onClick={handleCancel} className='flex justify-end'><button className=' font-semibold sm:text-lg hover:text-xl
@@ -330,7 +351,7 @@ const QuizDetail = () => {
                                 placeholder='Title of the quiz'
                                 id="title"
                                 value={tempQuiz.title}
-                                onChange={handleChange}
+                                onChange={handleChangeForEdit}
                             />
                         </div>
                         <div >
@@ -340,7 +361,7 @@ const QuizDetail = () => {
                                 placeholder='Description of the quiz'
                                 id="description"
                                 value={tempQuiz.description}
-                                onChange={handleChange}
+                                onChange={handleChangeForEdit}
                             />
                         </div>
                         <div className='flex flex-col sm:flex-row justify-between'>
@@ -350,6 +371,10 @@ const QuizDetail = () => {
                         <Button type='submit' className='my-5'>Update Quiz </Button>
                     </form>
                 </div>
+            )}
+
+            {quiz && !active && showAddQuestion && (
+                <AddQuestion handleCancel={handleCancel} quizId={id}/>
             )}
         </div>
 

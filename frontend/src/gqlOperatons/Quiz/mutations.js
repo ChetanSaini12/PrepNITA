@@ -99,3 +99,15 @@ export const DELETE_QUIZ=gql`
         deleteQuiz(QuizId:$QuizId)
     }
 `;
+
+export const ADD_QUESTION_TO_QUIZ = gql`
+    mutation addQuestionToQuizMutation($question: addQuestion){
+        addQuestionToQuiz(question: $question){
+            id 
+            quizId
+            description
+            options
+            correctOption
+        }
+    }
+`;

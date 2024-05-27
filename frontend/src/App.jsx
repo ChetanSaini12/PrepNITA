@@ -70,6 +70,7 @@ function App() {
             <Route path="/interview" element={<Interview />}></Route>
             <Route path="/interviewdummy" element={<Interviewhome />}></Route>
             <Route path="/interviewdummyadmin" element={<AdminInterview />}></Route>
+            <Route path="/quiz/view" element={<ParticipateQuiz />}></Route>
             <Route path="/interview/:id" element={<InterviewDetail />}></Route>
             <Route path="/*" element={<PageNotFound />}></Route>
           </Routes>
