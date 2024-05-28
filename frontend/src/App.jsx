@@ -26,7 +26,7 @@ import AdminInterview from "./Pages/InterviewPages/adminInterview.jsx";
 import { CreateQuiz } from "./Pages/Quiz/CreateQuiz.jsx";
 import QuizDetail from "./Pages/Quiz/QuizDetail.jsx";
 import { useSelector } from "react-redux";
-import ParticipateQuiz from "./Pages/Quiz/ParticipateQuiz.jsx";
+import ScrollToTop from "./Components/ScrollToTop.jsx";
 
 function App() {
   
@@ -49,6 +49,7 @@ function App() {
          }
         </div>
         <BrowserRouter>
+          <ScrollToTop></ScrollToTop>
           <Header />
           <Routes>
             <Route path="/" element={<Home />}></Route>
