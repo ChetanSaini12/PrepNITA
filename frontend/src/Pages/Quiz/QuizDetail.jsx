@@ -82,7 +82,8 @@ const QuizDetail = () => {
                         );
                         if (errors) {
                             dispatch(setLoading(false));
-                            return setError(errors);
+                            setError(errors);
+                            navigate('/quizes');
                         }
                         else if (data) {
                             //to get user who created this quiz by ID
@@ -93,7 +94,8 @@ const QuizDetail = () => {
                             });
                             if (err) {
                                 dispatch(setLoading(false));
-                                return setError(err);
+                                setError(err);
+                                navigate('/quizes');
                             }
                             else if (res) {
                                 console.log("created by ", res);
@@ -109,7 +111,8 @@ const QuizDetail = () => {
                         }
                     } catch (error) {
                         dispatch(setLoading(false));
-                        return setError(error);
+                        setError(error);
+                        navigate('/quizes');
                     }
                 }
         )();
@@ -145,9 +148,9 @@ const QuizDetail = () => {
         // console.log("date time ", startDateTime.toISOString());
     };
 
-    const handleChangeForAddQuestion = (e) => {
+    // const handleChangeForAddQuestion = (e) => {
 
-    };
+    // };
 
     const handleUpdateQuiz = async (e) => {
         e.preventDefault();
