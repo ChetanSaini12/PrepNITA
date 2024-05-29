@@ -16,7 +16,7 @@ import { AddQuestion } from './AddQuestion';
 const QuizDetail = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { isLoading, loggedin } = useSelector((state) => state.user);
+    const { isLoading, loggedIn } = useSelector((state) => state.user);
     // console.log("user states :", loggedin, isLoading);
 
     const [quiz, setQuiz] = useState(null);
@@ -228,12 +228,11 @@ const QuizDetail = () => {
     // };
 
 
-
+    if (ready &&(loggedIn===false)) navigate('/register');
     if (isLoading) return <Loader />;
     if (ERROR) {
         toast.error(ERROR.message ? ERROR.message : ERROR || "something went wrong ");
     }
-    if (ready &&loggedin===false) navigate('/register');
 
 
     return (

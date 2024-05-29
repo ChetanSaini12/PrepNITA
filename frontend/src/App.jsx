@@ -69,7 +69,7 @@ function App() {
             <Route path="/profile/:id" element={<ProfileById />}></Route>
             <Route path="/questions" element={<Question />}></Route>
             <Route path="/questions/:id" element={<QuestionById />}></Route>
-            <Route path="/create_question" element={<CreateQuestion />}></Route>
+            {/* <Route path="/create_question" element={<CreateQuestion />}></Route> */}
             <Route path="/students" element={<AllUsers />}></Route>
             <Route path="/onboarding" element={<Onboarding />}></Route>
             <Route path="/interview" element={<Interview />}></Route>
