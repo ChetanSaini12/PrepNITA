@@ -16,7 +16,8 @@ import { AddQuestion } from './AddQuestion';
 const QuizDetail = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { isLoading } = useSelector((state) => state.user);
+    const { isLoading, loggedIn } = useSelector((state) => state.user);
+    // console.log("user states :", loggedin, isLoading);
 
     const [quiz, setQuiz] = useState(null);
     const [tempQuiz, setTempQuiz] = useState({})
@@ -29,6 +30,7 @@ const QuizDetail = () => {
     const [showAddQuestion, setShowAddQuestion] = useState(false);
     const [startDateTime, setStartDateTime] = useState(new Date());
     const [endDateTime, setEndDateTime] = useState(new Date());
+    const [ready, setReady] = useState(false);
 
     // const imagePath = '/logo192.png';//for logo of the quiz
     const imagePath = '/dccLogo.jpg';//for logo of the quiz
@@ -67,6 +69,7 @@ const QuizDetail = () => {
 
     const id = parseInt(useParams().id);
 
+
     useEffect(() => {
         (
             isNaN(id) ? navigate("/*") :
@@ -82,8 +85,9 @@ const QuizDetail = () => {
                         );
                         if (errors) {
                             dispatch(setLoading(false));
-                            setError(errors);
-                            navigate('/quizes');
+                            setReady(true);
+                            return setError(errors);
+                            // navigate('/quizes');
                         }
                         else if (data) {
                             //to get user who created this quiz by ID
@@ -94,8 +98,9 @@ const QuizDetail = () => {
                             });
                             if (err) {
                                 dispatch(setLoading(false));
-                                setError(err);
-                                navigate('/quizes');
+                                setReady(true);
+                                return setError(err);
+                                // navigate('/quizes');
                             }
                             else if (res) {
                                 console.log("created by ", res);
@@ -108,11 +113,13 @@ const QuizDetail = () => {
                             setTempQuiz(data.getQuizById);
                             setStartDateTime(moment(data.getQuizById.startTime));
                             setEndDateTime(moment(data.getQuizById.endTime));
+                            setReady(true);
                         }
                     } catch (error) {
                         dispatch(setLoading(false));
-                        setError(error);
-                        navigate('/quizes');
+                        setReady(true);
+                        return setError(error);
+                        // navigate('/quizes');
                     }
                 }
         )();
@@ -216,12 +223,12 @@ const QuizDetail = () => {
         }
     };
 
-    const handleAddQuestion = async (e) => {
+    // const handleAddQuestion = async (e) => {
 
-    };
+    // };
 
 
-
+    if (ready &&(loggedIn===false)) navigate('/register');
     if (isLoading) return <Loader />;
     if (ERROR) {
         toast.error(ERROR.message ? ERROR.message : ERROR || "something went wrong ");
@@ -377,7 +384,7 @@ const QuizDetail = () => {
             )}
 
             {quiz && !active && showAddQuestion && (
-                <AddQuestion handleCancel={handleCancel} quizId={id}/>
+                <AddQuestion handleCancel={handleCancel} quizId={id} />
             )}
         </div>
 
