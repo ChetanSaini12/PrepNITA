@@ -11,6 +11,7 @@ import { Button, Textarea } from 'flowbite-react';
 import DateTimePicker from '../../Components/DatePicker';
 import toast from 'react-hot-toast';
 import { AddQuestion } from './AddQuestion';
+import { UserConfirmation } from '../../Components/UserConfirmation';
 // import {favicon} from '../../../public/favicon.ico'
 
 const QuizDetail = () => {
@@ -223,12 +224,14 @@ const QuizDetail = () => {
         }
     };
 
-    // const handleAddQuestion = async (e) => {
+    const handleEnterToQuizButton = async (e) => {
+        const userConfirmation =await UserConfirmation("Before start please read the instructions below")
+        if (userConfirmation) navigate('/quiz/view');
+        else { };
+    };
 
-    // };
 
-
-    if (ready &&(loggedIn===false)) navigate('/register');
+    if (ready && (loggedIn === false)) navigate('/register');
     if (isLoading) return <Loader />;
     if (ERROR) {
         toast.error(ERROR.message ? ERROR.message : ERROR || "something went wrong ");
@@ -321,13 +324,13 @@ const QuizDetail = () => {
                     {moment(quiz.startTime) <= moment() && moment(quiz.endTime) > moment() && (
                         <div className='flex justify-between gap-1'>
                             <div>Quiz is running, You can participate in the quiz. </div>
-                            <Button size={"sm"} className='px-2 py-0 sm:px-5 md:px-6 mr-2 sm:mr-5 md:mr-12'>Enter</Button>
+                            <Button onClick={handleEnterToQuizButton} size={"sm"} className='px-2 py-0 sm:px-5 md:px-6 mr-2 sm:mr-5 md:mr-12'>Enter</Button>
                         </div>
                     )}
                     {moment(quiz.endTime) < moment() && (
                         <div className='flex justify-between gap-1'>
                             <div>The quiz is over, you can practice the quiz . </div>
-                            <Button size={"sm"} className=' px-1 py-0 sm:px-5 md:px-6 '>Practice</Button>
+                            <Button onClick={handleEnterToQuizButton} size={"sm"} className=' px-1 py-0 sm:px-5 md:px-6 '>Practice</Button>
                         </div>
                     )}
 
