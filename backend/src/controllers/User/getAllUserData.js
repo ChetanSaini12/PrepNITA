@@ -11,6 +11,20 @@ export const getAllUserData = async (_, payload) => {
       include: {
         authentication: true,
         userInformation: true,
+        userInformation: true,
+        userContribution: {
+          include: {
+            quizes: true, 
+            questions: true,
+            interview: true
+          },
+        },
+        userTraining : {
+          include: {
+            interview: true,
+            quizesAttended: true
+          }
+        }
       },
     })
     console.log(users)

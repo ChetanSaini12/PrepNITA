@@ -11,7 +11,6 @@ export const createQuiz = async (_, payload, context) => {
           description: payload.Quiz.description,
           startTime: payload.Quiz.startTime,
           endTime: payload.Quiz.endTime,
-          // QUIZs: { create: payload.Quiz.QUIZs },
           createdBy: context.userId,
         },
       })
