@@ -3,6 +3,8 @@ export const typeDefs = `#graphql
         id                      : Int
         userInformation         : UserInformation
         authentication          : Authentication
+        userContribution        : UserContribution
+        userTraining            : UserTraining
     }
 
     enum UserRole {
@@ -63,6 +65,23 @@ export const typeDefs = `#graphql
         codeforcesProfile       : String
         linkedinProfile         : String
         githubProfile           : String
+    }
+
+    type UserContribution {
+        id                      : Int
+        userId                  : Int
+        contributionPoints      : Int
+        quizes                  : [Quiz]
+        interview               : [Interview]
+        questions               : [Question]
+    }
+
+    type UserTraining {
+        id                      : Int
+        userId                  : Int
+        trainingPoints          : Int
+        quizesAttended          : [QuizAttendees]
+        interview               : [Interview]
     }
       
     enum Course {

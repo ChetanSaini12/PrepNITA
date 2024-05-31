@@ -10,7 +10,20 @@ export const getUserById = async (_, id) => {
       },
       include: {
         authentication: true,
-        userInformation: true
+        userInformation: true,
+        userContribution: {
+          include: {
+            quizes: true, 
+            questions: true,
+            interview: true
+          },
+        },
+        userTraining : {
+          include: {
+            interview: true,
+            quizesAttended: true
+          }
+        }
       }
     })
     return user
