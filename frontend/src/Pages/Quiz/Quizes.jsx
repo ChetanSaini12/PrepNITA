@@ -21,8 +21,6 @@ function Quizes() {
   // const [duration, setDuration] = useState({});
 
 
-
-
   const [getAllQuiz] = useMutation(GET_ALL_QUIZ, {
     onError: (error) => {
       console.log("on erro at all quiz ", error);

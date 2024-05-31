@@ -9,15 +9,18 @@ import { Link } from 'react-router-dom';
 import { FaCheck, FaTimes } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux';
 import { setLoading } from '../../app/user/userSlice';
+import CreateQuestion from './CreateQuestion';
 
 
 const Question = () => {
+    const dispatch = useDispatch();
     const { isLoading } = useSelector((state) => state.user);
+
     const [ERROR, setError] = useState(null);
     const [tempQ, setTempQ] = useState(null);
     const [data, setData] = useState(null);
     const [refresh, setRefresh] = useState(false);
-    const dispatch = useDispatch();
+    const [showCreateQuestion, setShowCreateQuestion] = useState(false);
 
     const [getQuestions] = useMutation(GET_ALL_QUESTIONS, {
         onError: (error) => {
@@ -88,11 +91,11 @@ const Question = () => {
                 if (errors) {
                     console.log("error in fetching question ", errors);
                     dispatch(setLoading(false));
-                   return  setError(errors);
+                    return setError(errors);
                 }
                 else {
                     setData(data.getQuestions)
-                    dispatch(setLoading(false)); 
+                    dispatch(setLoading(false));
                 }
                 // setData(res.data);
             } catch (error) {
@@ -109,106 +112,119 @@ const Question = () => {
         setLoading(false);
     }, [refresh]);
 
+    const handelShowQuestion = (e) => {
+        e.preventDefault();
+        setShowCreateQuestion(true);
+    };
+    const handleCancel = (e) => {
+        e.preventDefault();
+        setShowCreateQuestion(false);
+    };
 
 
-    if(ERROR){
+    if (isLoading) { return <Loader />; }
+    if (ERROR) {
         console.log("error from question page ", ERROR);
-        toast.error(ERROR.message?ERROR.message : "Error fetching questions");
+        toast.error(ERROR.message ? ERROR.message : "Error fetching questions");
     };
     return (
         <div className='min-h-screen table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500' >
-            {isLoading && <Loader />}
-            {data && (
-                <>
-                    <Table hoverable className='shadow-md'>
-                        <Table.Head>
-                            <Table.HeadCell>Question ID</Table.HeadCell>
-                            {/* <Table.HeadCell>Title</Table.HeadCell> */}
-                            {/* <Table.HeadCell>Description</Table.HeadCell> */}
-                            {/* <Table.HeadCell>Answer</Table.HeadCell> */}
-                            <Table.HeadCell>Upvotes</Table.HeadCell>
-                            <Table.HeadCell>Downvotes</Table.HeadCell>
-                            <Table.HeadCell>Author</Table.HeadCell>
-                            <Table.HeadCell>Approved</Table.HeadCell>
-                            <Table.HeadCell>
-                                <span>Question Link</span>
-                            </Table.HeadCell>
-                        </Table.Head>
-                        {data.map((question) => (
-                            <Table.Body className='divide-y' key={question.id}>
-                                <Table.Row className='bg-white dark:border-gray-700 dark:bg-gray-800'>
-                                    <Table.Cell>
-                                        {question?.id}
-                                    </Table.Cell>
+            <>
+                {!showCreateQuestion && data && (
+                    <>
+                        <div className='flex justify-end p-2'>
+                            <button onClick={handelShowQuestion}  className='border border-gray-300 rounded-lg p-1 hover:bg-gray-200 dark:hover:bg-gray-700'><span className='text-xl mr-1'>+</span>Create question</button>
+                        </div>
+                        <Table hoverable className='shadow-md'>
+                            <Table.Head>
+                                <Table.HeadCell>Question ID</Table.HeadCell>
+                                <Table.HeadCell>Upvotes</Table.HeadCell>
+                                <Table.HeadCell>Downvotes</Table.HeadCell>
+                                <Table.HeadCell>Author</Table.HeadCell>
+                                <Table.HeadCell>Approved</Table.HeadCell>
+                                <Table.HeadCell>
+                                    <span>Question Link</span>
+                                </Table.HeadCell>
+                            </Table.Head>
+                            {data.map((question) => (
+                                <Table.Body className='divide-y' key={question.id}>
+                                    <Table.Row className='bg-white dark:border-gray-700 dark:bg-gray-800'>
+                                        <Table.Cell>
+                                            {question?.id}
+                                        </Table.Cell>
 
-                                    {/* <Table.Cell>
+                                        {/* <Table.Cell>
                                     <Link className='font-medium text-gray-900 dark:text-white'>
                                 {question?.links?.title}
                                     </Link>
                                 </Table.Cell> */}
-                                    {/* <Table.Cell>
+                                        {/* <Table.Cell>
                                 <Link className='font-medium text-gray-900 dark:text-white'>
 
                                 {question.description}
                                 </Link>
                                 </Table.Cell> */}
-                                    {/* <Table.Cell>
+                                        {/* <Table.Cell>
                                 {question.answer}
                                 </Table.Cell> */}
-                                    <Table.Cell className='text-teal-600'>
-                                        {question.upvotes}
-                                    </Table.Cell>
-                                    <Table.Cell className='text-red-500'>
-                                        {question.downvotes}
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                        <Link className='font-medium text-gray-900 dark:text-white'>
-                                            {question.createdBy}
-                                        </Link>
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                        {question.isApproved ? (<FaCheck className='text-teal-500'></FaCheck>) : (<FaTimes className='text-red-500'></FaTimes>)}
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                        <Link to={`/questions/${question?.id}`} className='text-teal-500 hover:underline'>
-                                            <span>View </span>
-                                        </Link>
-                                    </Table.Cell>
-                                </Table.Row>
-                            </Table.Body>
-                            // <div key={question.id}>
-                            //     <div>TITLE : {question?.links?.title}</div>
-                            //     <div>QUESTION : {question.description}</div>
-                            //     <div>ANS : {question.answer}</div>
-                            //     <div>UpVotes : {question.upvotes}</div>
-                            //     <div>DownVotes : {question.downvotes}</div>
-                            //     <div>Approved : {question.isApproved ? "YES" : "NO"}</div>
-                            //     <div>Author : {question.createdBy}</div>
-                            //     <Button onClick={() => { setRefresh(!refresh); updateQuestionStatus(question.id) }} gradientDuoTone="purpleToPink" className='mb-2' >
-                            //         Update status
-                            //     </Button>
-                            //     <Button onClick={() => { setRefresh(!refresh); upVoteQuestion(question.id) }} gradientDuoTone="purpleToPink" className='mb-2' >
-                            //         Upvote
-                            //     </Button>
-                            //     <Button onClick={() => { setRefresh(!refresh); downVoteQuestion(question.id) }} gradientDuoTone="purpleToPink" className='mb-2'>
-                            //         DownVote
-                            //     </Button>
-                            //     {/* <Button onClick={()=>{setTempQ(data.tempQueQr)}}  gradientDuoTone="purpleToPink" className='mb-2'>
-                            //         Get temp questio 
-                            //     </Button> */}
-                            //     {/* {
-                            //         tempQ && (
-                            //             <div>
-                            //                 <h1>Your temp quesiton </h1>
-                            //                 {tempQ.tempQueQr.question}
-                            //             </div>
-                            //         )
-                            //     } */}
-                            // </div>
-                        ))}
-                    </Table>
-                </>
-            )}
+                                        <Table.Cell className='text-teal-600'>
+                                            {question.upvotes}
+                                        </Table.Cell>
+                                        <Table.Cell className='text-red-500'>
+                                            {question.downvotes}
+                                        </Table.Cell>
+                                        <Table.Cell>
+                                            <Link className='font-medium text-gray-900 dark:text-white'>
+                                                {question.createdBy}
+                                            </Link>
+                                        </Table.Cell>
+                                        <Table.Cell>
+                                            {question.isApproved ? (<FaCheck className='text-teal-500'></FaCheck>) : (<FaTimes className='text-red-500'></FaTimes>)}
+                                        </Table.Cell>
+                                        <Table.Cell>
+                                            <Link to={`/questions/${question?.id}`} className='text-teal-500 hover:underline'>
+                                                <span>View </span>
+                                            </Link>
+                                        </Table.Cell>
+                                    </Table.Row>
+                                </Table.Body>
+                                // <div key={question.id}>
+                                //     <div>TITLE : {question?.links?.title}</div>
+                                //     <div>QUESTION : {question.description}</div>
+                                //     <div>ANS : {question.answer}</div>
+                                //     <div>UpVotes : {question.upvotes}</div>
+                                //     <div>DownVotes : {question.downvotes}</div>
+                                //     <div>Approved : {question.isApproved ? "YES" : "NO"}</div>
+                                //     <div>Author : {question.createdBy}</div>
+                                //     <Button onClick={() => { setRefresh(!refresh); updateQuestionStatus(question.id) }} gradientDuoTone="purpleToPink" className='mb-2' >
+                                //         Update status
+                                //     </Button>
+                                //     <Button onClick={() => { setRefresh(!refresh); upVoteQuestion(question.id) }} gradientDuoTone="purpleToPink" className='mb-2' >
+                                //         Upvote
+                                //     </Button>
+                                //     <Button onClick={() => { setRefresh(!refresh); downVoteQuestion(question.id) }} gradientDuoTone="purpleToPink" className='mb-2'>
+                                //         DownVote
+                                //     </Button>
+                                //     {/* <Button onClick={()=>{setTempQ(data.tempQueQr)}}  gradientDuoTone="purpleToPink" className='mb-2'>
+                                //         Get temp questio 
+                                //     </Button> */}
+                                //     {/* {
+                                //         tempQ && (
+                                //             <div>
+                                //                 <h1>Your temp quesiton </h1>
+                                //                 {tempQ.tempQueQr.question}
+                                //             </div>
+                                //         )
+                                //     } */}
+                                // </div>
+                            ))}
+                        </Table>
+                    </>
+                )}
+                {showCreateQuestion && (
+                    <CreateQuestion handleCancel={handleCancel} />
+                )}
+            </>
 
         </div>
 

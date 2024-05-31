@@ -112,7 +112,7 @@ const QuestionById = () => {
   return (
     question ?
       (
-        <div className="w-screen min-h-screen shadow-md rounded-md p-6 " >
+        <div className="min-w-screen min-h-screen shadow-md rounded-md p-6 " >
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold">{question.title}</h2>
             <div className="flex items-center text-sm mx-2 ">

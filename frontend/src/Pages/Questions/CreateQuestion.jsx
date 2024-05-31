@@ -6,20 +6,30 @@ import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { setLoading } from '../../app/user/userSlice';
 import { Loader } from '../Loader.jsx';
+import { useNavigate } from 'react-router-dom';
 
 
 
-const CreateQuestion = () => {
+const CreateQuestion = ({ handleCancel }) => {
+
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { loggedIn, isLoading } = useSelector((state) => state.user);
+    const theme = useSelector((state) => state.theme);
 
     const [formData, setFormData] = useState({});
     const [refresh, setRefresh] = useState(false);
     const [ERROR, setError] = useState(null);
-    const theme = useSelector((state) => state.theme);
-    const { loggedIn, isLoading } = useSelector((state) => state.user);
+    const [ready, setReady] = useState(false);
 
-    dispatch(setLoading(false));    
+    dispatch(setLoading(false));
+
+    useEffect(() => {
+        console.log("state",loggedIn);
+
+        setReady(true);
+    },[]);
 
     const handleChange = ((e) => {
         if (e.target.id === "tags") {
@@ -42,58 +52,60 @@ const CreateQuestion = () => {
         },
     });
 
-    const handleSubmit =async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         dispatch(setLoading(true));
         console.log("Form Data : ", formData);
-            try {
-                const { data, errors } = await createQuestion({
-                    variables: {
-                        Question: {
-                            description: formData.description,
-                            answer: formData.answer,
-                            tags: formData.tags,
-                            // links: [
-                            //     {
-                            //         "title": formData.title,
-                            //         "url": "url1"
-                            //     }
-                            // ],
+        try {
+            const { data, errors } = await createQuestion({
+                variables: {
+                    Question: {
+                        description: formData.description,
+                        answer: formData.answer,
+                        tags: formData.tags,
+                        // links: [
+                        //     {
+                        //         "title": formData.title,
+                        //         "url": "url1"
+                        //     }
+                        // ],
 
-                        }
-                    },
-                });
-                console.log("res", data, errors);
-                if (errors) {
-                    console.log("error in creating question", errors);
-                    dispatch(setLoading(false));
-                    return setError(errors);
-                } else if (data) {
-                    dispatch(setLoading(false));
-                    toast.success("Question created successfully with id : " + data.createQuestion.id);
-                    // document.getElementById('questionForm').reset();
-                    setFormData({});
-                }
-                else dispatch(setLoading(false));
-                setRefresh(!refresh);
-
-            } catch (err) {
-                console.log("errr", err);
+                    }
+                },
+            });
+            console.log("res", data, errors);
+            if (errors) {
+                console.log("error in creating question", errors);
                 dispatch(setLoading(false));
-                setRefresh(!refresh);
-                return setError(err);
+                return setError(errors);
+            } else if (data) {
+                dispatch(setLoading(false));
+                toast.success("Question created successfully with id : " + data.createQuestion.id);
+                // document.getElementById('questionForm').reset();
+                setFormData({});
             }
-      
+            else dispatch(setLoading(false));
+            setRefresh(!refresh);
+
+        } catch (err) {
+            console.log("errr", err);
+            dispatch(setLoading(false));
+            setRefresh(!refresh);
+            return setError(err);
+        }
+
     };
 
-    if(ERROR){
-        toast.error(ERROR.message?ERROR.message:"Something went wrong");
+    if (ERROR) {
+        toast.error(ERROR.message ? ERROR.message : "Something went wrong");
         setError(null);
     }
     if (isLoading) return <Loader />;
+    if (ready&&loggedIn==false) navigate('/register');
     return (
         <>
             <div className='p-3 max-w-3xl mx-auto min-h-screen mt-2 mb-4'>
+                <div className='flex justify-end'><button onClick={handleCancel} className='text-lg sm:text-xl hover:text-red-500' >X</button></div>
                 <h1 className='text-center text-lg:md:text-2xl my-4 font-semibold'>
                     Create a Question</h1>
                 <div className="question_container">
