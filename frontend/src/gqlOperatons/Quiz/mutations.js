@@ -35,35 +35,36 @@ export const GET_ALL_QUIZ = gql`
             createdBy
             title
             description
-            questions {
-                id
-                quizId
-                description
-                options
-                correctOption
-            }
             isVisible
             isApproved
             startTime
             endTime
-            QuizAttendees {
-                id
-                quizId
-                userId
-                score
-            }
         }
     }
 
 `;
 
-export const GET_QUIZ_BY_ID = gql`
+export const GET_QUIZ_BY_ID_without_Q = gql`
     mutation getQuizByIdMutation($QuizId: Int!){
         getQuizById(QuizId: $QuizId){
             id 
             createdBy
             title
             description
+            isVisible
+            isApproved
+            startTime
+            endTime
+        }
+    }
+
+`;
+
+export const GET_QUIZ_BY_ID_with_Q = gql`
+    mutation getQuizByIdMutation($QuizId: Int!){
+        getQuizById(QuizId: $QuizId){
+            id 
+            title
             questions {
                 id
                 quizId
@@ -75,12 +76,6 @@ export const GET_QUIZ_BY_ID = gql`
             isApproved
             startTime
             endTime
-            QuizAttendees {
-                id
-                quizId
-                userId
-                score
-            }
         }
     }
 
@@ -94,7 +89,7 @@ export const UPDATE_QUIZ = gql`
     }
 `;
 
-export const DELETE_QUIZ=gql`
+export const DELETE_QUIZ = gql`
     mutation deleteQuizMutation($QuizId:Int!){
         deleteQuiz(QuizId:$QuizId)
     }

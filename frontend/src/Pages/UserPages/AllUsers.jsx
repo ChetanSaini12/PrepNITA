@@ -2,7 +2,7 @@
 
 import { useMutation, useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
-import { All_USER } from "../../gqlOperatons/mutations";
+import { All_USER } from "../../gqlOperatons/User/mutations";
 import toast from "react-hot-toast";
 import { Loader } from "../Loader";
 import SearchBar from "../../Components/SearchBar";

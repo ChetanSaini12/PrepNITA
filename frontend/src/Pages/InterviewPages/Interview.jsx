@@ -7,13 +7,15 @@ import { CREATE_INTERVIEW, GET_INTERVIEW } from '../../gqlOperatons/Interview/mu
 import toast from 'react-hot-toast';
 import { useMutation } from '@apollo/client';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Loader } from '../Loader';
 import { setLoading } from '../../app/user/userSlice';
 import TopicsInput from './CustomInput';
+import { BiBookAdd } from "react-icons/bi";
+import { RiAdminFill } from "react-icons/ri";
 
 function Interviews() {
-  const { loggedIn, isLoading } = useSelector((state) => state.user);
+  const { loggedIn, isLoading, id } = useSelector((state) => state.user);
   const [dateTime, setDateTime] = useState(new Date());
   const [Duration, setDuration] = useState();
   const [Topics, setTopics] = useState([]);
@@ -22,9 +24,11 @@ function Interviews() {
   const [interviews, setInterviews] = useState(null);
   const [ready, setReady] = useState(false);
   const [buttonIndex, setButtonIndex] = useState(0);
+  const [showCreateInterviw, setShowCreateInterview] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const params = useParams();
 
 
   const [createInterview] = useMutation(CREATE_INTERVIEW, {
@@ -46,30 +50,44 @@ function Interviews() {
     // console.log(loggedIn);
     setReady(false);
     dispatch(setLoading(true));
+    if (!id) {
+      setReady(true);
+      dispatch(setLoading(false));
+      return;
+    }
+
     (async () => {
       try {
-        const { data, errors } = await getInterviews();
-        console.log("Interviews data ", data);
+        const { data, errors } = await getInterviews({
+          variables:
+          {
+            intervieweeId: parseInt(id),
+          }
+        });
+        // console.log("Interviews data ", data);
         if (errors) {
           dispatch(setLoading(false));
+          setReady(true);
           return setError(errors);
         }
         else if (data) {
           setInterviews(data.getInterview);
+          setReady(true);
           dispatch(setLoading(false));
         }
         else {
           dispatch(setLoading(false));
+          setReady(true);
           return setError("Something went wrong in fetching interviews");
         }
       } catch (error) {
         console.log("Error in getting interviews ", error);
         dispatch(setLoading(false));
+        setReady(true);
         return setError(error);
       }
-      setReady(true);
     })();
-  }, [data]);
+  }, [id, data]);
 
 
   const handleSubmit = async (e) => {
@@ -91,8 +109,11 @@ function Interviews() {
         return setError(errors);
       }
       else if (data) {
-        console.log("Interview created ", data);
+        // console.log("Interview created ", data);
         setdata(data.createInterview);
+        setTopics([]);
+        setDuration(null);
+        setShowCreateInterview(false);
         dispatch(setLoading(false));
         toast.success("Interview created successfully with id " + data.createInterview.id);
       }
@@ -109,20 +130,144 @@ function Interviews() {
 
   };
 
+  if (isLoading) return <Loader />;
   if (ERROR) {
     console.log("Error in Interviews ", ERROR);
     toast.error(ERROR.message ? ERROR.message : " Something went wrong ! ");
+    // setError(null);
   }
-  if (isLoading) return <Loader />;
-  if (!isLoading && !loggedIn) {
+  if (!isLoading && !loggedIn && ready) {
     return navigate('/register');
   }
 
   return (
     <div className="min-w-screen min-h-screen flex flex-col items-center justify-center">
-      <div className=' max-w-xl w-full flex flex-col sm:flex-row p-3 border border-teal-500 justify-center items-center rounded-tl-3xl rounded-br-3xl m-5 bg-gray-200 dark:bg-gray-700'>
+      {showCreateInterviw && (
+        <CreateInterviewBox Duration={Duration}setDuration={setDuration} Topics={Topics}
+        setTopics={setTopics}setDateTime={setDateTime} handleSubmit={handleSubmit} setShowCreateInterview={setShowCreateInterview}
+        />
+      )}
+
+      {!showCreateInterviw && (
+
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-10">
+          <div className="bg-gray-200 dark:bg-gray-800 rounded-lg shadow-md flex justify-center items-center flex-col gap-3 p-3 my-4 md:p-6 hover:shadow-lg transition duration-300 h-36 w-80">
+            <button onClick={() => { setShowCreateInterview(true) }}>
+              <BiBookAdd />
+              <h1>Create an interview</h1>
+            </button>
+          </div>
+          <div className="bg-gray-200 dark:bg-gray-800 rounded-lg shadow-md flex justify-center items-center flex-col gap-3 p-3 my-4 md:p-6 hover:shadow-lg transition duration-300 h-36 w-80">
+            <RiAdminFill />
+            <h1>Interviews as an Admin</h1>
+          </div>
+        </div>
+      )}
+
+
+
+
+      <div className="mx-2 mb-5 ">
+        <h1 className="text-3xl font-semibold mb-4 ">My Interviews </h1>
+        <div className='flex justify-start gap-2 md:gap-5 my-4 mx-1 text-sm md:text-md '>
+          <Button size="sm" className={`text-sm p-0 ${buttonIndex === 0 ? "underline underline-offset-2 " : ""} `} onClick={() => { setButtonIndex(0) }}>All</Button>
+          <Button size="sm" className={`text-sm p-0 ${buttonIndex === 1 ? "underline underline-offset-2" : ""} `} onClick={() => { setButtonIndex(1) }} >Completed</Button>
+          <Button size="sm" className={`text-sm p-0 ${buttonIndex === 2 ? "underline underline-offset-2" : ""} `} onClick={() => { setButtonIndex(2) }} >Assigned</Button>
+          <Button size="sm" className={`text-sm p-0 ${buttonIndex === 3 ? "underline underline-offset-2" : ""} `} onClick={() => { setButtonIndex(3) }} >Not Assigned</Button>
+        </div>
+        {!ready && <h1 className=' text-2xl flex justify-center'>Loading...</h1>}
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5 text-wrap ">
+          {buttonIndex === 0 && interviews?.map((interview, index) => (
+            <div className='group relative w-full border border-teal-500 hover:border-2 transition-all h-[300px] overflow-hidden rounded-lg sm:w-[330px]  bg-gray-300 dark:bg-gray-700'>
+              <div className="p-3 flex flex-col gap-2">
+                <h1 className='text-lg font-semibold line-clamp-1'>Interviewee: {interview.intervieweeName}</h1>
+                <p className='text-lg font-semibold line-clamp-1'>Interviewer: {interview.interviewerName}</p>
+                <p className="text-sm  mb-1">Start Time: {moment(interview.startTime).format('MMMM Do YYYY, h:mm:ss a')}</p>
+                <p className="text-sm  mb-1">Duration: {interview.duration} minutes</p>
+                <p className="text-sm  mb-1">Topics: {interview.topics?.join(', ')}</p>
+                <p className="text-sm ">Feedback: {interview.feedback ? "Given" : "Not Given"}</p>
+                <Link to={`/interview/${interview.id}`}
+                  className='group-hover:bottom-0 absolute bottom-[-200px] left-0 right-0 border border-teal-500 text-teal-500 hover:bg-teal-500 hover:text-white transition-all duration-300 text-center py-2 rounded-md !rounded-tl-none m-2'
+                >
+                  See Interview
+                </Link>
+              </div>
+            </div>
+          ))}
+          {buttonIndex === 1 && interviews
+            ?.filter(interview => interview.isCompleted)
+            .map((interview, index) => (
+              <div className='group relative w-full border border-teal-500 hover:border-2 transition-all h-[300px] overflow-hidden rounded-lg sm:w-[330px]   bg-gray-300 dark:bg-gray-700'>
+                <div className="p-3 flex flex-col gap-2">
+                  <h1 className='text-lg font-semibold line-clamp-1'>Interviewee: {interview.intervieweeName}</h1>
+                  <p className='text-lg font-semibold line-clamp-1'>Interviewer: {interview.interviewerName}</p>
+                  <p className="text-sm  mb-1">Start Time: {moment(interview.startTime).format('MMMM Do YYYY, h:mm:ss a')}</p>
+                  <p className="text-sm  mb-1">Duration: {interview.duration} minutes</p>
+                  <p className="text-sm  mb-1">Topics: {interview.topics?.join(', ')}</p>
+                  <p className="text-sm ">Feedback: {interview.feedback ? "Given" : "Not Given"}</p>
+                  <Link to={`/interview/${interview.id}`}
+                    className='group-hover:bottom-0 absolute bottom-[-200px] left-0 right-0 border border-teal-500 text-teal-500 hover:bg-teal-500 hover:text-white transition-all duration-300 text-center py-2 rounded-md !rounded-tl-none m-2'
+                  >
+                    See Interview
+                  </Link>
+                </div>
+              </div>
+            ))}
+          {buttonIndex === 2 && interviews
+            ?.filter(interview => interview.interviewerName !== null)
+            .map((interview, index) => (
+              <div className='group relative w-full border border-teal-500 hover:border-2 transition-all h-[300px] overflow-hidden rounded-lg sm:w-[330px]   bg-gray-300 dark:bg-gray-700'>
+                <div className="p-3 flex flex-col gap-2">
+                  <h1 className='text-lg font-semibold line-clamp-1'>Interviewee: {interview.intervieweeName}</h1>
+                  <p className='text-lg font-semibold line-clamp-1'>Interviewer: {interview.interviewerName}</p>
+                  <p className="text-sm  mb-1">Start Time: {moment(interview.startTime).format('MMMM Do YYYY, h:mm:ss a')}</p>
+                  <p className="text-sm  mb-1">Duration: {interview.duration} minutes</p>
+                  <p className="text-sm  mb-1">Topics: {interview.topics?.join(', ')}</p>
+                  <p className="text-sm  mb-1">Feedback: {interview.feedback ? "Given" : "Not Given"}</p>
+                  <Link to={`/interview/${interview.id}`}
+                    className='group-hover:bottom-0 absolute bottom-[-200px] left-0 right-0 border border-teal-500 text-teal-500 hover:bg-teal-500 hover:text-white transition-all duration-300 text-center py-2 rounded-md !rounded-tl-none m-2'
+                  >
+                    See Interview
+                  </Link>
+                </div>
+              </div>
+            ))}
+
+          {buttonIndex === 3 && interviews
+            ?.filter(interview => interview.interviewerName === null && !interview.isCompleted)
+            .map((interview, index) => (
+              <div className='group relative w-full border border-teal-500 hover:border-2 transition-all h-[300px] overflow-hidden rounded-lg sm:w-[330px]  bg-gray-300 dark:bg-gray-700'>
+                <div className="p-3 flex flex-col gap-2">
+                  <h1 className='text-lg font-semibold line-clamp-1'>Interviewee: {interview.intervieweeName}</h1>
+                  <p className='text-lg font-semibold line-clamp-1'>Interviewer: {interview.interviewerName}</p>
+                  <p className="text-sm  mb-1">Start Time: {moment(interview.startTime).format('MMMM Do YYYY, h:mm:ss a')}</p>
+                  <p className="text-sm  mb-1">Duration: {interview.duration} minutes</p>
+                  <p className="text-sm  mb-1">Topics: {interview.topics?.join(', ')}</p>
+                  <p className="text-sm  mb-1">Feedback: {interview.feedback ? "Given" : "Not Given"}</p>
+                  <Link to={`/interview/${interview.id}`}
+                    className='group-hover:bottom-0 absolute bottom-[-200px] left-0 right-0 border border-teal-500 text-teal-500 hover:bg-teal-500 hover:text-white transition-all duration-300 text-center py-2 rounded-md !rounded-tl-none m-2'
+                  >
+                    See Interview
+                  </Link>
+                </div>
+              </div>
+            ))}
+
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default Interviews;
+
+ const  CreateInterviewBox = ({ Duration, setDuration, Topics, setTopics, setDateTime, handleSubmit, setShowCreateInterview }) => {
+  return (
+    <div className=' max-w-xl w-full flex flex-col sm:flex-row p-3 border border-teal-500 justify-center items-center rounded-tl-3xl rounded-br-3xl m-5 bg-gray-200 dark:bg-gray-700'>
       <div className='flex-1 justify-center flex flex-col '>
-        <h1 className="text-3xl font-semibold mb-4  ">Schedule an Interview</h1>
+      <button className='flex justify-end hover:text-xl hover:text-red-500' onClick={() => { setShowCreateInterview(false) }}>X</button>
+        <h1 className="text-3xl font-semibold mb-4  ">Create an Interview</h1>
         <form onSubmit={handleSubmit} className="space-y-4" >
           <TextInput
             type="number"
@@ -130,14 +275,9 @@ function Interviews() {
             value={Duration}
             required
             onChange={(e) => setDuration(parseInt(e.target.value))}
-            // className="block w-full bg-red-500 border-gray-600 rounded-md shadow-sm focus:ring-cyan-500 focus:border-cyan-500"
+          // className="block w-full bg-red-500 border-gray-600 rounded-md shadow-sm focus:ring-cyan-500 focus:border-cyan-500"
           />
-          {/* <TextInput
-            placeholder="Topics (e.g., CS Fundamentals, OS, ...)"
-            value={Topics}
-            onChange={(e) => setTopics(e.target.value)}
-            className="block w-full border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-gray-700 text-white"
-          /> */}
+
           <TopicsInput Topics={Topics} setTopics={setTopics} />
           <DateTimePicker setDateTime={setDateTime} />
           <Button
@@ -149,99 +289,6 @@ function Interviews() {
           </Button>
         </form>
       </div>
-      </div>
-
-      <div className="mx-2 mb-5 ">
-        <h1 className="text-3xl font-semibold mb-4 ">All Interviews </h1>
-        <div className='flex justify-start gap-2 md:gap-5 my-4 mx-1 text-sm md:text-md '>
-          <Button   size="sm" className='text-sm p-0' onClick={() => { setButtonIndex(0) }}>All</Button>
-          <Button   size="sm" className='text-sm p-0' onClick={() => { setButtonIndex(1) }} >Completed</Button>
-          <Button   size="sm" className='text-sm p-0' onClick={() => { setButtonIndex(2) }} >Assigned</Button>
-          <Button   size="sm" className='text-sm p-0' onClick={() => { setButtonIndex(3) }} >Not Assigned</Button>
-        </div>
-        {!ready && <h1 className=' text-2xl flex justify-center'>Loading...</h1>}
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5 text-wrap">
-          {buttonIndex === 0 && interviews?.map((interview, index) => (
-            <div className='group relative w-full border border-teal-500 hover:border-2 transition-all h-[300px] overflow-hidden rounded-lg sm:w-[330px]  bg-gray-300 dark:bg-gray-700'>
-              <div className="p-3 flex flex-col gap-2">
-                <h1 className='text-lg font-semibold line-clamp-1'>Interviewee: {interview.intervieweeName}</h1>
-                <p className='text-lg font-semibold line-clamp-1'>Interviewer: {interview.interviewerName}</p>
-                <p className="text-sm  mb-1">Start Time: {moment(interview.startTime).format('MMMM Do YYYY, h:mm:ss a')}</p>
-                <p className="text-sm  mb-1">Duration: {interview.duration} minutes</p>
-                <p className="text-sm  mb-1">Topics: {interview.topics?.join(', ')}</p>
-                <p className="text-sm ">Feedback: {interview.feedback ? "Given" : "Not Given"}</p>
-                <Link to={`/interview/${interview.id}`}
-                className='group-hover:bottom-0 absolute bottom-[-200px] left-0 right-0 border border-teal-500 text-teal-500 hover:bg-teal-500 hover:text-white transition-all duration-300 text-center py-2 rounded-md !rounded-tl-none m-2'
-                >
-                See Interview
-              </Link>
-              </div>
-            </div>
-          ))}
-          {buttonIndex === 1 && interviews
-            ?.filter(interview => interview.isCompleted)
-            .map((interview, index) => (
-              <div className='group relative w-full border border-teal-500 hover:border-2 transition-all h-[300px] overflow-hidden rounded-lg sm:w-[330px] light: text-white bg-gray-700'>
-              <div className="p-3 flex flex-col gap-2">
-                <h1 className='text-lg font-semibold line-clamp-1'>Interviewee: {interview.intervieweeName}</h1>
-                <p className='text-lg font-semibold line-clamp-1'>Interviewer: {interview.interviewerName}</p>
-                <p className="text-sm  mb-1">Start Time: {moment(interview.startTime).format('MMMM Do YYYY, h:mm:ss a')}</p>
-                <p className="text-sm  mb-1">Duration: {interview.duration} minutes</p>
-                <p className="text-sm  mb-1">Topics: {interview.topics?.join(', ')}</p>
-                <p className="text-sm ">Feedback: {interview.feedback ? "Given" : "Not Given"}</p>
-                <Link to={`/interview/${interview.id}`}
-                className='group-hover:bottom-0 absolute bottom-[-200px] left-0 right-0 border border-teal-500 text-teal-500 hover:bg-teal-500 hover:text-white transition-all duration-300 text-center py-2 rounded-md !rounded-tl-none m-2'
-                >
-                See Interview
-              </Link>
-              </div>
-            </div>
-            ))}
-          {buttonIndex === 2 && interviews
-            ?.filter(interview => interview.interviewerName !== null)
-            .map((interview, index) => (
-              <div className='group relative w-full border border-teal-500 hover:border-2 transition-all h-[300px] overflow-hidden rounded-lg sm:w-[330px] light: text-white bg-gray-700'>
-              <div className="p-3 flex flex-col gap-2">
-                <h1 className='text-lg font-semibold line-clamp-1'>Interviewee: {interview.intervieweeName}</h1>
-                <p className='text-lg font-semibold line-clamp-1'>Interviewer: {interview.interviewerName}</p>
-                <p className="text-sm  mb-1">Start Time: {moment(interview.startTime).format('MMMM Do YYYY, h:mm:ss a')}</p>
-                <p className="text-sm  mb-1">Duration: {interview.duration} minutes</p>
-                <p className="text-sm  mb-1">Topics: {interview.topics?.join(', ')}</p>
-                <p className="text-sm  mb-1">Feedback: {interview.feedback ? "Given" : "Not Given"}</p>
-                <Link to={`/interview/${interview.id}`}
-                className='group-hover:bottom-0 absolute bottom-[-200px] left-0 right-0 border border-teal-500 text-teal-500 hover:bg-teal-500 hover:text-white transition-all duration-300 text-center py-2 rounded-md !rounded-tl-none m-2'
-                >
-                See Interview
-              </Link>
-              </div>
-            </div>
-            ))}
-
-          {buttonIndex === 3 && interviews
-            ?.filter(interview => interview.interviewerName === null && !interview.isCompleted)
-            .map((interview, index) => (
-              <div className='group relative w-full border border-teal-500 hover:border-2 transition-all h-[300px] overflow-hidden rounded-lg sm:w-[330px] light: text-white bg-gray-700'>
-              <div className="p-3 flex flex-col gap-2">
-                <h1 className='text-lg font-semibold line-clamp-1'>Interviewee: {interview.intervieweeName}</h1>
-                <p className='text-lg font-semibold line-clamp-1'>Interviewer: {interview.interviewerName}</p>
-                <p className="text-sm  mb-1">Start Time: {moment(interview.startTime).format('MMMM Do YYYY, h:mm:ss a')}</p>
-                <p className="text-sm  mb-1">Duration: {interview.duration} minutes</p>
-                <p className="text-sm  mb-1">Topics: {interview.topics?.join(', ')}</p>
-                <p className="text-sm  mb-1">Feedback: {interview.feedback ? "Given" : "Not Given"}</p>
-                <Link to={`/interview/${interview.id}`}
-                className='group-hover:bottom-0 absolute bottom-[-200px] left-0 right-0 border border-teal-500 text-teal-500 hover:bg-teal-500 hover:text-white transition-all duration-300 text-center py-2 rounded-md !rounded-tl-none m-2'
-                >
-                See Interview
-              </Link>
-              </div>
-            </div>
-            ))}
-
-        </div>
-      </div>
     </div>
-  );
-}
-
-export default Interviews;
+  )
+};

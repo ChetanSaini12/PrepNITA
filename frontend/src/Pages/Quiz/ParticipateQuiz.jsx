@@ -1,37 +1,137 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import TimerComponent from './TimerComponent';
 import toast from 'react-hot-toast';
 import { Button } from 'flowbite-react';
-import { duration } from 'moment';
+import moment, { duration } from 'moment';
 import { UserConfirmation } from '../../Components/UserConfirmation';
+import { useMutation, useQuery } from '@apollo/client';
+import { GET_USER_TRAINING_QUIZ } from '../../gqlOperatons/User/queries';
+import MyApolloProvider from '../../index';
+import { useDispatch, useSelector } from 'react-redux';
+import { setLoading } from '../../app/user/userSlice';
+import { Loader } from '../Loader';
+import { GET_QUIZ_BY_ID, GET_QUIZ_BY_ID_with_Q, GET_QUIZ_BY_ID_without_Q } from '../../gqlOperatons/Quiz/mutations';
+import { useNavigate, useParams } from 'react-router-dom';
+import { FinishScreen } from './FinishScreen';
 
 // Dummy data for questions
-const quizQuestions = [
-    {
-        description: "What is the capital of France?",
-        options: ["Berlin", "Madridsjdlk djdjjjjjjjjjjjj c+jajindnfl jdfjdkljkl  jdkjl   c=== disnks isi dsfdskmdkmsfisdkkms i      fidkn (inti i=jjJ++)jdk jdksjkdjdjkdj    djdjkjskjf    djkdjfkdj   ", "Paris", "Rome"],
-        correctOptionIndex: 2,
-    },
-    {
-        description: "What is 2 + 2?",
-        options: ["3", "4", "5", "6"],
-        correctOptionIndex: 1,
-    },
-    {
-        description: "What is the color of the sky?",
-        options: ["Blue", "Green", "Red", "Yellow"],
-        correctOptionIndex: 0,
-    },
-];
+// const quizQuestions = [
+//     {
+//         description: "What is the capital of France?",
+//         options: ["Berlin", "Madridsjdlk djdjjjjjjjjjjjj c+jajindnfl jdfjdkljkl  jdkjl   c=== disnks isi dsfdskmdkmsfisdkkms i      fidkn (inti i=jjJ++)jdk jdksjkdjdjkdj    djdjkjskjf    djkdjfkdj   ", "Paris", "Rome"],
+//         correctOptionIndex: 2,
+//     },
+//     {
+//         description: "What is 2 + 2?",
+//         options: ["3", "4", "5", "6"],
+//         correctOptionIndex: 1,
+//     },
+//     {
+//         description: "What is the color of the sky?",
+//         options: ["Blue", "Green", "Red", "Yellow"],
+//         correctOptionIndex: 0,
+//     },
+// ];
 
 const ParticipateQuiz = () => {
+
+    const { isLoading } = useSelector((state) => state.user);
+    const dispatch = useDispatch();
+    const params = useParams();
+    const navigate = useNavigate();
+
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedOptionIndex, setSelectedOptionIndex] = useState(null);
     const [score, setScore] = useState(0);
     const [quizCompleted, setQuizCompleted] = useState(false);
-    
-    const timePerQuestion=20;
+    const [ERROR, setError] = useState(null);
+    const [alreadyAttempted, setAlreadyAttempted] = useState(null);
+    const [quizQuestions, setQuizQuestions] = useState(null);
+
+    const timePerQuestion = 20;
     const [time, setTime] = useState(timePerQuestion);
+
+    const id = params.id;
+    if (isNaN(id)) {
+        navigate('/notFound');
+    }
+    const ID = parseInt(id);
+
+
+    const [getQuiz] = useMutation(GET_QUIZ_BY_ID_with_Q, {
+        onError: (error) => {
+            console.log("Error from query 1", error);
+            return setError(error);
+        },
+    });
+
+    useEffect(() => {
+        (
+            async () => {
+                dispatch(setLoading(true));
+                try {
+                    const { data, errors } = await getQuiz({
+                        variables: {
+                            QuizId: ID,
+                        }
+                    });
+                    if (errors) {
+                        console.log('error 2', errors);
+                        dispatch(setLoading(false));
+                        return setError(errors);
+                    }
+                    else if (data) {
+                        const startTime = moment(data.getQuizById.startTime);
+                        const endTime = moment(data.getQuizById.endTime);
+                        const currentTime = moment();
+                        if (currentTime < startTime) {
+                            dispatch(setLoading(false));
+                            navigate(`/quiz/id/${ID}`);
+                        }
+                        const { data: res, errors: err } = await MyApolloProvider.client.query({
+                            query: GET_USER_TRAINING_QUIZ,
+                            onerror: (error) => {
+                                // console.log("Error from query", error);
+                                dispatch(setLoading(false));
+                                return setError(error);
+                            }
+                        });
+                        if (err) {
+                            console.log("Errors from query 3", err);
+                            dispatch(setLoading(false));
+                            return setError(err);
+                        }
+                        else if (res) {
+                            console.log("Training user result ", res);
+                            res.getMe.userTraining.quizesAttended.map((quiz) => {
+                                if (parseInt(quiz.quizId) === ID) {
+                                    setScore(quiz.score);
+                                    setAlreadyAttempted(true);
+                                    return dispatch(setLoading(false));
+
+                                }
+                            })
+                            setQuizQuestions(data.getQuizById.questions);
+                            console.log('quiz question ', data.getQuizById.questions);
+                            dispatch(setLoading(false));
+                        }
+                        else dispatch(setLoading(false));
+                    }
+                    else dispatch(setLoading(false));
+
+                } catch (error) {
+                    console.log('error 4', error);
+                    dispatch(setLoading(false));
+                    return setError(error);
+                }
+
+            })
+            ();
+
+
+    }, []);
+
+
 
     const handleOptionClick = (index) => {
         setSelectedOptionIndex(index);
@@ -42,8 +142,10 @@ const ParticipateQuiz = () => {
             toast.error("Please select an option");
             return;
         }
+        // console.log("Selected option index", selectedOptionIndex);
+        // console.log("Correct option index", quizQuestions[currentQuestionIndex].correctOption);
 
-        if (selectedOptionIndex === quizQuestions[currentQuestionIndex].correctOptionIndex) {
+        if (selectedOptionIndex === quizQuestions[currentQuestionIndex].correctOption) {
             setScore(score + 1);
         }
 
@@ -59,7 +161,7 @@ const ParticipateQuiz = () => {
     };
 
     const handleTimeUp = () => {
-        console.log("Time up", currentQuestionIndex, quizQuestions.length);
+        // console.log("Time up", currentQuestionIndex, quizQuestions.length);
         if (currentQuestionIndex + 1 < quizQuestions.length) {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
             setTime(timePerQuestion);
@@ -69,36 +171,41 @@ const ParticipateQuiz = () => {
             setQuizCompleted(true);
         }
     };
-    const onNo=(e)=>{
-        e.preventDefault();
-        toast.success("You clicked No");
-    };
 
-    const handleFinishButton = async(e) => {
+    const handleFinishButton = async (e) => {
         e.preventDefault();
 
-       const response= await UserConfirmation("Are you sure to finish the quiz ?");
-        console.log("Response from UserConfirmation",response);
-        if(response){
+        const response = await UserConfirmation("Are you sure to finish the quiz ?");
+        console.log("Response from UserConfirmation", response);
+        if (response) {
             setQuizCompleted(true);
         }
-        else{};
-    
+        else { };
+
     }
+    if (isLoading) {
+        return <Loader />;
+    }
+    if (ERROR) {
+        console.log("error at participateQuiz page ", ERROR);
+        return <div>Error</div>;
+    }
+    // if (alreadyAttempted) {
+    //     return <FinishScreen />
+    // }
 
     return (
         <div className='min-h-screen flex flex-col gap-4  bg-gray-200 dark:bg-gray-800 '>
-            <div className='px-5 py-3 flex justify-end'>
-                <TimerComponent onTimeUp={handleTimeUp} time={time} setTime={setTime} />
-            </div>
-            {!quizCompleted && (
+            {!quizCompleted && quizQuestions?.length>0 && (
                 <>
-
+                    <div className='px-5 py-3 flex justify-end'>
+                        <TimerComponent onTimeUp={handleTimeUp} time={time} setTime={setTime} />
+                    </div>
                     <div className='  grid grid-cols-1 sm:grid-cols-2  border-t border-b border-gray-400 dark:border-gray-500  '>
 
                         {/* <h1>Quiz</h1> */}
                         <div className='flex flex-col   gap-3   p-3 bg-gray-300 dark:bg-gray-900'>
-                            <h1>Question {currentQuestionIndex + 1}</h1>
+                            <h1>Question {quizQuestions[currentQuestionIndex] + 1}</h1>
                             <h2>{quizQuestions[currentQuestionIndex].description}</h2>
                         </div>
                         <div className='flex flex-col  gap-3   p-3 bg-gray-200 dark:bg-gray-800'>
@@ -126,12 +233,7 @@ const ParticipateQuiz = () => {
                         </div>
 
                     </div>
-                    {/* //  (
-                //     <div>
-            //         <h1>Quiz Completed</h1>
-            //         <p>Your score: {score} / {quizQuestions.length}</p>
-            //     </div>
-            // ) */}
+
                     <div className='p-3'>
                         here will be question sequence
                     </div>
@@ -144,9 +246,15 @@ const ParticipateQuiz = () => {
                         <Button disabled={selectedOptionIndex === null} onClick={handleNextQuestion} color='green' size={"xs"} className='h-6 sm:h-10 px-0 sm:px-3' >Submit</Button>
                     </div>
                 </>
+                // {/* <div>hello</div> */}
             )}
+
+            {alreadyAttempted && (
+                <FinishScreen score={score} quizQuestions={quizQuestions} />
+            )}
+
             {quizCompleted && (
-                <EndingPage score={score} />
+                <FinishScreen score={score} quizQuestions={quizQuestions} />
             )}
 
             {/* <ToastContainer /> */}
@@ -156,11 +264,4 @@ const ParticipateQuiz = () => {
 
 export default ParticipateQuiz;
 
-const EndingPage = ({ score }) => {
-    return (
-        <div className='flex flex-col items-center gap-5 p-5'>
-            <h1>Quiz Completed</h1>
-            <p>Your score: {score} / {quizQuestions.length}</p>
-        </div>
-    )
-}
+
