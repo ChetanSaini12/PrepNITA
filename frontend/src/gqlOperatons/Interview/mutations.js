@@ -14,13 +14,6 @@ export const GET_INTERVIEW = gql`
             intervieweeName
             interviewerName
             feedback {
-                id
-                interviewId
-                communication
-                development
-                dsa
-                csfundamentals
-                notes
                 points
             }
         }

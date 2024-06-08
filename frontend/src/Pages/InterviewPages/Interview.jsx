@@ -143,21 +143,23 @@ function Interviews() {
   return (
     <div className="min-w-screen min-h-screen flex flex-col items-center justify-center">
       {showCreateInterviw && (
-        <CreateInterviewBox Duration={Duration}setDuration={setDuration} Topics={Topics}
-        setTopics={setTopics}setDateTime={setDateTime} handleSubmit={handleSubmit} setShowCreateInterview={setShowCreateInterview}
+        <CreateInterviewBox Duration={Duration} setDuration={setDuration} Topics={Topics}
+          setTopics={setTopics} setDateTime={setDateTime} handleSubmit={handleSubmit} setShowCreateInterview={setShowCreateInterview}
         />
       )}
 
       {!showCreateInterviw && (
 
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-10">
-          <div className="bg-gray-200 dark:bg-gray-800 rounded-lg shadow-md flex justify-center items-center flex-col gap-3 p-3 my-4 md:p-6 hover:shadow-lg transition duration-300 h-36 w-80">
+          <div className="bg-gray-200 dark:bg-gray-800 rounded-lg shadow-md flex justify-center items-center flex-col gap-3 p-3 my-4 md:p-6 hover:bg-gray-300 dark:hover:bg-gray-700 transition duration-100 h-36 w-80">
             <button onClick={() => { setShowCreateInterview(true) }}>
-              <BiBookAdd />
+              <div className='flex justify-center'>
+                <BiBookAdd />
+              </div>
               <h1>Create an interview</h1>
             </button>
           </div>
-          <div className="bg-gray-200 dark:bg-gray-800 rounded-lg shadow-md flex justify-center items-center flex-col gap-3 p-3 my-4 md:p-6 hover:shadow-lg transition duration-300 h-36 w-80">
+          <div className="bg-gray-200 dark:bg-gray-800 rounded-lg shadow-md flex justify-center items-center flex-col gap-3 p-3 my-4 md:p-6 hover:bg-gray-300 dark:hover:bg-gray-700 transition duration-100 h-36 w-80">
             <RiAdminFill />
             <h1>Interviews as an Admin</h1>
           </div>
@@ -262,11 +264,11 @@ function Interviews() {
 
 export default Interviews;
 
- const  CreateInterviewBox = ({ Duration, setDuration, Topics, setTopics, setDateTime, handleSubmit, setShowCreateInterview }) => {
+const CreateInterviewBox = ({ Duration, setDuration, Topics, setTopics, setDateTime, handleSubmit, setShowCreateInterview }) => {
   return (
     <div className=' max-w-xl w-full flex flex-col sm:flex-row p-3 border border-teal-500 justify-center items-center rounded-tl-3xl rounded-br-3xl m-5 bg-gray-200 dark:bg-gray-700'>
       <div className='flex-1 justify-center flex flex-col '>
-      <button className='flex justify-end hover:text-xl hover:text-red-500' onClick={() => { setShowCreateInterview(false) }}>X</button>
+        <button className='flex justify-end hover:text-xl hover:text-red-500' onClick={() => { setShowCreateInterview(false) }}>X</button>
         <h1 className="text-3xl font-semibold mb-4  ">Create an Interview</h1>
         <form onSubmit={handleSubmit} className="space-y-4" >
           <TextInput
