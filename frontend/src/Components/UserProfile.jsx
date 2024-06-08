@@ -11,7 +11,7 @@ export const UserProfile = ({userData}) => {
   // },[userData]);
   console.log("hosteller", userData);
   return (
-        <div className="flex flex-col justify-center items-start my-4 gap-5 mx-2">
+        <div className="flex flex-col justify-center items-start my-4 gap-5 px-2">
           <div className=' flex justify-start sm:justify-center  items-center gap-4 sm:gap-6'>
             <img
               src={userData.profilePic || "https://images.pexels.com/photos/2690774/pexels-photo-2690774.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"}

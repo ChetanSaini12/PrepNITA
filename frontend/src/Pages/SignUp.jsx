@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import OAuth from "../Components/OAuth";
 import { useMutation } from "@apollo/client";
-import { REGISTER_USER, SEND_VERIFY_EMAIL, VERIFY_EMAIL } from "../gqlOperatons/mutations";
+import { REGISTER_USER, SEND_VERIFY_EMAIL, VERIFY_EMAIL } from "../gqlOperatons/User/mutations";
 import { Loader } from "./Loader";
 import { useDispatch, useSelector } from "react-redux";
 import { LoginUser, setLoading, setToken } from "../app/user/userSlice";

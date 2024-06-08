@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { DELETE_QUIZ, GET_QUIZ_BY_ID, UPDATE_QUIZ } from '../../gqlOperatons/Quiz/mutations';
+import { DELETE_QUIZ, GET_QUIZ_BY_ID, GET_QUIZ_BY_ID_without_Q, UPDATE_QUIZ } from '../../gqlOperatons/Quiz/mutations';
 import { setLoading } from '../../app/user/userSlice';
 import { Loader } from '../Loader';
 import { useMutation } from '@apollo/client';
-import { GET_USER_BY_ID2 } from '../../gqlOperatons/mutations';
+import { GET_USER_BY_ID2 } from '../../gqlOperatons/User/mutations';
 import moment from 'moment';
 import { Button, Textarea } from 'flowbite-react';
 import DateTimePicker from '../../Components/DatePicker';
@@ -38,7 +38,7 @@ const QuizDetail = () => {
     const locationImg = '/location-dot-solid.svg';//for logo of the quiz
 
 
-    const [getQuizById] = useMutation(GET_QUIZ_BY_ID, {
+    const [getQuizById] = useMutation(GET_QUIZ_BY_ID_without_Q, {
         onError: (error) => {
             console.log("on error at get quiz by id", error);
             return setError(error);
@@ -225,8 +225,8 @@ const QuizDetail = () => {
     };
 
     const handleEnterToQuizButton = async (e) => {
-        const userConfirmation =await UserConfirmation("Before start please read the instructions below")
-        if (userConfirmation) navigate('/quiz/view');
+        const userConfirmation =await UserConfirmation("Before start please read the instructions below and Click Yes to enter ")
+        if (userConfirmation) navigate(`/quiz/view/${id}`);
         else { };
     };
 

@@ -25,7 +25,7 @@ export default function Interviewhome() {
   });
 
   useEffect(() => {
-    console.log("");
+    // console.log("");
     setReady(false);
     dispatch(setLoading(true));
     (async () => {
@@ -33,7 +33,7 @@ export default function Interviewhome() {
         const { data, errors } = await getInterviews({
           variables: { intervieweeId: id },
         });
-        console.log("Interviews data ", data);
+        // console.log("Interviews data ", data);
         if (errors) {
           dispatch(setLoading(false));
           return setError(errors);

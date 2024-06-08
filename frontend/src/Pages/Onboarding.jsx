@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import OAuth from "../Components/OAuth";
 import { useMutation } from "@apollo/client";
-import { ONBOARD_USER, REGISTER_USER } from "../gqlOperatons/mutations";
+import { ONBOARD_USER, REGISTER_USER } from "../gqlOperatons/User/mutations";
 import { Loader } from "./Loader";
 import { useDispatch, useSelector } from "react-redux";
 import { LoginUser, setLoading } from "../app/user/userSlice";

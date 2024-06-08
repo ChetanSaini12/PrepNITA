@@ -14,7 +14,10 @@ function Header() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { theme } = useSelector(state => state.theme)
-    const { loggedIn } = useSelector((state) => state.user);
+    const { loggedIn,id } = useSelector((state) => state.user);
+
+    
+    console.log("user state at header ", loggedIn,id);
 
     const logoutHandler = () => {
         dispatch(LogoutUser());
@@ -79,7 +82,8 @@ function Header() {
                     <Link to='/discuss'>Discuss</Link>
                 </Navbar.Link>
                 <Navbar.Link active={path === '/profile'} as={'div'}>
-                    <Link to='/profile'>Profile</Link>
+                    {/* <Link to={`/profile/${id}`}>Profile</Link> */}
+                    <Link to={`/profile`}>Profile</Link>
                 </Navbar.Link>
 
             </Navbar.Collapse>
