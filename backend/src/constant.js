@@ -10,4 +10,7 @@ superadmin -> superadminpassword : 11
 
 manager token : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIsImlhdCI6MTcwNzg1ODIyMywiZXhwIjoxNzE2NDk4MjIzfQ.m7vATj6uzD6Id0LaGhlYCf-MKAsaKakBLphwlfNdQdY
 manager -> managerpassword : 12
+
+user : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTYsImlhdCI6MTcxODY4NTgzNSwiZXhwIjoxNzI3MzI1ODM1fQ.pcey1Zirqyca4su6bDFaE0VkzSQA9q8QrTBixOtSuwc
+1234567890 : 16
 */
