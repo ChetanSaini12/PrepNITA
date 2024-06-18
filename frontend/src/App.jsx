@@ -6,14 +6,11 @@ import Header from "./Components/Header";
 import Quizes from "./Pages/Quiz/Quizes.jsx";
 import Discuss from "./Pages/Discuss";
 import SignUp from "./Pages/SignUp";
-// import SignIn from "./Pages/SignIn";
 import FooterCom from "./Components/Footer";
 import AllUsers from "./Pages/UserPages/AllUsers.jsx";
-// import Interviews from "./Pages/InterviewPages/Interview.jsx";
 import { Profile } from "./Pages/UserPages/Profile.jsx";
 import Question from "./Pages/Questions/Question.jsx";
 import CreateQuestion from "./Pages/Questions/CreateQuestion.jsx";
-// import DisplayUsers from "./Pages/UserPages/DisplayUsers.jsx";
 import Onboarding from "./Pages/Onboarding";
 import Interview from "./Pages/InterviewPages/Interview.jsx";
 import InterviewDetail from "./Pages/InterviewPages/InterviewDetail.jsx";
@@ -62,11 +59,11 @@ function App() {
             <Route path="/quizes" element={<Quizes></Quizes>}></Route>
             <Route path="/quiz/new" element={<CreateQuiz></CreateQuiz>}></Route>
             <Route path="/quiz/id/:id" element={<QuizDetail></QuizDetail>}></Route>
-            <Route path="/quiz/view" element={<ParticipateQuiz />}></Route>
+            <Route path="/quiz/view/:id" element={<ParticipateQuiz />}></Route>
             <Route path="/discuss" element={<Discuss></Discuss>}></Route>
             <Route path="/register" element={<SignUp></SignUp>}></Route>
             <Route path="/profile" element={<Profile />}></Route>
-            <Route path="/profile/:id" element={<ProfileById />}></Route>
+            <Route path="/profile/:username" element={<ProfileById />}></Route>
             <Route path="/questions" element={<Question />}></Route>
             <Route path="/questions/:id" element={<QuestionById />}></Route>
             {/* <Route path="/create_question" element={<CreateQuestion />}></Route> */}
@@ -76,6 +73,7 @@ function App() {
             <Route path="/interviewdummy" element={<Interviewhome />}></Route>
             <Route path="/interviewdummyadmin" element={<AdminInterview />}></Route>
             <Route path="/interview/:id" element={<InterviewDetail />}></Route>
+            <Route path="/notFound" element={<PageNotFound />}></Route>
             <Route path="/*" element={<PageNotFound />}></Route>
           </Routes>
           <FooterCom></FooterCom>

@@ -6,7 +6,7 @@ export const UserConfirmation = (message, duration =3000) => {
         const toastId = toast.custom((t) => (
             <div
                 className={`${t.visible ? 'animate-Enter' : 'animate-Leave'
-                    } max-w-md w-full bg-gray-300 shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+                    } max-w-md w-full h-40 bg-gray-300 shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
             >
                 <div className="flex-1 w-0 p-4">
                     <div className="flex items-start">
@@ -51,3 +51,4 @@ export const UserConfirmation = (message, duration =3000) => {
         }, duration);
     });
 };
+

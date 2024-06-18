@@ -11,12 +11,12 @@ import Lottie from 'react-lottie';
 import animationData from '../../lotties/startup.json';
 import { useMutation, useQuery } from '@apollo/client';
 import MyApolloProvider from '../../index';
-import { GET_USER_FOR_PROFILE, GET_USER_STATUS, GET_USER_STATUS_WITH_ALL_DETAILS } from '../../gqlOperatons/queries';
+import { GET_USER_FOR_PROFILE, GET_USER_STATUS, GET_USER_STATUS_WITH_ALL_DETAILS } from '../../gqlOperatons/User/queries';
 import { VerifyToken } from '../../utils/verifyToken';
 import { CircularProgressbar } from 'react-circular-progressbar';
 
 import TakeUserDetails from '../../Components/TakeUserDetails';
-import { UPDATE_USER } from '../../gqlOperatons/mutations';
+import { UPDATE_USER } from '../../gqlOperatons/User/mutations';
 import { UserProfile } from '../../Components/UserProfile';
 
 export const Profile = () => {
@@ -45,8 +45,6 @@ export const Profile = () => {
       return setError(error);
     }
   });
-
-
 
 
   useEffect(() => {
@@ -199,7 +197,7 @@ export const Profile = () => {
   }
   else {
     return (
-      <div>
+      <div className='px-2'>
         <UserProfile userData={userData} />
         <div className="flex justify-start w-full my-5 mx-3 max-w-4xl gap-5 ">
           <Button className='' onClick={handleEditMode}>⚙️Edit</Button>

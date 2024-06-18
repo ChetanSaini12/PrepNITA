@@ -1,6 +1,6 @@
 import { useSearchParams } from 'react-router-dom';
 import { LoginUser, LogoutUser, setLoading } from '../app/user/userSlice';
-import { GET_USER_STATUS } from '../gqlOperatons/queries';
+import { GET_USER_STATUS } from '../gqlOperatons/User/queries';
 import  MyApolloProvider  from '../index';
 import { useSelector } from 'react-redux';
 
