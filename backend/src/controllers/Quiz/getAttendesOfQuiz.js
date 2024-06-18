@@ -1,5 +1,5 @@
 import { GraphQLError } from "graphql";
-import { prisma } from "../../../prisma"
+import { prisma } from "../../../prisma/index.js"
 
 export const getAttendesOfQuiz = async (_, payload) => {
     try {
