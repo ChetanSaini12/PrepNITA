@@ -394,7 +394,7 @@ const QuizDetail = () => {
             )}
 
             {quiz && !active && showAddQuestion && (
-                <AddQuestion handleCancel={handleCancel} quizId={id} />
+                <AddQuestion handleCancel={handleCancel} quizId={ID} />
             )}
         </div>
 
