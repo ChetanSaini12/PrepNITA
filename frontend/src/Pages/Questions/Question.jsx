@@ -9,7 +9,6 @@ import { Link } from 'react-router-dom';
 import { FaCheck, FaTimes } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux';
 import { setLoading } from '../../app/user/userSlice';
-import CreateQuestion from './CreateQuestion';
 
 
 const Question = () => {
@@ -130,11 +129,11 @@ const Question = () => {
     return (
         <div className='min-h-screen table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500' >
             <>
-                {!showCreateQuestion && data && (
+                { data && (
                     <>
-                        <div className='flex justify-end p-2'>
+                        {/* <div className='flex justify-end p-2'>
                             <button onClick={handelShowQuestion}  className='border border-gray-300 rounded-lg p-1 hover:bg-gray-200 dark:hover:bg-gray-700'><span className='text-xl mr-1'>+</span>Create question</button>
-                        </div>
+                        </div> */}
                         <Table hoverable className='shadow-md'>
                             <Table.Head>
                                 <Table.HeadCell>Question ID</Table.HeadCell>
@@ -221,9 +220,9 @@ const Question = () => {
                         </Table>
                     </>
                 )}
-                {showCreateQuestion && (
+                {/* {showCreateQuestion && (
                     <CreateQuestion handleCancel={handleCancel} />
-                )}
+                )} */}
             </>
 
         </div>
