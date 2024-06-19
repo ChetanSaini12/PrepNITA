@@ -132,9 +132,9 @@ const Question = () => {
             <>
                 {!showCreateQuestion && data && (
                     <>
-                        <div className='flex justify-end p-2'>
+                        {/* <div className='flex justify-end p-2'>
                             <button onClick={handelShowQuestion}  className='border border-gray-300 rounded-lg p-1 hover:bg-gray-200 dark:hover:bg-gray-700'><span className='text-xl mr-1'>+</span>Create question</button>
-                        </div>
+                        </div> */}
                         <Table hoverable className='shadow-md'>
                             <Table.Head>
                                 <Table.HeadCell>Question ID</Table.HeadCell>
@@ -221,9 +221,9 @@ const Question = () => {
                         </Table>
                     </>
                 )}
-                {showCreateQuestion && (
+                {/* {showCreateQuestion && (
                     <CreateQuestion handleCancel={handleCancel} />
-                )}
+                )} */}
             </>
 
         </div>
