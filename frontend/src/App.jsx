@@ -64,6 +64,7 @@ function App() {
             ></Route>
             <Route path="/quiz/id/:id" element={<QuizDetail />}></Route>
             <Route path="/quiz/view/:id" element={<ParticipateQuiz />}></Route>
+
             <Route path="/discuss" element={<Discuss />}></Route>
             <Route path="/register" element={<SignUp />}></Route>
             <Route path="/profile" element={<Profile />}></Route>

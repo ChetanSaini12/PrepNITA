@@ -145,8 +145,7 @@ const ParticipateQuiz = () => {
         }
         // console.log("Selected option index", selectedOptionIndex);
         // console.log("Correct option index", quizQuestions[currentQuestionIndex].correctOption);
-
-        if (selectedOptionIndex === quizQuestions[currentQuestionIndex].correctOption) {
+        if (selectedOptionIndex+1 === quizQuestions[currentQuestionIndex].correctOption) {
             setScore(score + 1);
         }
 
@@ -164,7 +163,7 @@ const ParticipateQuiz = () => {
     const handleTimeUp = () => {
         // console.log("Time up", currentQuestionIndex, quizQuestions.length);
         if (selectedOptionIndex !== null) {
-            if (selectedOptionIndex === quizQuestions[currentQuestionIndex].correctOption) {
+            if (selectedOptionIndex+1 === quizQuestions[currentQuestionIndex].correctOption) {
                 setScore(score + 1);
             }
         }
@@ -186,7 +185,7 @@ const ParticipateQuiz = () => {
         console.log("Response from UserConfirmation", response);
         if (response) {
             if (selectedOptionIndex !== null) {
-                if (selectedOptionIndex === quizQuestions[currentQuestionIndex].correctOption) {
+                if (selectedOptionIndex+1 === quizQuestions[currentQuestionIndex].correctOption) {
                     setScore(score + 1);
                 }
             }

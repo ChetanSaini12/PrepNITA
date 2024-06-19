@@ -59,7 +59,7 @@ function Quizes() {
   }, []);
 
   const handleNewQuiz=()=>{
-    return navigate('/quiz/new');
+    return navigate('/contribute/quiz');
   }
 
   const HandleFilterCondition = (quiz) => {
