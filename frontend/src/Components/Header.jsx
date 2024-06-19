@@ -33,7 +33,7 @@ function Header() {
 
 
     return (
-        <Navbar className=' fixed w-full z-10 top-0 border-b-2 dark:bg-gray-800'>
+        <Navbar className='w-full z-10 top-0 border-b-2 dark:bg-gray-800'>
             <Link to="/" className='font-bold text-lg flex-col '>
             
                 <span className='px-2 py-1 bg-gradient-to-r from from-cyan-400  via-cyan-500 to-cyan-900 rounded-lg text-white text-lg font-bold ab'>PreP</span> NITA
