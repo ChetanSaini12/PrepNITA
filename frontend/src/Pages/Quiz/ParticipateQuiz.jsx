@@ -81,6 +81,7 @@ const ParticipateQuiz = () => {
                         return setError(errors);
                     }
                     else if (data) {
+                        console.log("quiz data", data);
                         const startTime = moment(data.getQuizById.startTime);
                         const endTime = moment(data.getQuizById.endTime);
                         const currentTime = moment();
@@ -162,14 +163,20 @@ const ParticipateQuiz = () => {
 
     const handleTimeUp = () => {
         // console.log("Time up", currentQuestionIndex, quizQuestions.length);
+        if (selectedOptionIndex !== null) {
+            if (selectedOptionIndex === quizQuestions[currentQuestionIndex].correctOption) {
+                setScore(score + 1);
+            }
+        }
+        setSelectedOptionIndex(null);
         if (currentQuestionIndex + 1 < quizQuestions.length) {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
             setTime(timePerQuestion);
-        }
-        else {
+        } else {
             setTime(0);
             setQuizCompleted(true);
         }
+
     };
 
     const handleFinishButton = async (e) => {
@@ -178,6 +185,12 @@ const ParticipateQuiz = () => {
         const response = await UserConfirmation("Are you sure to finish the quiz ?");
         console.log("Response from UserConfirmation", response);
         if (response) {
+            if (selectedOptionIndex !== null) {
+                if (selectedOptionIndex === quizQuestions[currentQuestionIndex].correctOption) {
+                    setScore(score + 1);
+                }
+            }
+            setSelectedOptionIndex(null);
             setQuizCompleted(true);
         }
         else { };
@@ -196,7 +209,7 @@ const ParticipateQuiz = () => {
 
     return (
         <div className='min-h-screen flex flex-col gap-4  bg-gray-200 dark:bg-gray-800 '>
-            {!quizCompleted && quizQuestions?.length>0 && (
+            {!quizCompleted && quizQuestions?.length > 0 && (
                 <>
                     <div className='px-5 py-3 flex justify-end'>
                         <TimerComponent onTimeUp={handleTimeUp} time={time} setTime={setTime} />
@@ -205,7 +218,7 @@ const ParticipateQuiz = () => {
 
                         {/* <h1>Quiz</h1> */}
                         <div className='flex flex-col   gap-3   p-3 bg-gray-300 dark:bg-gray-900'>
-                            <h1>Question {quizQuestions[currentQuestionIndex] + 1}</h1>
+                            <h1>Question {currentQuestionIndex + 1}</h1>
                             <h2>{quizQuestions[currentQuestionIndex].description}</h2>
                         </div>
                         <div className='flex flex-col  gap-3   p-3 bg-gray-200 dark:bg-gray-800'>

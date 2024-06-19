@@ -41,7 +41,7 @@ function Quizes() {
           }
           else if (data) {
             dispatch(setLoading(false));
-            // console.log("all quizes ", data);
+            console.log("all quizes ", data);
             setQuizes(data.getAllQuiz);
             // return setQuizes(data.getAllQuiz
           }
