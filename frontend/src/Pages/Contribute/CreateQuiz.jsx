@@ -8,7 +8,7 @@ import { setLoading } from '../../app/user/userSlice';
 import toast from 'react-hot-toast';
 import DateTimePicker from '../../Components/DatePicker';
 import { Loader } from '../Loader';
-import { FaFlag } from "react-icons/fa";
+import { HiOutlineBackspace } from "react-icons/hi";
 
 export const CreateQuiz = () => {
 
@@ -76,6 +76,7 @@ export const CreateQuiz = () => {
                 toast.success("Quiz created successfully");
                 setFormData({});
                 dispatch(setLoading(false));
+                return navigate(`/quiz/id/${data.createQuiz.id}`)
             }
         } catch (error) {
             dispatch(setLoading(false));
@@ -87,7 +88,7 @@ export const CreateQuiz = () => {
         return <Loader />
     }
     if (ERROR) {
-     toast.error(ERROR.message ? ERROR.message : ERROR || "something went wrong ");
+        toast.error(ERROR.message ? ERROR.message : ERROR || "something went wrong ");
     }
 
     return (
@@ -95,9 +96,16 @@ export const CreateQuiz = () => {
 
         //     CreateQuiz</div>
         <>
-            <div className='p-3 max-w-3xl mx-auto min-h-screen  mt-2 mb-5'>
+            <div className='p-3 max-w-3xl mx-auto min-h-screen mb-5'>
+                <div className='flex justify-end -mb-2'>
+                    <button onClick={() => navigate('/quizes')} className='w-8 h-8 hover:text-red-400'>
+                        <HiOutlineBackspace size={'md'} />
+                    </button>
+                </div>
                 <h1 className='text-center text-lg md:text-2xl my-4 font-semibold'>
-                    Create a Quiz</h1>
+                    Create a Quiz
+                </h1>
+
                 <div className="question_container">
                     <form id='questionForm' onSubmit={handleCreateQuiz} className='flex flex-col gap-4 border border-teal-500 rounded-tl-3xl rounded-br-3xl p-3 '>
                         <div >
@@ -120,15 +128,17 @@ export const CreateQuiz = () => {
                             />
                         </div>
                         <div className='flex justify-between'>
-                            <DateTimePicker required setDateTime={setStartDateTime} text='Start :'/>
+                            <DateTimePicker required setDateTime={setStartDateTime} text='Start :' />
                             <DateTimePicker required setDateTime={setEndDateTime} text='Finish :' />
                         </div>
-
 
                         <Button type='submit' className='my-5'>Create</Button>
                     </form>
 
                 </div>
-            </div></>
+
+            </div>
+
+        </>
     )
 }
