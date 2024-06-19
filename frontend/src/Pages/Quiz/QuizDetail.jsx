@@ -232,7 +232,7 @@ const QuizDetail = () => {
 
     const handleEnterToQuizButton = async (e) => {
         const userConfirmation = await UserConfirmation("Before start please read the instructions below and Click Yes to enter ")
-        if (userConfirmation) navigate(`/quiz/view/${id}`);
+        if (userConfirmation) navigate(`/quiz/view/${ID}`);
         else { };
     };
 
