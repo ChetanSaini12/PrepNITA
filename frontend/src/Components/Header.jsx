@@ -78,8 +78,8 @@ function Header() {
                     <Link to='/interview'>Interviews</Link>
                 </Navbar.Link>
                 {/* <Navbar.Link active={path==='/discuss'} as={'div'}> */}
-                <Navbar.Link active={path === '/discuss' } as={'div'}>
-                    <Link to='/discuss'>Discuss</Link>
+                <Navbar.Link active={path === '/contribute' } as={'div'}>
+                    <Link to='/contribute'>Contribute</Link>
                 </Navbar.Link>
                 <Navbar.Link active={path === '/profile'} as={'div'}>
                     {/* <Link to={`/profile/${id}`}>Profile</Link> */}
