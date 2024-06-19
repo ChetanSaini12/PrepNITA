@@ -1,8 +1,8 @@
 import { useSearchParams } from 'react-router-dom';
-import { LoginUser, LogoutUser, setLoading } from '../app/user/userSlice';
+import { LoginUser, LogoutUser, setLoading, setReadyStates } from '../app/user/userSlice';
 import { GET_USER_STATUS } from '../gqlOperatons/User/queries';
 import  MyApolloProvider  from '../index';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 
 
@@ -27,6 +27,7 @@ export const VerifyToken = async (dispatch) => {
             if (errors) {
                 console.log("Error in verifyToken 1:", errors);
                 dispatch(setLoading(false));
+                dispatch(setReadyStates(true));
                return  response.verified = false;
             } else if (data) {
                 console.log("Data from verifyToken 1 :", data);
@@ -38,6 +39,7 @@ export const VerifyToken = async (dispatch) => {
                     token:localStorage.getItem("token"),
                     // profilePic: data.getMe.userInformation.profilePic
                 }));
+                dispatch(setReadyStates(true));
                 response.verified = true;
                 response.userInformation = data.getMe.userInformation;
                 response.authentication = data.getMe.authentication;
@@ -50,6 +52,7 @@ export const VerifyToken = async (dispatch) => {
         } catch (error) {
             console.log("Error in verifyToken try catch :", error.message);
             dispatch(setLoading(false));
+            dispatch(setReadyStates(true));
             return response.verified=false;
             // dispatch(LogoutUser());
             // response.verified = false;
@@ -58,6 +61,7 @@ export const VerifyToken = async (dispatch) => {
     else {
         dispatch(setLoading(false));
         dispatch(LogoutUser());
+        dispatch(setReadyStates(true));
         console.log("token not present at verifyToken 2 ");
         return response.verified=false;
     }

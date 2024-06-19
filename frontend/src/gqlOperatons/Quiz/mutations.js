@@ -33,6 +33,13 @@ export const GET_ALL_QUIZ = gql`
         getAllQuiz{
             id 
             createdBy
+            questions {
+                id
+                quizId
+                description
+                options
+                correctOption
+            }
             title
             description
             isVisible

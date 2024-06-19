@@ -17,13 +17,13 @@ import { UserConfirmation } from '../../Components/UserConfirmation';
 const QuizDetail = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { isLoading, loggedIn } = useSelector((state) => state.user);
+    const { isLoading, loggedIn, id, ready } = useSelector((state) => state.user);
     // console.log("user states :", loggedin, isLoading);
 
     const [quiz, setQuiz] = useState(null);
     const [tempQuiz, setTempQuiz] = useState({})
     const [questions, setQuestions] = useState([{}]);
-    const [createdBy, setCreatedBy] = useState({});
+    const [createdBy, setCreatedBy] = useState(null);
     const [ERROR, setError] = useState(null);
     const [refresh, setRefresh] = useState(false);
     const [showEditMode, setShowEditMode] = useState(false);
@@ -31,7 +31,8 @@ const QuizDetail = () => {
     const [showAddQuestion, setShowAddQuestion] = useState(false);
     const [startDateTime, setStartDateTime] = useState(new Date());
     const [endDateTime, setEndDateTime] = useState(new Date());
-    const [ready, setReady] = useState(false);
+    // const [ready, setReady] = useState(false);
+    const [isOwner, setIsOwner] = useState(false);
 
     // const imagePath = '/logo192.png';//for logo of the quiz
     const imagePath = '/dccLogo.jpg';//for logo of the quiz
@@ -68,25 +69,25 @@ const QuizDetail = () => {
 
 
 
-    const id = parseInt(useParams().id);
+    const ID = parseInt(useParams().id);
 
 
     useEffect(() => {
         (
-            isNaN(id) ? navigate("/*") :
+            isNaN(ID) ? navigate("/*") :
                 async () => {
                     dispatch(setLoading(true));
                     try {
                         const { data, errors } = await getQuizById(
                             {
                                 variables: {
-                                    QuizId: id
+                                    QuizId: ID
                                 }
                             }
                         );
                         if (errors) {
                             dispatch(setLoading(false));
-                            setReady(true);
+                            // setReady(true);
                             return setError(errors);
                             // navigate('/quizes');
                         }
@@ -99,26 +100,26 @@ const QuizDetail = () => {
                             });
                             if (err) {
                                 dispatch(setLoading(false));
-                                setReady(true);
+                                // setReady(true);
                                 return setError(err);
                                 // navigate('/quizes');
                             }
                             else if (res) {
                                 console.log("created by ", res);
-                                setCreatedBy(res.getUserById.userInformation);
+                                setCreatedBy(res);
                             }
 
-                            dispatch(setLoading(false));
-                            console.log("data at quiz detail ", data);
+                            // console.log("data at quiz detail ", data);
                             setQuiz(data.getQuizById);
                             setTempQuiz(data.getQuizById);
                             setStartDateTime(moment(data.getQuizById.startTime));
                             setEndDateTime(moment(data.getQuizById.endTime));
-                            setReady(true);
+                            // setReady(true);
+                            dispatch(setLoading(false));
                         }
                     } catch (error) {
                         dispatch(setLoading(false));
-                        setReady(true);
+                        // setReady(true);
                         return setError(error);
                         // navigate('/quizes');
                     }
@@ -126,7 +127,12 @@ const QuizDetail = () => {
         )();
 
     }, [refresh]);
-
+    useEffect(() => {
+        if (createdBy && ready) {
+            // console.log("isOwner ",createdBy.getUserById.id,id,ready);
+            setIsOwner(parseInt(createdBy.getUserById.id) === parseInt(id));
+        }
+    }, [createdBy, ready]);
     const handleQuizEdit = (e) => {
         e.preventDefault();
         setActive(false);
@@ -180,12 +186,12 @@ const QuizDetail = () => {
                 return setError(errors);
             }
             else if (data) {
-                dispatch(setLoading(false));
                 // console.log("updated quiz ", data);
+                dispatch(setLoading(false));
+                toast.success(" Quiz is updated successfully ! ")
                 setRefresh(!refresh);
                 setActive(true);
                 setShowEditMode(false);
-                toast.success(" Quiz is updated successfully ! ")
             }
         } catch (error) {
             dispatch(setLoading(false));
@@ -225,18 +231,19 @@ const QuizDetail = () => {
     };
 
     const handleEnterToQuizButton = async (e) => {
-        const userConfirmation =await UserConfirmation("Before start please read the instructions below and Click Yes to enter ")
+        const userConfirmation = await UserConfirmation("Before start please read the instructions below and Click Yes to enter ")
         if (userConfirmation) navigate(`/quiz/view/${id}`);
         else { };
     };
 
-
-    if (ready && (loggedIn === false)) navigate('/register');
-    if (isLoading) return <Loader />;
-    if (ERROR) {
-        toast.error(ERROR.message ? ERROR.message : ERROR || "something went wrong ");
+    // console.log("ready ",ready,isLoading,loggedIn,id);
+    if (isLoading || !ready) return <Loader />;
+    if (ready && (loggedIn === false)) {
+        return navigate('/register');
     }
-
+    if (ERROR) {
+        return toast.error(ERROR.message ? ERROR.message : ERROR || "something went wrong ");
+    }
 
     return (
         <div className=' flex flex-col min-w-screen min-h-screen items-center gap-2'>
@@ -250,7 +257,7 @@ const QuizDetail = () => {
                             <div className='flex flex-col gap-2 mt-1'>
                                 <div className='font-semibold text-lg md:text-xl lg:text-2xl '>{quiz.title}</div>
                                 <span>
-                                    <Link className='hover:text-blue-500 dark:hover:text-blue-300' to={`/profile/${parseInt(quiz.createdBy)}`}>✍🏼 {createdBy.name}</Link>
+                                    <Link className='hover:text-blue-500 dark:hover:text-blue-300' to={`/profile/${createdBy.getUserById.userInformation.username}`}>✍🏼 {createdBy.getUserById.userInformation.name}</Link>
                                 </span>
                                 <div className='flex  flex-wrap gap-2 md:gap-3 lg:gap-5 mt-1 '>
                                     {/* <div className='flex text-blue-500 dark:text-blue-300 gap-5'> */}
@@ -271,12 +278,12 @@ const QuizDetail = () => {
                                 <div>Online</div>
                             </div>
                             <div className='flex flex-wrap gap-3'>
-                                <button onClick={handleQuizEdit} className='border border-gray-300 dark:border-gray-700 
-                                 hover:border-red-500 dark:hover:border-red-400 px-2 rounded-lg'>Edit </button>
-                                <button onClick={handleDeleteQuiz} className='border border-gray-300 dark:border-gray-700 
-                                 hover:border-red-500 dark:hover:border-red-400 px-2 rounded-lg'>Delete</button>
-                                <button onClick={handleQuestionButton} className='border border-gray-300 dark:border-gray-700 
-                                 hover:border-red-500 dark:hover:border-red-400 px-2 rounded-lg'>Add question</button>
+                                <button onClick={handleQuizEdit} className={`${!isOwner?`disabledButton`:""} border border-gray-300 dark:border-gray-700 
+                                hover:border-red-500 dark:hover:border-red-400 px-2 rounded-lg`}>Edit </button>
+                                <button onClick={handleDeleteQuiz} className={`${!isOwner?`disabledButton`:""} border border-gray-300 dark:border-gray-700 
+                                hover:border-red-500 dark:hover:border-red-400 px-2 rounded-lg`}>Delete</button>
+                                <button onClick={handleQuestionButton} className={`${!isOwner?`disabledButton`:""} border border-gray-300 dark:border-gray-700 
+                                hover:border-red-500 dark:hover:border-red-400 px-2 rounded-lg`}>Add question</button>
                             </div>
                         </div>
                     </div>

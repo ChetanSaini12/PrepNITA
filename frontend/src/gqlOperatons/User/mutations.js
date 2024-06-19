@@ -92,13 +92,14 @@ export const GET_USER_BY_USER_NAME = gql`
     }
   `;
 
-  export const GET_USER_BY_ID2 = gql`
+export const GET_USER_BY_ID2 = gql`
     mutation getUserByIdMutation($id:Int!){
       getUserById(id:$id){
+        id
         userInformation{
+        username
           name
-          profilePic  
-          linkedinProfile         
+          profilePic           
       }
       }
     }

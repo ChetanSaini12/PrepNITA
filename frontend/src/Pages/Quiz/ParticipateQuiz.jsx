@@ -81,6 +81,7 @@ const ParticipateQuiz = () => {
                         return setError(errors);
                     }
                     else if (data) {
+                        console.log("quiz data",data);
                         const startTime = moment(data.getQuizById.startTime);
                         const endTime = moment(data.getQuizById.endTime);
                         const currentTime = moment();
@@ -205,7 +206,7 @@ const ParticipateQuiz = () => {
 
                         {/* <h1>Quiz</h1> */}
                         <div className='flex flex-col   gap-3   p-3 bg-gray-300 dark:bg-gray-900'>
-                            <h1>Question {quizQuestions[currentQuestionIndex] + 1}</h1>
+                            <h1>Question {currentQuestionIndex + 1}</h1>
                             <h2>{quizQuestions[currentQuestionIndex].description}</h2>
                         </div>
                         <div className='flex flex-col  gap-3   p-3 bg-gray-200 dark:bg-gray-800'>
