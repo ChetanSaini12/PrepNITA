@@ -27,8 +27,8 @@ import { useDispatch, useSelector } from "react-redux";
 import ScrollToTop from "./Components/ScrollToTop.jsx";
 import { VerifyToken } from "./utils/verifyToken.js";
 import { LogoutUser, setLoading } from "./app/user/userSlice.jsx";
-import TextEditor from "./Pages/sampleTextEditor.jsx";
 import Contribute from "./Pages/Contribute/Contribute.jsx";
+import TextEditor from "./Components/sampleTextEditor.jsx";
 
 function App() {
   const { theme } = useSelector((state) => state.theme);

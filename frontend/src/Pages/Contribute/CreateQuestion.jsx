@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setLoading } from '../../app/user/userSlice';
 import { Loader } from '../Loader.jsx';
 import { useNavigate } from 'react-router-dom';
+import TextEditor from '../../Components/sampleTextEditor.jsx';
 
 
 
@@ -18,10 +19,14 @@ const CreateQuestion = () => {
     const { loggedIn, isLoading } = useSelector((state) => state.user);
     const theme = useSelector((state) => state.theme);
 
-    const [formData, setFormData] = useState({});
+    // const [formData, setFormData] = useState({});
     const [refresh, setRefresh] = useState(false);
     const [ERROR, setError] = useState(null);
     const [ready, setReady] = useState(false);
+    const [description, setDescription] = useState("HEllo");
+    const [answer, setAnswer] = useState("Because light attracts bugs!");
+    const [tags, setTags] = useState(["DarkMode", "Bugs"]);
+    const [textEditor, setTextEditor] = useState(0);
 
     dispatch(setLoading(false));
 
@@ -31,19 +36,19 @@ const CreateQuestion = () => {
         setReady(true);
     },[]);
 
-    const handleChange = ((e) => {
-        if (e.target.id === "tags") {
-            setFormData({
-                ...formData,
-                tags: e.target.value.split(',').map(str => str.trim())
-            });
-        }
-        else
-            setFormData({
-                ...formData,
-                [e.target.id]: e.target.value
-            });
-    });
+    // const handleChange = ((e) => {
+    //     if (e.target.id === "tags") {
+    //         setFormData({
+    //             ...formData,
+    //             tags: e.target.value.split(',').map(str => str.trim())
+    //         });
+    //     }
+    //     else
+    //         setFormData({
+    //             ...formData,
+    //             [e.target.id]: e.target.value
+    //         });
+    // });
 
     const [createQuestion] = useMutation(CREATE_QUESTION, {
         onError: (error) => {
@@ -55,14 +60,14 @@ const CreateQuestion = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         dispatch(setLoading(true));
-        console.log("Form Data : ", formData);
+        // console.log("Form Data : ", formData);
         try {
             const { data, errors } = await createQuestion({
                 variables: {
                     Question: {
-                        description: formData.description,
-                        answer: formData.answer,
-                        tags: formData.tags,
+                        description,
+                        answer,
+                        tags,
                         // links: [
                         //     {
                         //         "title": formData.title,
@@ -82,7 +87,9 @@ const CreateQuestion = () => {
                 dispatch(setLoading(false));
                 toast.success("Question created successfully with id : " + data.createQuestion.id);
                 // document.getElementById('questionForm').reset();
-                setFormData({});
+                setDescription();
+                setAnswer();
+                setTags();
             }
             else dispatch(setLoading(false));
             setRefresh(!refresh);
@@ -104,11 +111,11 @@ const CreateQuestion = () => {
     if (ready&&loggedIn==false) navigate('/register');
     return (
         <>
-            <div className='p-3 max-w-3xl mx-auto min-h-screen mt-2 mb-4'>
-                <h1 className='text-center text-lg:md:text-2xl my-4 font-semibold'>
+            <div className='p-3 mx-auto min-h-screen mt-2 mb-4'>
+                <h1 className='text-center text-2xl md:text-2xl my-4 font-semibold'>
                     Create a Question</h1>
                 <div className="question_container">
-                    <form id='questionForm' onSubmit={handleSubmit} className='flex flex-col gap-4 border border-teal-500 rounded-tl-3xl rounded-br-3xl p-3 '>
+                    <div className='flex flex-col gap-4 border border-teal-500 rounded-tl-3xl rounded-br-3xl p-3 '>
                         {/* <div id="question_area_section">
                             <h1 className="text-2xl">Title : </h1>
                             <Textarea
@@ -120,6 +127,33 @@ const CreateQuestion = () => {
                         </div> */}
 
                         <div id="question_area_section">
+                            <div className='flex flex-row w-full'>
+                            <h1 className="">Question : </h1>
+                                { textEditor == 0 && <div><button onClick={() => setTextEditor(1)} >(Open Editor)</button></div>}
+                                { textEditor == 1 && <div><button onClick={() => setTextEditor(0)} >(Close Editor)</button></div>}
+                            </div>
+                            { textEditor == 1 && <TextEditor data={description} setData={setDescription}></TextEditor>}
+                            { textEditor != 1 && (<div className='bg-slate-800' dangerouslySetInnerHTML={{ __html: description }} />)}
+                        </div>
+                        <div id="question_area_section">
+                            <div className='flex flex-row w-full'>
+                            <h1 className="">Answer : </h1>
+                                { textEditor == 0 && <div><button onClick={() => setTextEditor(2)} >(Open Editor)</button></div>}
+                                { textEditor == 2 && <div><button onClick={() => setTextEditor(0)} >(Close Editor)</button></div>}
+                            </div>
+                            { textEditor == 2 && <TextEditor data={answer} setData={setAnswer}></TextEditor>}
+                            { textEditor != 2 && (<div className='bg-slate-800' dangerouslySetInnerHTML={{ __html: answer }} />)}
+                        </div>
+                        <div id="question_area_section">
+                            <div className='flex flex-row w-full'>
+                            <h1 className="">Tags : </h1>
+                                { textEditor == 0 && <div><button onClick={() => setTextEditor(3)} >(Open Editor)</button></div>}
+                                { textEditor == 3 && <div><button onClick={() => setTextEditor(0)} >(Close Editor)</button></div>}
+                            </div>
+                            { textEditor == 3 && <TextEditor data={tags} setData={setTags}></TextEditor>}
+                            { textEditor != 3 && (<div className='bg-slate-800' dangerouslySetInnerHTML={{ __html: tags }} />)}
+                        </div>
+                        {/* <div id="question_area_section">
                             <h1 className="text-xl mb-1.5 mx-2">Description : </h1>
                             <Textarea
                                 required
@@ -145,9 +179,9 @@ const CreateQuestion = () => {
                                 id="tags"
                                 onChange={handleChange}
                             />
-                        </div>
-                        <Button type='submit' className='my-5'>Create</Button>
-                    </form>
+                        </div> */}
+                        <Button onClick={handleSubmit} className='my-5'>Create</Button>
+                    </div>
 
                     {/* //....................PREVIEW OF THE QUESTION..................................                     */}
                     {/* <div classNamme="">

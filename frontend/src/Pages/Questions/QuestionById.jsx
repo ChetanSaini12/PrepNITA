@@ -114,15 +114,15 @@ const QuestionById = () => {
       (
         <div className="min-w-screen min-h-screen shadow-md rounded-md p-6 " >
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-bold">{question.title}</h2>
-            <div className="flex items-center text-sm mx-2 ">
+            {/* <h2 className="text-2xl font-bold">{question.title}</h2> */}
               <span className="mr-4 font-bold">Question ID: {question.id}</span>
+            <div className="flex items-center text-sm mx-2 ">
               <span className='font-bold'>Upvotes: {upvote} | Downvotes: {downvote}</span>
             </div>
           </div>
           <div className=" mb-4">
             {/* <h1 className='text-2xl font-bold'>{question.links?question.links[0].title:"TITLE not available"}</h1> */}
-            <p className='text-2xl font-semibold'>{question.description}</p>
+            <p className='text-2xl font-semibold' dangerouslySetInnerHTML={{ __html: question.description }} />
           </div>
           <div className=" mb-4">
             <strong>Tags:</strong> {question.tags?.map(tag => (
@@ -131,7 +131,7 @@ const QuestionById = () => {
           </div>
           <div className=" mb-4">
             <h3 className="font-bold">Answer:</h3>
-            <p>{question.answer}</p>
+            <p dangerouslySetInnerHTML={{ __html: question.answer }} />
           </div>
           <div className=" mb-4">
             <strong>Approved:</strong> {question.isApproved ? 'Yes' : 'No'}
