@@ -27,6 +27,8 @@ import { useDispatch, useSelector } from "react-redux";
 import ScrollToTop from "./Components/ScrollToTop.jsx";
 import { VerifyToken } from "./utils/verifyToken.js";
 import { LogoutUser, setLoading } from "./app/user/userSlice.jsx";
+import TextEditor from "./Pages/sampleTextEditor.jsx";
+import Contribute from "./Pages/Contribute/Contribute.jsx";
 
 function App() {
 
@@ -73,6 +75,8 @@ function App() {
             <Route path="/interviewdummy" element={<Interviewhome />}></Route>
             <Route path="/interviewdummyadmin" element={<AdminInterview />}></Route>
             <Route path="/interview/:id" element={<InterviewDetail />}></Route>
+            <Route path="/contribute" element={<Contribute />}></Route>
+            <Route path="/texted" element={<TextEditor />}></Route>
             <Route path="/notFound" element={<PageNotFound />}></Route>
             <Route path="/*" element={<PageNotFound />}></Route>
           </Routes>

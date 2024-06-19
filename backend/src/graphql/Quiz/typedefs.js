@@ -25,6 +25,7 @@ export const typeDefs = `#graphql
         quizId : Int
         userId : Int
         score : Int
+        response : [Int]
     }
 
     input quizInput {

@@ -17,4 +17,10 @@ export const mutations = `#graphql
     addQuestionToQuiz(question : addQuestion) : QuizQuestion
 
     deleteQuestionOfQuiz(questionId : Int!) : String 
+
+    getAttendesOfQuiz(quizId : Int!) : [QuizAttendees]
+
+    getQuizResponseForUser(quizId : Int!, userId : Int!) : QuizAttendees
+
+    setResponse(quizId : Int!, response : [Int]) : QuizAttendees
 `
