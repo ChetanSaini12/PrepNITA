@@ -126,7 +126,7 @@ const QuestionById = () => {
           </div>
           <div className=" mb-4">
             <strong>Tags:</strong> {question.tags?.map(tag => (
-              <span key={tag} className="inline-block bg-gray-200 text-gray-800 rounded-full px-2 py-1 text-xs font-semibold mr-2">{tag}</span>
+              <span key={tag} className="inline-block bg-gray-200 text-gray-800 rounded-full px-2 py-1 text-xs font-semibold mr-2" dangerouslySetInnerHTML={{ __html: tag }}/>
             ))}
           </div>
           <div className=" mb-4">
