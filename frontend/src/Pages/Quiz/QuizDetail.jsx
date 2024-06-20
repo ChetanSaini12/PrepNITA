@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { DELETE_QUIZ, GET_QUIZ_BY_ID, GET_QUIZ_BY_ID_without_Q, UPDATE_QUIZ } from '../../gqlOperatons/Quiz/mutations';
+import { CHANGE_VISIBLE_STATUS_OF_QUIZ, DELETE_QUIZ, GET_QUIZ_BY_ID, GET_QUIZ_BY_ID_without_Q, UPDATE_QUIZ } from '../../gqlOperatons/Quiz/mutations';
 import { setLoading } from '../../app/user/userSlice';
 import { Loader } from '../Loader';
 import { useMutation } from '@apollo/client';
@@ -12,12 +12,13 @@ import DateTimePicker from '../../Components/DatePicker';
 import toast from 'react-hot-toast';
 import { AddQuestion } from './AddQuestion';
 import { UserConfirmation } from '../../Components/UserConfirmation';
+import { CHANGE_APPROVE_STATUS_OF_QUE } from '../../gqlOperatons/Question/mutations';
 // import {favicon} from '../../../public/favicon.ico'
 
 const QuizDetail = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { isLoading, loggedIn, id, ready } = useSelector((state) => state.user);
+    const { isLoading, loggedIn, id, ready, role } = useSelector((state) => state.user);
     // console.log("user states :", loggedin, isLoading);
 
     const [quiz, setQuiz] = useState(null);
@@ -31,8 +32,11 @@ const QuizDetail = () => {
     const [showAddQuestion, setShowAddQuestion] = useState(false);
     const [startDateTime, setStartDateTime] = useState(new Date());
     const [endDateTime, setEndDateTime] = useState(new Date());
+    const [Visibility, setVisibility] = useState(false);
+    const [Approved, setApproved] = useState(false);
     // const [ready, setReady] = useState(false);
     const [isOwner, setIsOwner] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);
 
     // const imagePath = '/logo192.png';//for logo of the quiz
     const imagePath = '/dccLogo.jpg';//for logo of the quiz
@@ -67,8 +71,22 @@ const QuizDetail = () => {
         }
     });
 
+    const [changeVisibleStatus] = useMutation(CHANGE_VISIBLE_STATUS_OF_QUIZ, {
+        onError: (error) => {
+            console.log("on error at change visible status of quiz", error);
+            return setError(error);
+        }
+    });
+
+    const [changeAproveStatus] = useMutation(CHANGE_APPROVE_STATUS_OF_QUE, {
+        onError: (error) => {
+            console.log("on error at change aprove status of quiz", error);
+            return setError(error);
+        },
+    });
 
 
+    // This is quiz id 
     const ID = parseInt(useParams().id);
 
 
@@ -105,17 +123,20 @@ const QuizDetail = () => {
                                 // navigate('/quizes');
                             }
                             else if (res) {
-                                console.log("created by ", res);
+                                // console.log("created by ", res);
                                 setCreatedBy(res);
+                                console.log("data at quiz detail ", data);
+                                setVisibility(data.getQuizById.isVisible);
+                                setApproved(data.getQuizById.isApproved);
+                                setQuiz(data.getQuizById);
+                                setTempQuiz(data.getQuizById);
+                                setStartDateTime(moment(data.getQuizById.startTime));
+                                setEndDateTime(moment(data.getQuizById.endTime));
+                                // setReady(true);
+                                dispatch(setLoading(false));
                             }
 
-                            // console.log("data at quiz detail ", data);
-                            setQuiz(data.getQuizById);
-                            setTempQuiz(data.getQuizById);
-                            setStartDateTime(moment(data.getQuizById.startTime));
-                            setEndDateTime(moment(data.getQuizById.endTime));
-                            // setReady(true);
-                            dispatch(setLoading(false));
+
                         }
                     } catch (error) {
                         dispatch(setLoading(false));
@@ -127,12 +148,23 @@ const QuizDetail = () => {
         )();
 
     }, [refresh]);
+
     useEffect(() => {
         if (createdBy && ready) {
             // console.log("isOwner ",createdBy.getUserById.id,id,ready);
             setIsOwner(parseInt(createdBy.getUserById.id) === parseInt(id));
         }
     }, [createdBy, ready]);
+
+    useEffect(() => {
+        if (ready) {
+            if (role === "SUPERADMIN") {
+                setIsAdmin(true);
+            }
+            else setIsAdmin(false);
+        }
+    }, [ready, role]);
+
     const handleQuizEdit = (e) => {
         e.preventDefault();
         setActive(false);
@@ -230,6 +262,62 @@ const QuizDetail = () => {
         }
     };
 
+    const handleQuizAproveStatus = async () => {
+        const userConfirmation = await UserConfirmation("Are you sure you want to change the approve status of the quiz?");
+        if (!userConfirmation) return;
+
+        dispatch(setLoading(true));
+
+        try {
+            const { data, errors } = await changeAproveStatus({
+                variables: {
+                    quizId: ID,
+                }
+            });
+
+            if (errors) {
+                setError(errors);
+            } else if (data) {
+                // setRefresh(prevRefresh => !prevRefresh);
+                setApproved(data.changeAproveStatus.isAproved);
+                toast.success("Quiz approval status has been changed successfully!");
+                // console.log("updated quiz ", data);
+            }
+        } catch (error) {
+            setError(error);
+        } finally {
+            dispatch(setLoading(false));
+        }
+    };
+
+
+    const handleQuizVisibilityStatus = async () => {
+        const userConfirmation = await UserConfirmation("Are you sure you want to change the visibility status of the quiz?");
+        if (!userConfirmation) return;
+
+        dispatch(setLoading(true));
+        try {
+            const { data, errors } = await changeVisibleStatus({
+                variables: {
+                    quizId: ID,
+                }
+            });
+
+            if (errors) {
+                setError(errors);
+            } else if (data) {
+                // setRefresh(prevRefresh => !prevRefresh); // Ensure correct state update
+                setVisibility(data.changeVisibleStatusOfQuiz.isVisible)
+                toast.success("Quiz visibility status has been changed successfully!");
+                // console.log("updated quiz ", data);
+            }
+        } catch (error) {
+            setError(error);
+        } finally {
+            dispatch(setLoading(false));
+        }
+    };
+
     const handleEnterToQuizButton = async (e) => {
         const userConfirmation = await UserConfirmation("Before start please read the instructions below and Click Yes to enter ")
         if (userConfirmation) navigate(`/quiz/view/${ID}`);
@@ -278,11 +366,15 @@ const QuizDetail = () => {
                                 <div>Online</div>
                             </div>
                             <div className='flex flex-wrap gap-3'>
-                                <button onClick={handleQuizEdit} className={`${!isOwner?`disabledButton`:""} border border-gray-300 dark:border-gray-700 
+                                <button onClick={handleQuizAproveStatus} className={`${!isAdmin ? `disabledButton` : ""} border border-gray-300 dark:border-gray-700 
+                                hover:border-red-500 dark:hover:border-red-400 px-2 rounded-lg`}>Aproved {Approved ? "✅" : "❌"} </button>
+                                <button onClick={handleQuizVisibilityStatus} className={`${!isOwner ? `disabledButton` : ""} border border-gray-300 dark:border-gray-700 
+                                hover:border-red-500 dark:hover:border-red-400 px-2 rounded-lg`}>Visibility {Visibility ? "✅" : "❌"} </button>
+                                <button onClick={handleQuizEdit} className={`${!isOwner ? `disabledButton` : ""} border border-gray-300 dark:border-gray-700 
                                 hover:border-red-500 dark:hover:border-red-400 px-2 rounded-lg`}>Edit </button>
-                                <button onClick={handleDeleteQuiz} className={`${!isOwner?`disabledButton`:""} border border-gray-300 dark:border-gray-700 
+                                <button onClick={handleDeleteQuiz} className={`${!isOwner ? `disabledButton` : ""} border border-gray-300 dark:border-gray-700 
                                 hover:border-red-500 dark:hover:border-red-400 px-2 rounded-lg`}>Delete</button>
-                                <button onClick={handleQuestionButton} className={`${!isOwner?`disabledButton`:""} border border-gray-300 dark:border-gray-700 
+                                <button onClick={handleQuestionButton} className={`${!isOwner ? `disabledButton` : ""} border border-gray-300 dark:border-gray-700 
                                 hover:border-red-500 dark:hover:border-red-400 px-2 rounded-lg`}>Add question</button>
                             </div>
                         </div>
