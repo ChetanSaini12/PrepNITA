@@ -31,6 +31,8 @@ const ParticipateQuiz = () => {
     const [quizQuestions, setQuizQuestions] = useState(null);
     const [userQuizResponse, setUserQuizResponse] = useState(null);
     const [score, setScore] = useState(0);
+    const [fetchingDone1, setFetchingDone1] = useState(false);
+    const [fetchingDone2,setFetchingDone2]=useState(false);
 
     const timePerQuestion = 20;
     const [time, setTime] = useState(timePerQuestion);
@@ -82,15 +84,17 @@ const ParticipateQuiz = () => {
                     return setError(errors);
                 }
                 else if (data) {
-                    console.log("quiz response data", data);
+                    console.log("quiz response data at participate page 1", data);
                     // console.log(data.getQuizResponseForUser===null);
-                    if (data.getQuizResponseForUser === null) {
+                    if (!data || data.getQuizResponseForUser === null) {
                         setAlreadyAttempted(false);
+                        console.log("data nhi hai participate page ");
                     }
                     else {
+                        console.log("data hai participate page");
+                        setAlreadyAttempted(true);
                         setUserQuizResponse(data.getQuizResponseForUser.response);
                         setScore(data.getQuizResponseForUser.score);
-                        setAlreadyAttempted(true);
                     }
                 }
                 else {
@@ -102,6 +106,7 @@ const ParticipateQuiz = () => {
             }
             finally {
                 dispatch(setLoading(false));
+                setFetchingDone1(true);
             }
         })();
     }, [ready]);
@@ -109,7 +114,7 @@ const ParticipateQuiz = () => {
 
     // to fetch the quiz data
     useEffect(() => {
-        if (!ready) return;
+        if (!ready||!fetchingDone1) return;
         (
             async () => {
                 dispatch(setLoading(true));
@@ -134,39 +139,14 @@ const ParticipateQuiz = () => {
                             navigate(`/quiz/id/${quizId}`);
                             return null;
                         }
-                        // const { data: res, errors: err } = await MyApolloProvider.client.query({
-                        //     query: GET_USER_TRAINING_QUIZ,
-                        //     onerror: (error) => {
-                        //         // console.log("Error from query", error);
-                        //         dispatch(setLoading(false));
-                        //         return setError(error);
-                        //     }
-                        // });
-                        // if (err) {
-                        //     console.log("Errors from query 3", err);
-                        //     dispatch(setLoading(false));
-                        //     return setError(err);
-                        // }
-                        // else if (res) {
-                        //     console.log("Training user result ", res);
-                        //     res.getMe.userTraining.quizesAttended.map((quiz) => {
-                        //         if (parseInt(quiz.quizId) === quizId) {
-                        //             setScore(quiz.score);
-                        //             setAlreadyAttempted(true);
-                        //             return dispatch(setLoading(false));
-
-                        //         }
-                        //     })
-                        //     setQuizQuestions(data.getQuizById.questions);
-                        //     console.log('quiz question ', data.getQuizById.questions);
-                        //     dispatch(setLoading(false));
-                        // }
-                        // else dispatch(setLoading(false));
 
                         setQuizQuestions(data.getQuizById.questions);
                         console.log('quiz questions  ', data.getQuizById.questions);
-                        const tempArray = new Array(data.getQuizById.questions.length).fill(-1);
-                        setUserQuizResponse(tempArray);
+                        if (alreadyAttempted === false) {
+                            console.log("enter in zone ", userQuizResponse, score);
+                            const tempArray = new Array(data.getQuizById.questions.length).fill(-1);
+                            setUserQuizResponse(tempArray);
+                        }
                     }
 
                 } catch (error) {
@@ -175,12 +155,13 @@ const ParticipateQuiz = () => {
                 }
                 finally {
                     dispatch(setLoading(false));
+                    setFetchingDone2(true);
                 }
 
             })
             ();
 
-    }, [ready]);
+    }, [ready,fetchingDone1]);
 
 
 
@@ -215,7 +196,7 @@ const ParticipateQuiz = () => {
         // console.log("Time up", currentQuestionIndex, quizQuestions.length);
         setSelectedOptionIndex(null);
         if (currentQuestionIndex + 1 < quizQuestions.length) {
-            console.log("dd",selectedOptionIndex,quizQuestions[currentQuestionIndex].correctOption);
+            console.log("dd", selectedOptionIndex, quizQuestions[currentQuestionIndex].correctOption);
             setCurrentQuestionIndex(currentQuestionIndex + 1);
             setTime(timePerQuestion);
         } else {
@@ -256,6 +237,8 @@ const ParticipateQuiz = () => {
             else if (data) {
                 console.log("quiz submition data", data);
                 toast.success("Quiz submitted successfully");
+                setScore(data.setResponse.score);
+                setUserQuizResponse(data.setResponse.response);
                 setQuizCompleted(true);
             }
         } catch (error) {
@@ -275,11 +258,12 @@ const ParticipateQuiz = () => {
         return toast.error(ERROR.message ? ERROR.message : ERROR || "something went wrong ");
     }
 
-    if (ready && alreadyAttempted) {
+    if (ready && fetchingDone2 && alreadyAttempted) {
         return (
-            <FinishScreen score={userQuizResponse ? userQuizResponse.score : 5} quizQuestions={quizQuestions} userQuizResponse={userQuizResponse} />
+            <FinishScreen score={score} quizQuestions={quizQuestions} userQuizResponse={userQuizResponse} />
         );
     }
+    if (quizCompleted) return <FinishScreen score={score} quizQuestions={quizQuestions} userQuizResponse={userQuizResponse} />;
     return (
         <div className='min-h-screen flex flex-col gap-4  bg-gray-200 dark:bg-gray-800 '>
             {!quizCompleted && quizQuestions?.length > 0 && (
@@ -333,6 +317,11 @@ const ParticipateQuiz = () => {
                     </div>
                 </>
                 // {/* <div>hello</div> */}
+            )}
+            {!quizCompleted && quizQuestions?.length===0 && (
+                <div className='flex justify-center items-center h-screen'>
+                    <h1 className='text-2xl'>No questions in this quiz</h1>
+                </div>
             )}
 
             {/* <ToastContainer /> */}
