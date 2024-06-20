@@ -7,6 +7,7 @@ const TextEditor = ({data, setData}) => {
 
   function btnclick(){
     // alert(rte.getHTMLCode());
+    console.log(rte.getHTMLCode());
     setData(rte.getHTMLCode())
   }
 

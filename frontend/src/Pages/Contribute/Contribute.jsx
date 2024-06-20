@@ -32,7 +32,8 @@ function Contribute() {
               </h2>
               <p className="mb-4">Tell us about any company drive you had.</p>
               <div className="mt-4">
-                <button className="bg-blue-500 text-white font-bold py-2 px-4 rounded">
+                <button className="bg-blue-500 text-white font-bold py-2 px-4 rounded"
+                onClick={() => navigate("/contribute/experience")}>
                   Explore
                 </button>
               </div>

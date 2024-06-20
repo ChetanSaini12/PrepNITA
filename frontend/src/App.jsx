@@ -29,6 +29,7 @@ import { VerifyToken } from "./utils/verifyToken.js";
 import { LogoutUser, setLoading } from "./app/user/userSlice.jsx";
 import Contribute from "./Pages/Contribute/Contribute.jsx";
 import TextEditor from "./Components/sampleTextEditor.jsx";
+import CreateExperience from "./Pages/Contribute/CreateExperience.jsx";
 
 function App() {
   const { theme } = useSelector((state) => state.theme);
@@ -58,6 +59,7 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />}></Route>
             <Route path="/quizes" element={<Quizes />}></Route>
             <Route path="/contribute/quiz" element={<CreateQuiz />}></Route>
+            <Route path="/contribute/experience" element={<CreateExperience />}></Route>
             <Route
               path="/contribute/question"
               element={<CreateQuestion />}
