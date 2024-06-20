@@ -27,7 +27,7 @@ export const setResponse = async (_, payload, context) => {
   try {
     const quiz = await prisma.quiz.findFirst({
       where: {
-        quizId: payload.quizId,
+        id: payload.quizId,
       },
       include: {
         questions: true,
