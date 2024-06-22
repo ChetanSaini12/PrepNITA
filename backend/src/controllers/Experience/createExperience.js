@@ -1,5 +1,6 @@
+import { GraphQLError } from 'graphql'
 import { prisma } from '../../../prisma/index.js'
-
+import moment from 'moment'
 export const createExperience = async (_, payload, context) => {
   try {
     /*
@@ -14,11 +15,11 @@ export const createExperience = async (_, payload, context) => {
     if (context.isUser) {
       const experience = await prisma.experience.create({
         data: {
-          company: payload.company,
-          role: payload.role,
-          anonymous: payload.anonymous,
-          description: payload.description,
-          //   createdAt:
+          company: payload.Experience.company,
+          role: payload.Experience.role,
+          anonymous: payload.Experience.anonymous,
+          description: payload.Experience.description,
+          createdAt: moment(),
           createdBy: context.userId,
         },
       })
