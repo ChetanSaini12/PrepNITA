@@ -6,6 +6,7 @@ const initialState = {
     isLoading: true,
     role: "USER",
     username: undefined,
+    name: undefined,
     profilePic: "https://ik.imagekit.io/pqymxdgbi/avtar.png",
     token: "",
     ready: false,
@@ -21,6 +22,9 @@ const userSlice = createSlice({
             state.isLoading = false;
             state.role = actions.payload.role;
             state.username = actions.payload.username;
+            if(actions.payload.name){
+                state.name = actions.payload.name;
+            }
             if (actions.payload.token) {
                 state.token = actions.payload.token;
                 localStorage.setItem("token", actions.payload.token);
@@ -39,6 +43,7 @@ const userSlice = createSlice({
             localStorage.removeItem("token");
             state.token = "";
             state.ready = true;
+            state.name=undefined;
         },
         setLoading(state, actions) {
             state.isLoading = actions.payload;

@@ -11,6 +11,7 @@ export const REGISTER_USER = gql`
          email
          username
          role
+         name
         }
         authentication {
           isVerified
@@ -30,7 +31,8 @@ export const ONBOARD_USER = gql`
         email
         username
         role
-       }
+        name
+        }
     }
   }
 
@@ -116,6 +118,7 @@ export const LOGIN_USER = gql`
           email
           username
           role
+          name
          }
       }
     }
@@ -132,6 +135,7 @@ export const VERIFY_EMAIL = gql`
         email
         username
         role
+        name
        }
       authentication {
         isVerified

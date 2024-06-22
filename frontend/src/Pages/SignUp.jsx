@@ -119,7 +119,7 @@ function SignUp() {
       }
 
       const { isVerified, isBoarded } = user.data.registerUser.user.authentication;
-      console.log("isVerified : ", isVerified, "isBoarded : ", isBoarded, user);
+      // console.log("isVerified : ", isVerified, "isBoarded : ", isBoarded, user);
       if (!isVerified) {
         console.log("email : ", email);
         try {
@@ -150,22 +150,23 @@ function SignUp() {
       }
       else if (!isBoarded) {
         const { id } = user.data.registerUser.user;
-        const { username, role } = user.data.registerUser.user.userInformation;
+        const { username, role,name } = user.data.registerUser.user.userInformation;
         console.log("User not onboarded! Please onboard your account");
         localStorage.setItem("token", user.data.registerUser.token);
         dispatch(LoginUser({
-          id, email, username, role, token: user.data.registerUser.token,
+          id, email, username,name, role, token: user.data.registerUser.token,
         }));
         dispatch(setLoading(false));
         navigate('/onboarding');
       }
       else {
         /// everything is  done ,  just want to login 
-        const { id, username, role } = user.data.registerUser.user;
+        const { id}=user.data.registerUser.user;
+        const{username, role,name } = user.data.registerUser.user.userInformation;
         const { token } = user.data.registerUser;
         dispatch(setToken(token));
         dispatch(LoginUser({
-          id, email, username, role
+          id, email, username, role,name
         }));
         localStorage.setItem("token", token);
         dispatch(setLoading(false));
@@ -210,7 +211,7 @@ function SignUp() {
         setEmailModel(false);
         dispatch(LoginUser({
           token: user.data.checkOTPForEmail.token, id: user.data.checkOTPForEmail.user.id, email: user.data.checkOTPForEmail.user.userInformation.email,
-          username: user.data.checkOTPForEmail.user.userInformation.username, role: user.data.checkOTPForEmail.user.userInformation.role
+          username: user.data.checkOTPForEmail.user.userInformation.username, role: user.data.checkOTPForEmail.user.userInformation.role,name: user.data.checkOTPForEmail.user.userInformation.name
         }))
         dispatch(setLoading(false));
         toast.success("Email Verified Successfully ! You can onBoard Now ", { duration: 4000 });
