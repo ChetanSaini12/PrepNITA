@@ -13,6 +13,7 @@ import toast from 'react-hot-toast';
 import { AddQuestion } from './AddQuestion';
 import { UserConfirmation } from '../../Components/UserConfirmation';
 import { CHANGE_APPROVE_STATUS_OF_QUE } from '../../gqlOperatons/Question/mutations';
+import { QuizInstructions } from './QuizInstructions';
 // import {favicon} from '../../../public/favicon.ico'
 
 const QuizDetail = () => {
@@ -433,23 +434,29 @@ const QuizDetail = () => {
                         </div>
                     )}
 
-                    {/* <div>yha par contest start krne ka button aayega</div> */}
 
                 </div>
-
                 // </>
-
             )}
 
             {quiz && active && (
                 <div className='bg-gray-200 dark:bg-gray-800  w-full md:w-3/4 py-5 px-5 mb-3  rounded-md
             flex flex-col gap-5 '>
-                    <div className='text-lg sm:text-xl font-semibold'>About the quiz </div>
-                    <div className='font-semibold -mb-2'>{quiz.title}</div>
+                    <div className='text-lg sm:text-xl font-bold'>About the quiz </div>
+                    <div className='font-bold -mb-2'>{quiz.title}</div>
                     <div>{quiz.description}</div>
 
                 </div>
             )}
+            {quiz && active && (
+            //     <div className='bg-gray-200 dark:bg-gray-800  w-full md:w-3/4 py-5 px-5 mb-3  rounded-md
+            // flex flex-col gap-5 '>
+
+                  <QuizInstructions/>
+
+                // </div>
+            )}
+            
             {quiz && !active && showEditMode && (
                 <div className=' bg-gray-200 dark:bg-gray-800  w-full md:w-3/4 pt-5 pb-8 px-5 mt-5 mb-5  rounded-md
                 flex flex-col gap-5 '>
