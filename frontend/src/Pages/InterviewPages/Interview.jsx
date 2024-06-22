@@ -141,7 +141,7 @@ function Interviews() {
   }
 
   return (
-    <div className="min-w-screen min-h-screen flex flex-col items-center justify-center">
+    <div className=" min-w-screen min-h-screen flex flex-col items-center justify-center">
       {showCreateInterviw && (
         <CreateInterviewBox Duration={Duration} setDuration={setDuration} Topics={Topics}
           setTopics={setTopics} setDateTime={setDateTime} handleSubmit={handleSubmit} setShowCreateInterview={setShowCreateInterview}

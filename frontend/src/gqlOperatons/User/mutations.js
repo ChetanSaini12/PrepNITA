@@ -161,6 +161,7 @@ mutation getAllUserMuatation($user:UserInputOptional){
             email
             mobileNum
             role
+            profilePic
           }
         }
   }
@@ -192,6 +193,12 @@ mutation updateUserMutation($user:UserInputOptional){
   }
 }
 
+`;
+
+export const UPDATE_USER_ROLE = gql`
+  mutation updateUserRoleMutation($id:Int!,$role:UserRole!){
+    updateUserRole(id:$id,role:$role)
+  }
 `;
 
 

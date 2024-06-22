@@ -165,7 +165,7 @@ function Quizes() {
                   <div className='flex justify-between'>
                     <span className='text-xl sm:text-3xl '>🕗</span> <span className='text-center mt-1'>{moment(quiz.startTime).format('HH:mm:ss')} IST</span></div>
                 </div>
-                <div className='flex justify-between'>
+                <div className='flex justify-between gap-5'>
                   <div>Duration</div>
                   <div>
                     {(() => {
