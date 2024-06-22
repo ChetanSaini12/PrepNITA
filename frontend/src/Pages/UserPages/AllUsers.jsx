@@ -164,9 +164,9 @@ function AllUsers() {
           dispatch(setLoading(false));
           setData(data.getAllUser);
         }
-        else{
+        else {
           dispatch(setLoading(false));
-          return setError({message:"Server side error "});
+          return setError({ message: "Server side error " });
         }
       } catch (error) {
         console.log("error in allUser catch block ", error || error.message);

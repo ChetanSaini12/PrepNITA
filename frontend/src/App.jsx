@@ -30,6 +30,7 @@ import { LogoutUser, setLoading } from "./app/user/userSlice.jsx";
 import Contribute from "./Pages/Contribute/Contribute.jsx";
 import TextEditor from "./Components/sampleTextEditor.jsx";
 import CreateExperience from "./Pages/Contribute/CreateExperience.jsx";
+import RoleManagement from "./Pages/UserPages/RoleManagement.jsx";
 
 function App() {
   const { theme } = useSelector((state) => state.theme);
@@ -73,7 +74,7 @@ function App() {
             <Route path="/profile/:username" element={<ProfileById />}></Route>
             <Route path="/questions" element={<Question />}></Route>
             <Route path="/questions/:id" element={<QuestionById />}></Route>
-            {/* <Route path="/create_question" element={<CreateQuestion />}></Route> */}
+            <Route path="/role_management" element={<RoleManagement />}></Route>
             <Route path="/students" element={<AllUsers />}></Route>
             <Route path="/onboarding" element={<Onboarding />}></Route>
             <Route path="/interview" element={<Interview />}></Route>
