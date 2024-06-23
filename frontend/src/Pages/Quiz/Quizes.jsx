@@ -13,7 +13,7 @@ import { BiBookAdd } from "react-icons/bi";
 
 function Quizes() {
 
-  const QuizLogo1 = '/Quiz-Logo-1.png';
+  const QuizLogo1 = '/Quiz-logo-1.png';
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isLoading,ready,loggedIn } = useSelector((state) => state.user);
