@@ -1,5 +1,6 @@
 import { GraphQLError } from 'graphql'
 import { prisma } from '../../../prisma/index.js'
+import { addNameExp } from './addnameExp.js'
 
 export const updateExperience = async (_, payload, context) => {
   try {
@@ -15,8 +16,9 @@ export const updateExperience = async (_, payload, context) => {
       },
     })
     if (existingExp) {
-      if (existingExp.createdBy == context.id) {
-        const updatedExp = await prisma.experience.update({
+      console.log(existingExp.createdBy, " ::: ", context.userId)
+      if (existingExp.createdBy == context.userId) {
+        let updatedExp = await prisma.experience.update({
           where: {
             id: payload.id,
           },
@@ -24,6 +26,7 @@ export const updateExperience = async (_, payload, context) => {
             ...payload.Experience,
           },
         })
+        updatedExp = addNameExp(updatedExp)
         return updatedExp
       } else {
         throw new GraphQLError(

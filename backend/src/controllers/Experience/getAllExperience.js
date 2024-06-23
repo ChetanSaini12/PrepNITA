@@ -1,11 +1,16 @@
-import { GraphQLError } from "graphql"
-import { prisma } from "../../../prisma/index.js";
+import { GraphQLError } from 'graphql'
+import { prisma } from '../../../prisma/index.js'
+import { addNameExp } from './addnameExp.js'
 
 export const getAllExperience = async (_, payload) => {
-    try {
-        const experience = await prisma.experience.findMany({})
-        return experience
-    } catch (error) {
-        throw new GraphQLError('Something went wrong!!');
+  try {
+    let experience = await prisma.experience.findMany({})
+    for (let i = 0; i < experience.length; i++) {
+      experience[i] = addNameExp(experience[i])
     }
+    return experience
+  } catch (error) {
+    console.log("ERROR WHILE GETTING ALL EXPS : ", error);
+    throw new GraphQLError('Something went wrong!!')
+  }
 }

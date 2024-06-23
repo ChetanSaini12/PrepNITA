@@ -1,19 +1,21 @@
 import { GraphQLError } from 'graphql'
 import { prisma } from '../../../prisma/index.js'
+import { addNameExp } from './addnameExp.js'
 
 export const downvoteExperience = async (_, payload, context) => {
   try {
     if (context.isUser) {
-      const experience = await prisma.experience.update({
+      let experience = await prisma.experience.update({
         where: {
           id: payload.id,
         },
         data: {
           downvotes: {
-            decrement: 1,
+            increment: 1,
           },
         },
       })
+      experience = addNameExp(experience)
       return experience
     } else {
       throw new GraphQLError('You are not authorised user!!', {

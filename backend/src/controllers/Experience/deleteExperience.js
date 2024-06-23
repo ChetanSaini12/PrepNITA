@@ -1,5 +1,6 @@
 import { GraphQLError } from 'graphql'
 import { prisma } from '../../../prisma/index.js'
+import { addNameExp } from './addnameExp.js'
 
 export const deleteExperience = async (_, payload, context) => {
   try {
@@ -9,12 +10,13 @@ export const deleteExperience = async (_, payload, context) => {
       },
     })
     if (existingExp) {
-      if (existingExp.createdBy == context.id) {
-        const deletedExp = await prisma.experience.delete({
+      if (existingExp.createdBy == context.userId) {
+        let deletedExp = await prisma.experience.delete({
           where: {
             id: payload.id,
           },
         })
+        deletedExp = addNameExp(deletedExp)
         return deletedExp
       } else {
         throw new GraphQLError(
