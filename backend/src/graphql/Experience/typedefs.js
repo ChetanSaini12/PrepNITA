@@ -5,16 +5,20 @@ export const typeDefs = `#graphql
         company : String
         role : String
         description : String
+        anonymous : Boolean
         createdBy : Int
+        creatorName : String
+        creatorUsername : String
         createdAt : DateTime
         upvotes : Int
         downvotes : Int
     }
 
-    type InputExperience {
-        company : String!
-        role : String!
-        description : String!
+    input InputExperience {
+        company : String
+        role : String
+        description : String
+        anonymous : Boolean
     }
 
 `

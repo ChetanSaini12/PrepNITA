@@ -1,6 +1,7 @@
 import { GraphQLError } from 'graphql'
 import { prisma } from '../../../prisma/index.js'
 import moment from 'moment'
+import { addNameExp } from './addnameExp.js'
 export const createExperience = async (_, payload, context) => {
   try {
     /*
@@ -13,7 +14,7 @@ export const createExperience = async (_, payload, context) => {
         }
     */
     if (context.isUser) {
-      const experience = await prisma.experience.create({
+      let experience = await prisma.experience.create({
         data: {
           company: payload.Experience.company,
           role: payload.Experience.role,
@@ -23,6 +24,7 @@ export const createExperience = async (_, payload, context) => {
           createdBy: context.userId,
         },
       })
+      experience = addNameExp(experience)
       return experience
     } else {
       throw new GraphQLError('User is not authorised!!', {
