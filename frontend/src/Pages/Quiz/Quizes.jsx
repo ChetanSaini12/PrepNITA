@@ -13,10 +13,10 @@ import { BiBookAdd } from "react-icons/bi";
 
 function Quizes() {
 
-  const QuizLogo1 = '/Quiz-Logo-1.png';
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isLoading,ready,loggedIn } = useSelector((state) => state.user);
+  const QuizLogo1 = '/Quiz-logo-1.png';
 
 
   const [ERROR, setError] = useState(null);
@@ -56,7 +56,7 @@ function Quizes() {
       }
     )();
 
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (quizes) {
@@ -74,7 +74,7 @@ function Quizes() {
       }
       setQuizes(sortedQuizes);
     }
-  }, [quizes]);
+  }, [buttonIndex]);
 
   const handleNewQuiz = () => {
     return navigate('/contribute/quiz');
@@ -102,7 +102,7 @@ function Quizes() {
   const nonSelectedButtonClass = "border-b";
 
 
-  if (isLoading) {
+  if (isLoading||!ready) {
     return <Loader />;
   }
   if (ERROR) {
