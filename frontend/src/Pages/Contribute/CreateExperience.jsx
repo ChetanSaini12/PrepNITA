@@ -1,4 +1,4 @@
-import { Button, FloatingLabel, TextInput, ToggleSwitch } from "flowbite-react";
+import { Button, FloatingLabel, TextInput, Textarea, ToggleSwitch } from "flowbite-react";
 import React, { useState } from "react";
 import TextEditor from "../../Components/sampleTextEditor";
 
@@ -39,19 +39,19 @@ function CreateExperience() {
   const [anonymous, setAnonymous] = useState(1);
 
   return (
-    <div className="flex flex-col items-center w-full my-5">
-      <h1 className="text-2xl">
+    <div className="flex flex-col items-center min-w-screen my-5">
+      <h1 className="text-lg sm:text-2xl mx-1 p-2 text-center  border-t border-l border-r rounded-t-lg border-gray-300 dark:border-gray-700">
         Share your recent experience of hiring process of any company
       </h1>
-      <div className="flex flex-col gap-5 items-center mt-4 border-2 border-slate-500 w-4/5 rounded p-4">
+      <div className="flex flex-col gap-5 items-center mt-4 border-2 border-slate-500 w-full md:w-4/5 rounded p-2 bg-gray-200 dark:bg-gray-800">
         <div className="w-full gap-4 flex flex-col border-2 border-slate-700 p-4 rounded">
           <h1 className="text-xl">Preview : </h1>
           <hr />
-          <div className="flex flex-col gap-2 bg-zinc-600 p-4">
-            <div className="flex flex- justify-between gap-2 items-end">
+          <div className="flex flex-col gap-2 pt-2 pb-4 px-0.5">
+            <div className="flex flex-wrap justify-between gap-2 items-end">
               <div className="flex flex-row gap-2 items-end">
-                <span className="text-4xl">{companyName}</span>
-                <span className="text-xl bottom-0">| {position}</span>
+                <span className="text-2xl sm:text-4xl">{companyName}</span>
+                <span className="text-lg sm:text-xl bottom-0">| {position}</span>
               </div>
               <p>Written by -: {anonymous == 0 ? <span>Chetan Saini</span> : <span>Anonymous User</span>}</p>
             </div>
@@ -59,28 +59,30 @@ function CreateExperience() {
             <div dangerouslySetInnerHTML={{ __html: data }} />
           </div>
         </div>
-        <div className="w-full border-2 border-slate-700 p-4 rounded">
+
+        {/* /////////////////////////////////   This is editor part   //////////////////////////////////////////*/}
+        <div className="w-full flex flex-col gap-2  border-2 border-slate-700 p-2 rounded">
           <h1 className="text-2xl">Editor : </h1>
           <hr />
-          <div className="flex flex-row justify-between w-full my-2">
-            <div className="flex flex-col justify-evenly">
-              <FloatingLabel
-                className="w-96 my-2"
+          <div className="flex flex-wrap justify-between w-full my-2">
+            <div className="flex flex-col justify-evenly w-full  ">
+              <Textarea
+                className=" my-2 bg-gray-100"
                 variant="outlined"
-                label="Company Name"
+                placeholder="Company Name"
                 value={companyName}
                 onChange={(e) => setCompanyName(e.target.value)}
               />
-              <FloatingLabel
-                className="w-96 my-2"
+              <Textarea
+                className="my-2 bg-gray-100"
                 variant="outlined"
-                label="Role"
+                placeholder="Role"
                 value={position}
                 onChange={(e) => setPosition(e.target.value)}
               />
             </div>
 
-            <div className="flex justify-evenly flex-col border-2 rounded border-slate-700 p-2 bg-slate-700">
+            <div className="flex justify-evenly flex-col gap-5 my-2  rounded p-2 bg-gray-300 dark:bg-gray-600">
               <Button color="warning" className="w-full rounded">
                 Request to Publish
               </Button>
@@ -91,7 +93,10 @@ function CreateExperience() {
               />
             </div>
           </div>
-          <TextEditor data={data} setData={setData} />
+          <div className="">
+            <TextEditor data={data} setData={setData} />
+          </div>
+
         </div>
       </div>
     </div>
