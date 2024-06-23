@@ -12,7 +12,7 @@ function Contribute() {
 
   return (
     <>
-      <div className="min-h-screen min-w-screen flex flex-col justify-center gap-5">
+      <div className="min-h-screen min-w-screen flex flex-col justify-start gap-5">
         {/* <div className="flex flex-col items-center "> */}
           <div className="flex items-center flex-col mt-0.5 pt-2 pb-4 bg-gray-200 dark:bg-gray-800">
             <h1 className="text-3xl">Join our Community</h1>
