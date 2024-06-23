@@ -12,7 +12,6 @@ import { BiBookAdd } from "react-icons/bi";
 
 
 function Quizes() {
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isLoading,ready,loggedIn } = useSelector((state) => state.user);
