@@ -40,7 +40,7 @@ function CreateExperience() {
 
   return (
     <div className="flex flex-col items-center min-w-screen my-5">
-      <h1 className="text-lg sm:text-2xl mx-1 p-2 text-center  border-t border-l border-r rounded-t-lg border-gray-300 dark:border-gray-700">
+      <h1 className="text-lg sm:text-2xl mx-1 py-2 px-3 text-center  border-t border-l border-r rounded-t-lg border-gray-300 dark:border-gray-700">
         Share your recent experience of hiring process of any company
       </h1>
       <div className="flex flex-col gap-5 items-center mt-4 border-2 border-slate-500 w-full md:w-4/5 rounded p-2 bg-gray-200 dark:bg-gray-800">
