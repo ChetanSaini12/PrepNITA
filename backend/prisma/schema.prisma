@@ -184,7 +184,7 @@ model ExpComment {
   description    String
   reply          ExpReply[]
   commentorId    Int
-  likes          Int
+  likes          Int      @default(0)
   experience     Experience @relation(fields: [experienceId], references: [id], map : "comment_experience_fk" )
 }
 
@@ -193,7 +193,7 @@ model ExpReply {
   expcommentId   Int
   description    String
   replierId      Int
-  likes          Int
+  likes          Int    @default(0)
   comment        ExpComment @relation(fields: [expcommentId], references: [id], map : "exp_reply_comment_fk")
 }
 
