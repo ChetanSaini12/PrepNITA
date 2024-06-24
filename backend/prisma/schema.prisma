@@ -174,7 +174,47 @@ model Experience {
   createdBy      Int
   upvotes        Int       @default(0)
   downvotes      Int       @default(0)
+  comments       ExpComment[]
   creator        UserContribution? @relation(fields: [createdBy], references: [id], map: "exp_creator_user_contribution_fk")
+}
+
+model ExpComment {
+  id             Int       @id @unique @default(autoincrement())
+  experienceId   Int
+  description    String
+  reply          ExpReply[]
+  commentorId    Int
+  likes          Int
+  experience     Experience @relation(fields: [experienceId], references: [id], map : "comment_experience_fk" )
+}
+
+model ExpReply {
+  id             Int       @id @unique @default(autoincrement())
+  expcommentId   Int
+  description    String
+  replierId      Int
+  likes          Int
+  comment        ExpComment @relation(fields: [expcommentId], references: [id], map : "exp_reply_comment_fk")
+}
+
+model UserVotes {
+  id             Int        @id @unique @default(autoincrement())
+  userId         Int
+  areaId         Int
+  type           VoteType
+  area           VoteArea
+}
+
+enum VoteType {
+  LIKE
+  DISLIKE
+}
+
+enum VoteArea {
+  QUESTION
+  EXPERIENCE
+  EXP_COMMENT
+  EXP_REPLY
 }
 
 enum Roles {
