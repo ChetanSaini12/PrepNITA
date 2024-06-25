@@ -5,7 +5,7 @@ export const addReplyToExpComment = async (_, payload, context) => {
   try {
     /*
             payload : 
-                {
+             Reply :   {
                     description : String ("A good comment")
                     expcommentId : Int
                 }
@@ -26,8 +26,8 @@ export const addReplyToExpComment = async (_, payload, context) => {
     if (context.isUser) {
       const expReply = await prisma.expReply.create({
         data: {
-          description: payload.description,
-          expcommentId: payload.expcommentId,
+          description: payload.Reply.description,
+          expcommentId: payload.Reply.expcommentId,
           replierId: context.userId,
         },
       })
