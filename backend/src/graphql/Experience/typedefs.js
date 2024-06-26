@@ -10,6 +10,7 @@ export const typeDefs = `#graphql
         creatorName : String
         creatorUsername : String
         createdAt : DateTime
+        comments : [ExpComment]
         upvotes : Int
         downvotes : Int
     }

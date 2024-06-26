@@ -1,5 +1,6 @@
 import { GraphQLError } from 'graphql'
 import { prisma } from '../../../../prisma/index.js'
+import { addUserName } from './addUserName.js'
 
 export const deleteExpComment = async (_, payload, context) => {
   try {
@@ -24,12 +25,12 @@ export const deleteExpComment = async (_, payload, context) => {
           },
         })
 
-        const deletedComment = await prisma.expComment.delete({
+        let deletedComment = await prisma.expComment.delete({
           where: {
             id: commentId,
           },
         })
-
+        deletedComment = addUserName(deletedComment)
         return deletedComment
       }
       else 

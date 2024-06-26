@@ -1,5 +1,6 @@
 import { GraphQLError } from 'graphql'
 import { prisma } from '../../../../prisma/index.js'
+import { addUserName } from './addUserName.js'
 
 export const deleteExpReply = async (_, payload, context) => {
   try {
@@ -18,12 +19,12 @@ export const deleteExpReply = async (_, payload, context) => {
     })
     if (replierId) {
       if (replierId == context.userId || context.isSuperAdmin) {
-        const deletedReply = await prisma.expReply.delete({
+        let deletedReply = await prisma.expReply.delete({
           where: {
             id: replyId,
           },
         })
-
+        deletedReply = addUserName(deletedReply)
         return deletedReply
       }
       else 
