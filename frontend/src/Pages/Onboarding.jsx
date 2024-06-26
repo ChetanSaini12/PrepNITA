@@ -22,7 +22,7 @@ function Onboarding() {
   const [ERROR, setError] = useState(null);
   const [imageFileUploadProgress, setImageFIleUploadProgress] = useState(0);
 
-  const { loggedIn, isLoading, profilePic, username, ready } = useSelector((state) => state.user);
+  const { loggedIn, isLoading, profile_pic, username } = useSelector((state) => state.user);
 
 
   useEffect(() => {
@@ -34,7 +34,7 @@ function Onboarding() {
         if (response.authentication.isBoarded) {
           dispatch(setLoading(false));
           // console.log("1");
-          return navigate('/');
+          navigate('/');
         }
       } catch (error) {
         console.log("Error in Auth try catch:", error);
@@ -67,7 +67,7 @@ function Onboarding() {
       department, course, state, hosteler } = formData;
 
     const leetcodeProfile = formData.leetcodeProfile || ""; const codeforcesProfile = formData.codeforcesProfile || "";
-    const linkedinProfile = formData.linkedinProfile || ""; const githubProfile = formData.githubProfile || "";
+     const linkedinProfile = formData.linkedinProfile || ""; const githubProfile = formData.githubProfile || "";
 
     try {
       const { data, errors } = await onBoardUser({
@@ -108,15 +108,11 @@ function Onboarding() {
 
   };
 
-  if (isLoading || !ready) return <Loader />;
-  if (ready && !loggedIn) {
+  if (isLoading) return <Loader />;
+  if (!isLoading && (!loggedIn)) {
+    // console.log("isLding", isLoading, loggedIn, username);
+    // console.log("3");
     return navigate('/');
-  }
-  if (ERROR) {
-    toast.error(ERROR.message ? ERROR.message : "Error in Onboarding User ! Try again");
-    setTimeout(()=>{
-      setError(null);
-    },2000);
   }
   // const { handleChange, handleSubmit, loggedIn, imageFileUploadProgress, isLoading,Button_Text } = props;
   return (
@@ -126,7 +122,7 @@ function Onboarding() {
       loggedIn={loggedIn}
       imageFileUploadProgress={imageFileUploadProgress}
       isLoading={isLoading}
-      profilePic={profilePic}
+      profile_pic={profile_pic}
       Button_Text="Submit"
       formData={formData}
       setFormData={setFormData}
