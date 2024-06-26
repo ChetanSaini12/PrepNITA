@@ -15,6 +15,9 @@ export const deleteExperience = async (_, payload, context) => {
           where: {
             id: payload.id,
           },
+          include : {
+            comments : true
+          }
         })
         deletedExp = addNameExp(deletedExp)
         return deletedExp

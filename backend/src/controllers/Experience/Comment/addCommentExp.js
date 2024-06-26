@@ -1,22 +1,24 @@
 import { prisma } from '../../../../prisma/index.js'
 import { GraphQLError } from 'graphql'
-export const addComment = async (_, payload, context) => {
+import { addUserName } from './addUserName.js'
+export const addCommentExp = async (_, payload, context) => {
   try {
     /*
         payload : 
-            {
+          Comment :  {
                 description : String ("A good experience")
                 experienceId : Int
             }
         */
     if (context.isUser) {
-      const expComment = await prisma.expComment.create({
+      let expComment = await prisma.expComment.create({
         data: {
-          description: payload.description,
-          experienceId: payload.experienceId,
+          description: payload.Comment.description,
+          experienceId: payload.Comment.experienceId,
           commentorId: context.userId,
         },
       })
+      expComment = addUserName(expComment)
       return expComment
     } else {
       throw new GraphQLError('User is not authorised', {

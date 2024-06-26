@@ -1,5 +1,6 @@
 import { GraphQLError } from 'graphql'
 import { prisma } from '../../../../prisma/index.js'
+import { addUserName } from './addUserName.js'
 
 export const likeExpComment = async (_, payload, context) => {
   try {
@@ -21,7 +22,7 @@ export const likeExpComment = async (_, payload, context) => {
       })
     }
     if (context.isUser) {
-      const likedComment = await prisma.expComment.update({
+      let likedComment = await prisma.expComment.update({
         where: {
           id: payload.commentId,
         },
@@ -31,6 +32,7 @@ export const likeExpComment = async (_, payload, context) => {
           },
         },
       })
+      likedComment = addUserName(likedComment)
       return likedComment
     } else {
       throw new GraphQLError('You are not authorised user!!', {

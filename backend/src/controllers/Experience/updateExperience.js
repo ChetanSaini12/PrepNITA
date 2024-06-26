@@ -25,6 +25,9 @@ export const updateExperience = async (_, payload, context) => {
           data: {
             ...payload.Experience,
           },
+          include: {
+            comments : true
+          }
         })
         updatedExp = addNameExp(updatedExp)
         return updatedExp
