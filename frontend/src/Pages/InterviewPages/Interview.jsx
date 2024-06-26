@@ -95,8 +95,6 @@ function Interviews() {
       handleTabSwitch(0); // To set the initial displayInterviews
     }
   }, [interviews]);
-  
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -136,29 +134,35 @@ function Interviews() {
     }
   };
 
+  const handleTabSwitch = async (id) => {
+    setButtonIndex(id);
 
-const handleTabSwitch = async (id) => {
-  setButtonIndex(id);
+    let filteredInterviews;
+    if (id === 0) {
+      // All interviews
+      filteredInterviews = interviews;
+    } else if (id === 1) {
+      // Interviews where interview.isCompleted is true
+      filteredInterviews = interviews.filter(
+        (interview) => interview.isCompleted
+      );
+    } else if (id === 2) {
+      // Interviews where interview.interviewerName !== null
+      filteredInterviews = interviews.filter(
+        (interview) => interview.interviewerName !== null
+      );
+    } else if (id === 3) {
+      // Interviews where interview.interviewerName === null && !interview.isCompleted
+      filteredInterviews = interviews.filter(
+        (interview) =>
+          interview.interviewerName === null && !interview.isCompleted
+      );
+    } else {
+      filteredInterviews = [];
+    }
 
-  let filteredInterviews;
-  if (id === 0) {
-    // All interviews
-    filteredInterviews = interviews;
-  } else if (id === 1) {
-    // Interviews where interview.isCompleted is true
-    filteredInterviews = interviews.filter(interview => interview.isCompleted);
-  } else if (id === 2) {
-    // Interviews where interview.interviewerName !== null
-    filteredInterviews = interviews.filter(interview => interview.interviewerName !== null);
-  } else if (id === 3) {
-    // Interviews where interview.interviewerName === null && !interview.isCompleted
-    filteredInterviews = interviews.filter(interview => interview.interviewerName === null && !interview.isCompleted);
-  } else {
-    filteredInterviews = [];
-  }
-
-  setDisplayInterviews(filteredInterviews);
-};
+    setDisplayInterviews(filteredInterviews);
+  };
 
   if (isLoading) return <Loader />;
   if (ERROR) {
@@ -205,13 +209,21 @@ const handleTabSwitch = async (id) => {
             </button>
           </div>
           <div className="bg-gray-200 dark:bg-gray-800 rounded-lg shadow-md flex justify-center items-center flex-col gap-3 p-3 my-4 md:p-6 hover:bg-gray-300 dark:hover:bg-gray-700 transition duration-100 h-36 w-80">
-            <RiAdminFill />
-            <h1>Interviews as an Admin</h1>
+            <button
+              onClick={() => {
+                setShowCreateInterview(true);
+              }}
+            >
+              <div className="flex justify-center">
+                <RiAdminFill />
+              </div>
+              <h1>Interviews as an Admin</h1>
+            </button>
           </div>
         </div>
       )}
 
-      <div className="mx-2 mb-5 border-2 border-slate-500 rounded w-5/6 p-4 ">
+      <div className="w-full p-4 ">
         <h1 className="text-3xl font-semibold mb-4 ">My Interviews </h1>
 
         <hr />
@@ -261,152 +273,82 @@ const handleTabSwitch = async (id) => {
             <Lottie options={defaultOptions} height={100} width={100} />
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5 text-wrap ">
-              {displayInterviews?.map((interview, index) => (
-                <div className="group relative w-full border border-teal-500 hover:border-2 transition-all h-[300px] overflow-hidden rounded-lg sm:w-[330px]  bg-gray-300 dark:bg-gray-700">
-                  <div className="p-3 flex flex-col gap-2">
-                    <h1 className="text-lg font-semibold line-clamp-1">
-                      Interviewee: {interview.intervieweeName}
-                    </h1>
-                    <p className="text-lg font-semibold line-clamp-1">
-                      Interviewer: {interview.interviewerName}
-                    </p>
-                    <p className="text-sm  mb-1">
-                      Start Time:{" "}
+          <div className=" ">
+            <table className="table-auto w-full my-4">
+              <thead>
+                <tr className="bg-gray-100 text-gray-600 font-semibold text-left">
+                  <th className="px-4 py-2">Sr. No.</th>
+                  <th className="px-4 py-2">Interviewee</th>
+                  <th className="px-4 py-2">Interviewer</th>
+                  <th className="px-4 py-2">Start Time</th>
+                  <th className="px-4 py-2">Duration (Min.)</th>
+                  {/* <th className="px-4 py-2">Topics</th> */}
+                  <th className="px-4 py-2">Feedback</th>
+                </tr>
+              </thead>
+              <tbody>
+                {displayInterviews?.map((interview, index) => (
+                  <tr
+                    key={index}
+                    className="border-b border-gray-200 hover:bg-gray-600 transition-all"
+                    onClick={() => navigate(`/interview/${interview.id}`)}
+                  >
+                    <td className="px-4 py-2">{index + 1}.</td>
+                    <td className="px-4 py-2">{interview.intervieweeName}</td>
+                    <td className="px-4 py-2">
+                      {interview.interviewerName
+                        ? interview.interviewerName
+                        : "Not picked yet!"}
+                    </td>
+                    <td className="px-4 py-2">
                       {moment(interview.startTime).format(
                         "MMMM Do YYYY, h:mm:ss a"
                       )}
-                    </p>
-                    <p className="text-sm  mb-1">
-                      Duration: {interview.duration} minutes
-                    </p>
-                    <p className="text-sm  mb-1">
-                      Topics: {interview.topics?.join(", ")}
-                    </p>
-                    <p className="text-sm ">
-                      Feedback: {interview.feedback ? "Given" : "Not Given"}
-                    </p>
-                    <Link
-                      to={`/interview/${interview.id}`}
-                      className="group-hover:bottom-0 absolute bottom-[-200px] left-0 right-0 border border-teal-500 text-teal-500 hover:bg-teal-500 hover:text-white transition-all duration-300 text-center py-2 rounded-md !rounded-tl-none m-2"
-                    >
-                      See Interview
-                    </Link>
-                  </div>
+                    </td>
+                    <td className="px-4 py-2">{interview.duration}</td>
+                    {/* <td className="px-4 py-2">
+                      {interview.topics?.join(", ")}
+                    </td> */}
+                    <td className="px-4 py-2">
+                      {interview.feedback ? "✅" : "⏳"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {/* {displayInterviews?.map((interview, index) => (
+              <div className="group relative w-full border border-teal-500 hover:border-2 transition-all h-[300px] overflow-hidden rounded-lg sm:w-[330px]  bg-gray-300 dark:bg-gray-700">
+                <div className="p-3 flex flex-col gap-2">
+                  <h1 className="text-lg font-semibold line-clamp-1">
+                    Interviewee: {interview.intervieweeName}
+                  </h1>
+                  <p className="text-lg font-semibold line-clamp-1">
+                    Interviewer: {interview.interviewerName}
+                  </p>
+                  <p className="text-sm  mb-1">
+                    Start Time:{" "}
+                    {moment(interview.startTime).format(
+                      "MMMM Do YYYY, h:mm:ss a"
+                    )}
+                  </p>
+                  <p className="text-sm  mb-1">
+                    Duration: {interview.duration} minutes
+                  </p>
+                  <p className="text-sm  mb-1">
+                    Topics: {interview.topics?.join(", ")}
+                  </p>
+                  <p className="text-sm ">
+                    Feedback: {interview.feedback ? "Given" : "Not Given"}
+                  </p>
+                  <Link
+                    to={`/interview/${interview.id}`}
+                    className="group-hover:bottom-0 absolute bottom-[-200px] left-0 right-0 border border-teal-500 text-teal-500 hover:bg-teal-500 hover:text-white transition-all duration-300 text-center py-2 rounded-md !rounded-tl-none m-2"
+                  >
+                    See Interview
+                  </Link>
                 </div>
-              ))}
-            {/* {buttonIndex === 1 &&
-              interviews
-                ?.filter((interview) => interview.isCompleted)
-                .map((interview, index) => (
-                  <div className="group relative w-full border border-teal-500 hover:border-2 transition-all h-[300px] overflow-hidden rounded-lg sm:w-[330px]   bg-gray-300 dark:bg-gray-700">
-                    <div className="p-3 flex flex-col gap-2">
-                      <h1 className="text-lg font-semibold line-clamp-1">
-                        Interviewee: {interview.intervieweeName}
-                      </h1>
-                      <p className="text-lg font-semibold line-clamp-1">
-                        Interviewer: {interview.interviewerName}
-                      </p>
-                      <p className="text-sm  mb-1">
-                        Start Time:{" "}
-                        {moment(interview.startTime).format(
-                          "MMMM Do YYYY, h:mm:ss a"
-                        )}
-                      </p>
-                      <p className="text-sm  mb-1">
-                        Duration: {interview.duration} minutes
-                      </p>
-                      <p className="text-sm  mb-1">
-                        Topics: {interview.topics?.join(", ")}
-                      </p>
-                      <p className="text-sm ">
-                        Feedback: {interview.feedback ? "Given" : "Not Given"}
-                      </p>
-                      <Link
-                        to={`/interview/${interview.id}`}
-                        className="group-hover:bottom-0 absolute bottom-[-200px] left-0 right-0 border border-teal-500 text-teal-500 hover:bg-teal-500 hover:text-white transition-all duration-300 text-center py-2 rounded-md !rounded-tl-none m-2"
-                      >
-                        See Interview
-                      </Link>
-                    </div>
-                  </div>
-                ))}
-            {buttonIndex === 2 &&
-              interviews
-                ?.filter((interview) => interview.interviewerName !== null)
-                .map((interview, index) => (
-                  <div className="group relative w-full border border-teal-500 hover:border-2 transition-all h-[300px] overflow-hidden rounded-lg sm:w-[330px]   bg-gray-300 dark:bg-gray-700">
-                    <div className="p-3 flex flex-col gap-2">
-                      <h1 className="text-lg font-semibold line-clamp-1">
-                        Interviewee: {interview.intervieweeName}
-                      </h1>
-                      <p className="text-lg font-semibold line-clamp-1">
-                        Interviewer: {interview.interviewerName}
-                      </p>
-                      <p className="text-sm  mb-1">
-                        Start Time:{" "}
-                        {moment(interview.startTime).format(
-                          "MMMM Do YYYY, h:mm:ss a"
-                        )}
-                      </p>
-                      <p className="text-sm  mb-1">
-                        Duration: {interview.duration} minutes
-                      </p>
-                      <p className="text-sm  mb-1">
-                        Topics: {interview.topics?.join(", ")}
-                      </p>
-                      <p className="text-sm  mb-1">
-                        Feedback: {interview.feedback ? "Given" : "Not Given"}
-                      </p>
-                      <Link
-                        to={`/interview/${interview.id}`}
-                        className="group-hover:bottom-0 absolute bottom-[-200px] left-0 right-0 border border-teal-500 text-teal-500 hover:bg-teal-500 hover:text-white transition-all duration-300 text-center py-2 rounded-md !rounded-tl-none m-2"
-                      >
-                        See Interview
-                      </Link>
-                    </div>
-                  </div>
-                ))}
-
-            {buttonIndex === 3 &&
-              interviews
-                ?.filter(
-                  (interview) =>
-                    interview.interviewerName === null && !interview.isCompleted
-                )
-                .map((interview, index) => (
-                  <div className="group relative w-full border border-teal-500 hover:border-2 transition-all h-[300px] overflow-hidden rounded-lg sm:w-[330px]  bg-gray-300 dark:bg-gray-700">
-                    <div className="p-3 flex flex-col gap-2">
-                      <h1 className="text-lg font-semibold line-clamp-1">
-                        Interviewee: {interview.intervieweeName}
-                      </h1>
-                      <p className="text-lg font-semibold line-clamp-1">
-                        Interviewer: {interview.interviewerName}
-                      </p>
-                      <p className="text-sm  mb-1">
-                        Start Time:{" "}
-                        {moment(interview.startTime).format(
-                          "MMMM Do YYYY, h:mm:ss a"
-                        )}
-                      </p>
-                      <p className="text-sm  mb-1">
-                        Duration: {interview.duration} minutes
-                      </p>
-                      <p className="text-sm  mb-1">
-                        Topics: {interview.topics?.join(", ")}
-                      </p>
-                      <p className="text-sm  mb-1">
-                        Feedback: {interview.feedback ? "Given" : "Not Given"}
-                      </p>
-                      <Link
-                        to={`/interview/${interview.id}`}
-                        className="group-hover:bottom-0 absolute bottom-[-200px] left-0 right-0 border border-teal-500 text-teal-500 hover:bg-teal-500 hover:text-white transition-all duration-300 text-center py-2 rounded-md !rounded-tl-none m-2"
-                      >
-                        See Interview
-                      </Link>
-                    </div>
-                  </div>
-                ))} */}
+              </div>
+            ))} */}
           </div>
         )}
       </div>
