@@ -53,6 +53,7 @@ async function createApolloGraphqlServer() {
       },
     },
     includeStacktraceInErrorResponses: false,
+    introspection : true
   })
 
   await gqlserver.start()
