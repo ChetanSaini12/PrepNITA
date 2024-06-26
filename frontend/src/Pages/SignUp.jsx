@@ -174,7 +174,6 @@ function SignUp() {
       }
     } catch (catchError) {
       console.log("Error in signUpUser catch block:", catchError);
-      // return toast.error(catchError.message || catchError, { duration: 4000 });
       dispatch(setLoading(false));
       return setError(catchError || { message: "someting went wrong " });
     };

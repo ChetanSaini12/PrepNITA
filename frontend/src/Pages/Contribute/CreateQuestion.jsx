@@ -8,6 +8,7 @@ import { setLoading } from '../../app/user/userSlice';
 import { Loader } from '../Loader.jsx';
 import { useNavigate } from 'react-router-dom';
 import TextEditor from '../../Components/sampleTextEditor.jsx';
+import { HiOutlineBackspace } from "react-icons/hi";
 
 
 
@@ -31,10 +32,10 @@ const CreateQuestion = () => {
     dispatch(setLoading(false));
 
     useEffect(() => {
-        console.log("state",loggedIn);
+        console.log("state", loggedIn);
 
         setReady(true);
-    },[]);
+    }, []);
 
     // const handleChange = ((e) => {
     //     if (e.target.id === "tags") {
@@ -108,12 +109,18 @@ const CreateQuestion = () => {
         setError(null);
     }
     if (isLoading) return <Loader />;
-    if (ready&&loggedIn==false) navigate('/register');
+    if (ready && loggedIn == false) navigate('/register');
     return (
         <>
             <div className='p-3 mx-auto min-h-screen mt-2 mb-4'>
-                <h1 className='text-center text-2xl md:text-2xl my-4 font-semibold'>
-                    Create a Question</h1>
+                <h1 className='text-center text-lg sm:text-2xl my-1 font-semibold'>
+                    Create a Question
+                </h1>
+                <div className='flex justify-end mb-2'>
+                    <button onClick={() => navigate('/contribute')} className='w-8 h-8 hover:text-red-400'>
+                        <HiOutlineBackspace size={'md'} />
+                    </button>
+                </div>
                 <div className="question_container">
                     <div className='flex flex-col gap-4 border border-teal-500 rounded-tl-3xl rounded-br-3xl p-3 '>
                         {/* <div id="question_area_section">
@@ -128,32 +135,32 @@ const CreateQuestion = () => {
 
                         <div id="question_area_section">
                             <div className='flex flex-row w-full'>
-                            <h1 className="">Question : </h1>
-                                { textEditor == 0 && <div><button onClick={() => setTextEditor(1)} >(Open Editor)</button></div>}
-                                { textEditor == 1 && <div><button onClick={() => setTextEditor(0)} >(Close Editor)</button></div>}
+                                <h1 className="mx-2">Question : </h1>
+                                {textEditor == 0 && <div><button className='font-semibold hover:text-red-500' onClick={() => setTextEditor(1)} >( Open Editor )</button></div>}
+                                {textEditor == 1 && <div><button className='font-semibold hover:text-red-500' onClick={() => setTextEditor(0)} >( Close Editor )</button></div>}
                             </div>
-                            { textEditor == 1 && <TextEditor data={description} setData={setDescription}></TextEditor>}
-                            { textEditor != 1 && (<div className='bg-slate-800' dangerouslySetInnerHTML={{ __html: description }} />)}
+                            {textEditor == 1 && <TextEditor data={description} setData={setDescription}></TextEditor>}
+                            {textEditor != 1 && (<div className='bg-gray-200 dark:bg-gray-700 mt-0.5 px-2 py-4 rounded-md' dangerouslySetInnerHTML={{ __html: description }} />)}
                         </div>
                         <div id="question_area_section">
                             <div className='flex flex-row w-full'>
-                            <h1 className="">Answer : </h1>
-                                { textEditor == 0 && <div><button onClick={() => setTextEditor(2)} >(Open Editor)</button></div>}
-                                { textEditor == 2 && <div><button onClick={() => setTextEditor(0)} >(Close Editor)</button></div>}
+                                <h1 className="mx-2">Answer : </h1>
+                                {textEditor == 0 && <div><button className='font-semibold hover:text-red-500' onClick={() => setTextEditor(2)} >( Open Editor )</button></div>}
+                                {textEditor == 2 && <div><button className='font-semibold hover:text-red-500' onClick={() => setTextEditor(0)} >( Close Editor )</button></div>}
                             </div>
-                            { textEditor == 2 && <TextEditor data={answer} setData={setAnswer}></TextEditor>}
-                            { textEditor != 2 && (<div className='bg-slate-800' dangerouslySetInnerHTML={{ __html: answer }} />)}
+                            {textEditor == 2 && <TextEditor data={answer} setData={setAnswer}></TextEditor>}
+                            {textEditor != 2 && (<div className='bg-gray-200 dark:bg-gray-700 mt-0.5 px-2 py-4 rounded-md' dangerouslySetInnerHTML={{ __html: answer }} />)}
                         </div>
                         <div id="question_area_section">
                             <div className='flex flex-row w-full'>
-                            <h1 className="">Tags : </h1>
-                                { textEditor == 0 && <div><button onClick={() => setTextEditor(3)} >(Open Editor)</button></div>}
-                                { textEditor == 3 && <div><button onClick={() => setTextEditor(0)} >(Close Editor)</button></div>}
+                                <h1 className="mx-2">Tags : </h1>
+                                {textEditor == 0 && <div><button className='font-semibold hover:text-red-500' onClick={() => setTextEditor(3)} >( Open Editor )</button></div>}
+                                {textEditor == 3 && <div><button className='font-semibold hover:text-red-500' onClick={() => setTextEditor(0)} >( Close Editor )</button></div>}
                             </div>
-                            { textEditor == 3 && <TextEditor data={tags} setData={setTags}></TextEditor>}
-                            { textEditor != 3 && (<div className='bg-slate-800' dangerouslySetInnerHTML={{ __html: tags }} />)}
+                            {textEditor == 3 && <TextEditor data={tags} setData={setTags}></TextEditor>}
+                            {textEditor != 3 && (<div className='bg-gray-200 dark:bg-gray-700 mt-0.5 px-2 py-4 rounded-md' dangerouslySetInnerHTML={{ __html: tags }} />)}
                         </div>
-                        {/* <div id="question_area_section">
+                        {/* <div id="question_area_section"
                             <h1 className="text-xl mb-1.5 mx-2">Description : </h1>
                             <Textarea
                                 required

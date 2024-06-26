@@ -12,13 +12,16 @@ function Contribute() {
 
   return (
     <>
-      <div className="flex justify-center flex-col">
-        <div className="flex items-center flex-col w-full">
-          <h1 className="text-3xl">Join our Community</h1>
-          <p>Be a part of someone's dream journey</p>
+      <div className="min-h-screen min-w-screen flex flex-col justify-start gap-5">
+        {/* <div className="flex flex-col items-center "> */}
+          <div className="flex items-center flex-col mt-0.5 pt-2 pb-4 bg-gray-200 dark:bg-gray-800">
+            <h1 className="text-3xl">Join our Community</h1>
+            <p>Be a part of someone's dream journey</p>
+          {/* </div> */}
         </div>
-        <div className="flex justify-evenly items-center gap-20 flex-wrap w-full my-10">
-          <div className="bg-slate-800 shadow-xl rounded-lg w-1/3 h-full">
+        <div className="flex flex-wrap justify-center items-center gap-7 mx-2 mb-10 ">
+          <div className=" bg-gray-200 dark:bg-gray-800 rounded-lg shadow-md py-5 px-10 md:p-6 hover:shadow-lg hover:bg-gray-300
+             dark:hover:bg-gray-700 transition duration-300 max-w-sm ">
             <figure className="px-10 pt-10">
               <img
                 src={companyImg}
@@ -33,14 +36,15 @@ function Contribute() {
               <p className="mb-4">Tell us about any company drive you had.</p>
               <div className="mt-4">
                 <button className="bg-blue-500 text-white font-bold py-2 px-4 rounded"
-                onClick={() => navigate("/contribute/experience")}>
+                  onClick={() => navigate("/contribute/experience")}>
                   Explore
                 </button>
               </div>
             </div>
           </div>
 
-          <div className="bg-slate-800 shadow-xl rounded-lg w-1/3 h-full">
+          <div className=" bg-gray-200 dark:bg-gray-800 rounded-lg shadow-md py-5 px-10 md:p-6 hover:shadow-lg hover:bg-gray-300
+             dark:hover:bg-gray-700 transition duration-300 max-w-sm">
             <figure className="px-10 pt-10">
               <img
                 src={interviewImg}
@@ -61,7 +65,8 @@ function Contribute() {
             </div>
           </div>
 
-          <div className="bg-slate-800 shadow-xl rounded-lg w-1/3 h-full">
+          <div className=" bg-gray-200 dark:bg-gray-800 rounded-lg shadow-md py-5 px-10 md:p-6 hover:shadow-lg hover:bg-gray-300
+             dark:hover:bg-gray-700 transition duration-300 max-w-sm ">
             <figure className="px-10 pt-10">
               <img src={quizImg} alt="Create a Quiz" className="rounded-xl" />
             </figure>
@@ -81,7 +86,8 @@ function Contribute() {
             </div>
           </div>
 
-          <div className="bg-slate-800 shadow-xl rounded-lg w-1/3 h-full">
+          <div className=" bg-gray-200 dark:bg-gray-800 rounded-lg shadow-md py-5 px-10 md:p-6 hover:shadow-lg hover:bg-gray-300
+             dark:hover:bg-gray-700 transition duration-300 max-w-sm ">
             <figure className="px-10 pt-10">
               <img
                 src={questionImg}

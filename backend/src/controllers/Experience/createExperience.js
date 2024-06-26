@@ -23,6 +23,9 @@ export const createExperience = async (_, payload, context) => {
           createdAt: moment(),
           createdBy: context.userId,
         },
+        include : {
+          comments : true
+        }
       })
       experience = addNameExp(experience)
       return experience
@@ -41,6 +44,7 @@ export const createExperience = async (_, payload, context) => {
     ) {
       throw error
     } else {
+      console.log('ERROR WHILE CREATING EXP : ', error);
       throw new GraphQLError('Something went wrong!!', {
         extensions: {
           code: 'SOMETHING_WENT_WRONG!!',

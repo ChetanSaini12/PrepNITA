@@ -31,6 +31,7 @@ import Contribute from "./Pages/Contribute/Contribute.jsx";
 import TextEditor from "./Components/sampleTextEditor.jsx";
 import CreateExperience from "./Pages/Contribute/CreateExperience.jsx";
 import RoleManagement from "./Pages/UserPages/RoleManagement.jsx";
+import MyQuizes from "./Pages/Quiz/MyQuizes.jsx";
 
 function App() {
   const { theme } = useSelector((state) => state.theme);
@@ -59,6 +60,7 @@ function App() {
             <Route path="/faltu" element={<AllUsers />}></Route>
             <Route path="/dashboard" element={<Dashboard />}></Route>
             <Route path="/quizes" element={<Quizes />}></Route>
+            <Route path="/quizes/my" element={<MyQuizes/>}></Route>
             <Route path="/contribute/quiz" element={<CreateQuiz />}></Route>
             <Route path="/contribute/experience" element={<CreateExperience />}></Route>
             <Route

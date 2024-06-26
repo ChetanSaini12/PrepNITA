@@ -4,7 +4,13 @@ import { addNameExp } from './addnameExp.js'
 
 export const getAllExperience = async (_, payload) => {
   try {
-    let experience = await prisma.experience.findMany({})
+    let experience = await prisma.experience.findMany(
+      {
+        include: {
+          comments : true
+        }
+      }
+    )
     for (let i = 0; i < experience.length; i++) {
       experience[i] = addNameExp(experience[i])
     }

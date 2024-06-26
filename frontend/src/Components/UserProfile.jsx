@@ -9,7 +9,7 @@ export const UserProfile = ({userData}) => {
   // useEffect(()=>{
     
   // },[userData]);
-  console.log("hosteller", userData);
+  // console.log("hosteller", userData);
   return (
         <div className="flex flex-col justify-center items-start my-4 gap-5 px-2">
           <div className=' flex justify-start sm:justify-center  items-center gap-4 sm:gap-6'>

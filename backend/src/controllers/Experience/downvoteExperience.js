@@ -14,6 +14,9 @@ export const downvoteExperience = async (_, payload, context) => {
             increment: 1,
           },
         },
+        include : {
+          comments : true
+        }
       })
       experience = addNameExp(experience)
       return experience

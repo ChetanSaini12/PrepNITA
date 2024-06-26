@@ -17,11 +17,11 @@ const TextEditor = ({data, setData}) => {
   },0)
 
   return (
-    <div className='w-full' >
+    <div className='w-full p-0.5 overflow-x-auto' >
       <header >
         <div className='bg-sky-950' ref={refdiv}></div>
         
-        <div className='flex justify-center w-full mt-2'><button className='px-4 py-2 rounded-lg bg-green-500 hover:bg-green-600 focus:ring-2 focus:ring-green-300 font-semibold text-white shadow-md focus:outline-none transition' onClick={btnclick}>Save</button></div>
+        <div className='flex justify-center w-full mt-2'><button className='px-4 py-2 mb-2 rounded-lg bg-green-500 hover:bg-green-600 focus:ring-2 focus:ring-green-300 font-semibold text-white shadow-md focus:outline-none transition' onClick={btnclick}>Save</button></div>
         
       </header>
     </div>

@@ -10,8 +10,28 @@ export const typeDefs = `#graphql
         creatorName : String
         creatorUsername : String
         createdAt : DateTime
+        comments : [ExpComment]
         upvotes : Int
         downvotes : Int
+    }
+
+    type ExpComment {
+        id : Int 
+        experienceId :  Int
+        description  : String
+        reply        :  [ExpReply]
+        commentorId  : Int
+        commentorUserName : String
+        likes    : Int
+    }
+
+    type ExpReply {
+        id            : Int
+        expcommentId  : Int
+        description   : String
+        replierId     : Int
+        replierUserName : String
+        likes         : Int 
     }
 
     input InputExperience {
@@ -19,6 +39,16 @@ export const typeDefs = `#graphql
         role : String
         description : String
         anonymous : Boolean
+    }
+
+    input InputExpComment {
+        description : String
+        experienceId : Int
+    }
+
+    input InputExpReply {
+        description : String
+        expcommentId : Int
     }
 
 `
