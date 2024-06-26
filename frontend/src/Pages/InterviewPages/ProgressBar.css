@@ -1,0 +1,20 @@
+
+.progress-bar-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .progress-bar {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .progress-node {
+    display: flex;
+    flex-direction: column;
+    
+  }
