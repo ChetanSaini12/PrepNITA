@@ -1,19 +1,21 @@
-import { useMutation } from '@apollo/client';
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { ASSIGN_INTERVIEW, GET_INTERVIEW_BY_ID } from '../../gqlOperatons/Interview/mutations';
-import { useDispatch, useSelector } from 'react-redux';
-import { setLoading } from '../../app/user/userSlice';
-import { Loader } from '../Loader';
-import toast from 'react-hot-toast';
-import moment from 'moment';
-import { Chart as ChartJS } from 'chart.js/auto';
-import { Bar, Doughnut, Pie } from 'react-chartjs-2';
+import { useMutation } from "@apollo/client";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import {
+  ASSIGN_INTERVIEW,
+  GET_INTERVIEW_BY_ID,
+} from "../../gqlOperatons/Interview/mutations";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoading } from "../../app/user/userSlice";
+import { Loader } from "../Loader";
+import toast from "react-hot-toast";
+import moment from "moment";
+import { Chart as ChartJS } from "chart.js/auto";
+import { Bar, Doughnut, Pie } from "react-chartjs-2";
+import ProgressBar from "./ProgressBas";
 // import { ArcElement, } from "chart.js";
 
-
 const InterviewDetails = () => {
-
   let { id } = useParams();
   // id = parseInt(id);
   const [ERROR, setError] = useState(null);
@@ -35,22 +37,27 @@ const InterviewDetails = () => {
     csfundamentals: 5,
     csfundamentals: 1,
 
-    notes: ["Good communication skills", "Good in development", "Need to improve in DSA", "Excellent in CS Fundamentals"],
-    points: 14
+    notes: [
+      "Good communication skills",
+      "Good in development",
+      "Need to improve in DSA",
+      "Excellent in CS Fundamentals",
+    ],
+    points: 14,
   };
 
   const [getInterviewById] = useMutation(GET_INTERVIEW_BY_ID, {
     onError: (error) => {
       // console.log("onError 1 ", error);
       return setError(error);
-    }
+    },
   });
 
   const [assingInterview] = useMutation(ASSIGN_INTERVIEW, {
     onError: (error) => {
       // console.log("onError 2 ", error);
       return setError(error);
-    }
+    },
   });
 
   useEffect(() => {
@@ -60,51 +67,45 @@ const InterviewDetails = () => {
         const { data, errors } = await getInterviewById({
           variables: {
             interviewId: parseInt(id),
-          }
+          },
         });
         console.log("res ", data, errors);
 
         if (errors) {
           dispatch(setLoading(false));
           return setError(errors);
-        }
-        else if (data) {
+        } else if (data) {
           console.log("data at interview details page ", data);
           setInterview(data.getInterviewById);
           dispatch(setLoading(false));
         }
-
       } catch (error) {
         console.log("error at interview page ", error);
         dispatch(setLoading(false));
         return setError(error);
       }
-
     })();
-
   }, [id, fetch]);
 
   const assignInterviewHandler = async (e) => {
     e.preventDefault();
-    const userConfirmed = window.confirm('Do you want to take the interview?');
+    const userConfirmed = window.confirm("Do you want to take the interview?");
     if (!userConfirmed) return;
     dispatch(setLoading(true));
     const { data, errors } = await assingInterview({
       variables: {
         interviewId: parseInt(id),
-      }
+      },
     });
     if (errors) {
       console.log("error at interview page ", errors);
       dispatch(setLoading(false));
       return setError(errors);
-    }
-    else if (data) {
+    } else if (data) {
       dispatch(setLoading(false));
       setFetch(!fetch);
       toast.success("Interview assigned to you successfully !");
     }
-
   };
 
   if (ERROR) {
@@ -113,11 +114,54 @@ const InterviewDetails = () => {
   }
   if (isLoading) return <Loader />;
   return (
-
-    <div className='min-w-screen min-h-screen flex flex-col mt-8 mb-5'>
-      {/* <h1 className=' text-3xl flex justify-center my-2'> Interview detail page  </h1> */}
-
+    <>
       {interview && (
+        <div className="w-full p-5">
+          <h1 className="text-4xl"> Intrerview Id : #{id}</h1>
+          <hr></hr>
+          <div className="m-4">
+            <div className="flex flex-row justify-between ">
+              <div>
+                <p className="border-b-2 w-fit">Interviewee Name : </p>
+                <h1 className="text-2xl my-2">
+                  {interview.intervieweeName !== null
+                    ? interview.intervieweeName
+                    : "N/A"}
+                </h1>
+                <div className="border-2 border-gray-500 rounded p-2">
+                  <div className="flex flex-row gap-2 justify-center">
+                    <span>
+                      {moment(interview.startTime).format("DD-MM-YY")}
+                    </span>
+                    <span>|</span>
+                    <span>{moment(interview.startTime).format("ddd")}</span>
+                  </div>
+                  <div>
+                    <span>{moment(interview.startTime).format("h:mm A")}</span>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <p className="border-b-2 w-fit">Interviewer Name : </p>
+                <h1 className="text-2xl my-2">
+                  {interview.interviewerName !== null
+                    ? interview.interviewerName
+                    : "N/A"}
+                </h1>
+                <div>{interview.duration} minutes</div>
+              </div>
+            </div>
+            <div>
+              <p>Topics : </p>
+              <h1>{interview.topics?.join(", ")}</h1>
+            </div>
+          </div>
+        </div>
+      )}
+      <div className="min-w-screen min-h-screen flex flex-col mt-8 mb-5">
+        {/* <h1 className=' text-3xl flex justify-center my-2'> Interview detail page  </h1> */}
+
+        {/* {interview && (
 
         <div className="bg-gray-200 dark:bg-gray-800 flex flex-col items-center justify-start p-5 ">
           {interview.isCompleted && (
@@ -161,128 +205,144 @@ const InterviewDetails = () => {
             </div>
           )}
         </div>
-      )}
-
-      {dummyFeedBack && (
-        <>
-          <div className='max-h-96 mx-2 my-14  flex justify-center'>
-            <Bar
-              data={{
-                labels: ['Communication', 'Development', 'DSA', 'CS Fundamentals', 'CS Fundamentals', 'CS Fundamentals', 'CS Fundamentals', 'CS Fundamentals', 'CS Fundamentals', 'CS Fundamentals'],
-                // labels: interview.topics.map((topic) => topic),
-                datasets: [
-                  {
-                    label: 'Feedback',
-                    data: [dummyFeedBack.communication, dummyFeedBack.development, dummyFeedBack.dsa, dummyFeedBack.csfundamentals, dummyFeedBack.csfundamentals, dummyFeedBack.csfundamentals, dummyFeedBack.csfundamentals, dummyFeedBack.csfundamentals],
-                    backgroundColor: [
-                      'rgba(255, 99, 132, 0.5)',
-                      'rgba(54, 162, 235, 0.5)',
-                      'rgba(255, 206, 86, 0.5)',
-                      'rgba(75, 192, 192, 0.5)',
-                    ],
-                    borderColor: [
-                      'rgba(255, 99, 132, 1)',
-                      'rgba(54, 162, 235, 1)',
-                      'rgba(255, 206, 86, 1)',
-                      'rgba(75, 192, 192, 1)',
-                    ],
-                    borderWidth: 1,
-                    // minBarThickness: 10,
-                    // barThickness: 50,
-                    minBarLength: 2,
-                  },
-                ],
-              }}
-              options={{
-                scales: {
-                  x: {
-                    ticks: {
-                      color: theme === 'dark' ? "white" : "black" // Change x-axis text color
-                    }
-                  },
-                  y: {
-                    ticks: {
-                      color: theme === 'dark' ? "white" : "black" // Change y-axis text color
-                    }
-                  }
-                },
-                plugins: {
-                  legend: {
-                    labels: {
-                      color: theme === 'dark' ? "white" : "black", // Change dataset label color
-                    },
-                  },
-                },
-              }}
-            />
-
-          </div>
-          <div className='flex flex-col justify-center items-center max-h-52 my-10 '>
-            <h1 className='text-2xl -'>Overall Perfomance</h1>
-            <br />
-            <Doughnut
-              data={
-                {
-                  labels: ['Skills', 'Scope of improvement'],
+      )} */}
+        <div>
+          <ProgressBar currentStatus={3} />
+        </div>
+        {dummyFeedBack && (
+          <>
+            <div className="max-h-96 mx-2 my-14  flex justify-center">
+              <Bar
+                data={{
+                  labels: [
+                    "Communication",
+                    "Development",
+                    "DSA",
+                    "CS Fundamentals",
+                    "CS Fundamentals",
+                    "CS Fundamentals",
+                    "CS Fundamentals",
+                    "CS Fundamentals",
+                    "CS Fundamentals",
+                    "CS Fundamentals",
+                  ],
+                  // labels: interview.topics.map((topic) => topic),
                   datasets: [
                     {
-
-                      data: [dummyFeedBack.points, 20 - dummyFeedBack.points],
+                      label: "Feedback",
+                      data: [
+                        dummyFeedBack.communication,
+                        dummyFeedBack.development,
+                        dummyFeedBack.dsa,
+                        dummyFeedBack.csfundamentals,
+                        dummyFeedBack.csfundamentals,
+                        dummyFeedBack.csfundamentals,
+                        dummyFeedBack.csfundamentals,
+                        dummyFeedBack.csfundamentals,
+                      ],
                       backgroundColor: [
-                        'rgba(255, 99, 132, 0.5)',
-                        'rgba(54, 162, 235, 0.5)',
+                        "rgba(255, 99, 132, 0.5)",
+                        "rgba(54, 162, 235, 0.5)",
+                        "rgba(255, 206, 86, 0.5)",
+                        "rgba(75, 192, 192, 0.5)",
                       ],
                       borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
+                        "rgba(255, 99, 132, 1)",
+                        "rgba(54, 162, 235, 1)",
+                        "rgba(255, 206, 86, 1)",
+                        "rgba(75, 192, 192, 1)",
+                      ],
+                      borderWidth: 1,
+                      // minBarThickness: 10,
+                      // barThickness: 50,
+                      minBarLength: 2,
+                    },
+                  ],
+                }}
+                options={{
+                  scales: {
+                    x: {
+                      ticks: {
+                        color: theme === "dark" ? "white" : "black", // Change x-axis text color
+                      },
+                    },
+                    y: {
+                      ticks: {
+                        color: theme === "dark" ? "white" : "black", // Change y-axis text color
+                      },
+                    },
+                  },
+                  plugins: {
+                    legend: {
+                      labels: {
+                        color: theme === "dark" ? "white" : "black", // Change dataset label color
+                      },
+                    },
+                  },
+                }}
+              />
+            </div>
+            <div className="flex flex-col justify-center items-center max-h-52 my-10 ">
+              <h1 className="text-2xl -">Overall Perfomance</h1>
+              <br />
+              <Doughnut
+                data={{
+                  labels: ["Skills", "Scope of improvement"],
+                  datasets: [
+                    {
+                      data: [dummyFeedBack.points, 20 - dummyFeedBack.points],
+                      backgroundColor: [
+                        "rgba(255, 99, 132, 0.5)",
+                        "rgba(54, 162, 235, 0.5)",
+                      ],
+                      borderColor: [
+                        "rgba(255, 99, 132, 1)",
+                        "rgba(54, 162, 235, 1)",
                       ],
                       borderWidth: 1,
                       minBarThickness: 10,
                       barThickness: 50,
                       minBarLength: 2,
-                      labelColor: 'white',
-
-
+                      labelColor: "white",
                     },
                   ],
                 }}
-              options={{
-                plugins: {
-                  legend: {
-                    labels: {
-                      color: theme === 'dark' ? "white" : "black", // Change dataset label color
+                options={{
+                  plugins: {
+                    legend: {
+                      labels: {
+                        color: theme === "dark" ? "white" : "black", // Change dataset label color
+                      },
                     },
                   },
-                },
-              }}
-            />
+                }}
+              />
+            </div>
+
+            <div className="flex flex-col justify-center items-center mb-5">
+              {/* <h1 className='text-3xl my-2 text-blue-500'> Comments on Candidate </h1> */}
+              <l>
+                {dummyFeedBack.notes.map((note, index) => (
+                  <li key={index} className="text-lg my-2">
+                    {" "}
+                    {note}{" "}
+                  </li>
+                ))}
+              </l>
+            </div>
+          </>
+        )}
+
+        {ERROR && (
+          <div className="flex justify-center items-center">
+            <h1 className="text-lg "> Something Went Wrong ! </h1>
+            <br />
+            {/* <p> {Error} </p> */}
           </div>
-
-          <div className='flex flex-col justify-center items-center mb-5'>
-            {/* <h1 className='text-3xl my-2 text-blue-500'> Comments on Candidate </h1> */}
-            <l>
-              {dummyFeedBack.notes.map((note, index) => (
-                <li key={index} className='text-lg my-2'> {note} </li>
-              ))}
-            </l>
-          </div>
-
-        </>
-
-      )}
-
-      {ERROR && (
-        <div className='flex justify-center items-center' >
-          <h1 className='text-lg '> Something Went Wrong !  </h1>
-          <br />
-          {/* <p> {Error} </p> */}
-        </div>
-      )}
-
-
-    </div>
-  )
-}
-
+        )}
+      </div>
+    </>
+  );
+};
 
 export default InterviewDetails;
