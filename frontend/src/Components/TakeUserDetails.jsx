@@ -12,11 +12,11 @@ const TakeUserDetails = (props) => {
         <div className="max-w-lg mx-auto p-3 w-full">
             <form className="flex flex-col gap-4 align-items:center" onSubmit={handleSubmit}>
                 <input type='file' accept='image/*' hidden></input>
-                <div className='relative w-32 h-32 self-center  cursor-pointer shadow-md overflow-hidden rounded-full' >
-                    <img src={profilePic} alt="user" className={`rounded-full w-full h-full object-cover border-8  border-[lightgray] `} />
+                <div className=' border self-center cursor-pointer shadow-md overflow-hidden rounded-xl' >
+                    <img src={profilePic} alt="user" className={` h-32 w-32 sm:max-h-40 sm:w-42 object-cover border-1  border-[lightgray] `} />
                     {imageFileUploadProgress && imageFileUploadProgress < 100 &&
                         <CircularProgressbar
-                            value={imageFileUploadProgress || 0}
+                            value={imageFileUploadProgress||0}
                             text={`${imageFileUploadProgress}%`}
                             strokeWidth={5}
                             styles={{
@@ -24,8 +24,8 @@ const TakeUserDetails = (props) => {
                                     width: '100%',
                                     height: '100%',
                                     position: 'absolute',
-                                    top: 0,
-                                    left: 0,
+                                    top: 1,
+                                    left: 5,
                                 },
                                 path: {
                                     stroke: `rgba(62, 152, 199, ${imageFileUploadProgress / 100
