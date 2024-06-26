@@ -1,35 +1,46 @@
-import { changeApproveStatusOfQue } from "../../controllers/Question/changeApproveStatusOfQue.js"
-import { createQuestion } from "../../controllers/Question/createQuestion.js"
-import { deleteQuestion } from "../../controllers/Question/deleteQuestion.js"
-import { downVoteQuestion } from "../../controllers/Question/downVoteQuestion.js"
-import { getQuestionById } from "../../controllers/Question/getQuestionById.js"
-import { getQuestions } from "../../controllers/Question/getQuestions.js"
-import { upVoteQuestion } from "../../controllers/Question/upVoteQuestion.js"
-import { updateQuestion } from "../../controllers/Question/updateQuestion.js"
-import { checkRole } from "../../middlewares/checkRole.js"
+import { changeApproveStatusOfQue } from '../../controllers/Question/changeApproveStatusOfQue.js'
+import { changeVisibleStatusOfQue } from '../../controllers/Question/changeVisibleStatusOfQue.js'
+import { createQuestion } from '../../controllers/Question/createQuestion.js'
+import { deleteQuestion } from '../../controllers/Question/deleteQuestion.js'
+import { downVoteQuestion } from '../../controllers/Question/downVoteQuestion.js'
+import { getQuestionById } from '../../controllers/Question/getQuestionById.js'
+import { getQuestions } from '../../controllers/Question/getQuestions.js'
+import { upVoteQuestion } from '../../controllers/Question/upVoteQuestion.js'
+import { updateQuestion } from '../../controllers/Question/updateQuestion.js'
+import { checkRole } from '../../middlewares/checkRole.js'
 
-const queries = {
-    tempQueQr : () => {return "RADHE"},
-}
+const queries = {}
 
 const mutations = {
-    createQuestion : (_, payload, context) => checkRole({_, payload, context}, createQuestion),
+  createQuestion: (_, payload, context) =>
+    checkRole({ _, payload, context }, createQuestion),
 
-    getQuestionById : (_, payload, context) => checkRole({_, payload, context}, getQuestionById),
-    
-    getQuestions : (_, payload) => getQuestions(_, payload), 
+  getQuestionById: (_, payload, context) =>
+    checkRole({ _, payload, context }, getQuestionById),
 
-    upVoteQuestion : (_, payload, context) => checkRole({_, payload, context}, upVoteQuestion),
+  getQuestions: (_, payload) => getQuestions(_, payload),
 
-    downVoteQuestion : (_, payload, context) => checkRole({_, payload, context}, downVoteQuestion),
+  upVoteQuestion: (_, payload, context) =>
+    checkRole({ _, payload, context }, upVoteQuestion),
 
-    changeApproveStatusOfQue : (_, payload, context) => checkRole({_, payload, context}, changeApproveStatusOfQue),
+  downVoteQuestion: (_, payload, context) =>
+    checkRole({ _, payload, context }, downVoteQuestion),
 
-    deleteQuestion : (_, payload, context) => checkRole({_, payload, context}, deleteQuestion),
+  changeApproveStatusOfQue: (_, payload, context) =>
+    checkRole({ _, payload, context }, changeApproveStatusOfQue),
 
-    updateQuestion : (_, payload, context) => checkRole({_, payload, context}, updateQuestion),
+  changeVisibleStatusOfQue: (_, payload, context) =>
+    checkRole({ _, payload, context }, changeVisibleStatusOfQue),
 
-    tempQuestion : (_, payload) => {return payload.tempVal}
+  deleteQuestion: (_, payload, context) =>
+    checkRole({ _, payload, context }, deleteQuestion),
+
+  updateQuestion: (_, payload, context) =>
+    checkRole({ _, payload, context }, updateQuestion),
+
+  tempQuestion: (_, payload) => {
+    return payload.tempVal
+  },
 }
 
-export const resolvers = {queries , mutations}
+export const resolvers = { queries, mutations }

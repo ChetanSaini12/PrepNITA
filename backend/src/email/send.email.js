@@ -6,7 +6,8 @@ async function sendEmail(receiver, message) {
       throw new Error('Receiver and message are required')
       return
     }
-
+    console.log("RECEIVER : ", receiver)
+    console.log("MESSAGE : ", JSON.stringify(message))
     const { transporter, email } = await createTransporter()
 
     const mailData = {
@@ -16,7 +17,7 @@ async function sendEmail(receiver, message) {
       template: message.template,
       context: message.context,
     }
-
+    console.log('MAILDATA : ', JSON.stringify(mailData));
     await transporter.sendMail(mailData)
   } catch (error) {
     throw new Error(`Error recieved while sending mail : ${error}`)

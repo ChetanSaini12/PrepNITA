@@ -1,6 +1,8 @@
 import { prisma } from '../../../prisma/index.js'
 import { GraphQLError } from 'graphql'
 import { interviewNameAdd } from './interviewNameHelper.js'
+import { abstractDateTime } from '../../utils/DateTime.js';
+import sendEmail from '../../email/send.email.js';
 
 export const assignInterview = async (_, payload, context) => {
   try {
@@ -16,8 +18,45 @@ export const assignInterview = async (_, payload, context) => {
         },
       })
 
-      interview = interviewNameAdd(interview)
-      console.log('Assigned Interview : ', interview)
+      interview = await interviewNameAdd(interview)
+      console.log('Assigned Interview : ', JSON.stringify(interview))
+
+
+      // Date and Time from interview.startTime
+      const dateTime = abstractDateTime(interview.startTime);
+      const interviewDate = dateTime.date
+      const interviewTime = dateTime.time
+      // Send Email to both 
+      const intervieweeMessageBody = {
+        subject: 'PrepNITA : Interview Assignment',
+        template: './Interview/assignInterview_interviewee',
+        context: {
+          intervieweeName : interview.intervieweeName,
+          interviewerName : interview.interviewerName,
+          interviewerEmail : interview.interviewerEmail,
+          interviewDate,
+          interviewTime,
+          interviewDuration : interview.duration,
+          topics: interview.topics,
+        }, 
+      }
+      const interviewerMessageBody = {
+        subject: 'PrepNITA : Interview Assignment',
+        template: './Interview/assignInterview_interviewer',
+        context: {
+          interviewerName : interview.interviewerName,
+          intervieweeName : interview.intervieweeName,
+          intervieweeEmail : interview.intervieweeEmail,
+          interviewDate,
+          interviewTime,
+          interviewDuration : interview.duration,
+          topics: interview.topics,
+        },
+      }
+
+      if(interview.intervieweeEmail) await sendEmail(interview.intervieweeEmail, intervieweeMessageBody)
+      if(interview.interviewerEmail) await sendEmail(interview.interviewerEmail, interviewerMessageBody)
+        console.log('Email Sent Successfully');
       return interview
     } else {
       throw new GraphQLError('User is not authorized!!', {

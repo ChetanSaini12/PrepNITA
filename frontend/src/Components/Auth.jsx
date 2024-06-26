@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { VerifyToken } from "../utils/verifyToken";
-import { setLoading, LogoutUser } from "../app/user/userSlice";
-import { setContext } from "@apollo/client/link/context";
+import { setLoading, LogoutUser, setReadyStates } from "../app/user/userSlice";
+// import { setContext } from "@apollo/client/link/context";
 
 export const Auth = ({ children }) => {
   const dispatch = useDispatch();
@@ -10,15 +10,16 @@ export const Auth = ({ children }) => {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    const checkToken = async () => {
+    (async () => {
       console.log("Enter in Auth component");
+      console.log('LoggedIn : ', loggedIn);
       try {
-        console.log('LoggedIn : ', loggedIn);
         if ((!loggedIn && token)) {
           console.log('YHA token hai but login nhi h ');
-          VerifyToken(dispatch).then((response) => {
-            console.log("response in Auth:", response);
 
+          try {
+            const response = await VerifyToken(dispatch);
+            console.log("response in Auth:", response);
             if (response.verified) {
               dispatch(setLoading(false));
               // const authLink = setContext(async (_, { headers }) => {
@@ -34,32 +35,34 @@ export const Auth = ({ children }) => {
               // Do nothing, token is verified
             } else {
               dispatch(setLoading(false));
-              dispatch(LogoutUser()); // Assuming you have a LogoutUser action
+              dispatch(setReadyStates(true));
+              return dispatch(LogoutUser()); // Assuming you have a LogoutUser action
             }
-          })
-            .catch((error) => {
-              console.log("Error in Auth:", error);
-              dispatch(setLoading(false));
-              dispatch(LogoutUser());
-            })
 
+          } catch (error) {
+            console.log("error in auth try catch", error);
+            dispatch(setLoading(false));
+            dispatch(setReadyStates(true));
+            return dispatch(LogoutUser());
+          }
         }
         else if (!token) {
-          dispatch(LogoutUser)
           console.log('TOKEN IS NOT PRESENT!');
+          dispatch(setReadyStates(true));
+          dispatch(LogoutUser)
         }
         else {
           console.log("Already logged in");
+          dispatch(setReadyStates(true));
         }
       } catch (error) {
         console.log("Error in Auth try catch:", error.message);
         dispatch(setLoading(false));
-        dispatch(LogoutUser());
+        dispatch(setReadyStates(true));
+        return dispatch(LogoutUser());
       }
-    };
-
-    checkToken();
-  }, [loggedIn,id]); // Added dependencies for useEffect
+    })();
+  }, [loggedIn, id]); // Added dependencies for useEffect
 
   return <>{children}</>;
 };

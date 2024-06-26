@@ -60,7 +60,8 @@ model UserContribution {
   articles           Article[]
   interview          Interview[]
   questions          Question[]
-  quizes             Quiz?
+  quizes             Quiz[]
+  experiences        Experience[]
   contributionUser   User        @relation(fields: [userId], references: [id], map: "user_contribution_user_fk")
 }
 
@@ -80,7 +81,7 @@ model Question {
   createdBy   Int
   tags        String[]
   isApproved  Boolean          @default(false)
-  isVisibile  Boolean          @default(false)
+  isVisible   Boolean          @default(false)
   upvotes     Int              @default(0)
   downvotes   Int              @default(0)
   links       QueAddOnLink[]
@@ -97,12 +98,13 @@ model QueAddOnLink {
 
 model Quiz {
   id          Int              @id @unique @default(autoincrement())
-  createdBy   Int              @unique
+  createdBy   Int              
   title       String
   description String?
   startTime   DateTime
   endTime     DateTime
-  isVisibile  Boolean          @default(false)
+  isApproved  Boolean          @default(false)
+  isVisible  Boolean          @default(false)
   creator     UserContribution @relation(fields: [createdBy], references: [id], map: "quiz_user_contribution_fk")
   attendees   QuizAttendance[]
   questions   QuizQuestion[]
@@ -113,6 +115,7 @@ model QuizAttendance {
   quizId   Int
   userId   Int
   score    Int
+  response Int[]
   attendee UserTraining @relation(fields: [userId], references: [id], map: "quiz_attendence_traingin_fk")
   quiz     Quiz         @relation(fields: [quizId], references: [id], map: "quiz_qttendence_quiz_fk")
 }
@@ -159,6 +162,59 @@ model Feedback {
   notes          String[]
   points         Int       @default(0)
   interview      Interview @relation(fields: [interviewId], references: [id], map: "feedback_interview_fk")
+}
+
+model Experience {
+  id             Int       @id @unique @default(autoincrement())
+  company        String       
+  role           String       
+  anonymous      Boolean   @default(false)
+  description    String       
+  createdAt      DateTime
+  createdBy      Int
+  upvotes        Int       @default(0)
+  downvotes      Int       @default(0)
+  comments       ExpComment[]
+  creator        UserContribution? @relation(fields: [createdBy], references: [id], map: "exp_creator_user_contribution_fk")
+}
+
+model ExpComment {
+  id             Int       @id @unique @default(autoincrement())
+  experienceId   Int
+  description    String
+  reply          ExpReply[]
+  commentorId    Int
+  likes          Int      @default(0)
+  experience     Experience @relation(fields: [experienceId], references: [id], map : "comment_experience_fk" )
+}
+
+model ExpReply {
+  id             Int       @id @unique @default(autoincrement())
+  expcommentId   Int
+  description    String
+  replierId      Int
+  likes          Int    @default(0)
+  comment        ExpComment @relation(fields: [expcommentId], references: [id], map : "exp_reply_comment_fk")
+}
+
+model UserVotes {
+  id             Int        @id @unique @default(autoincrement())
+  userId         Int
+  areaId         Int
+  type           VoteType
+  area           VoteArea
+}
+
+enum VoteType {
+  LIKE
+  DISLIKE
+}
+
+enum VoteArea {
+  QUESTION
+  EXPERIENCE
+  EXP_COMMENT
+  EXP_REPLY
 }
 
 enum Roles {

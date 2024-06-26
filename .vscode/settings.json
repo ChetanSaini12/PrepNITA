@@ -1,5 +1,7 @@
 {
     "files.autoSave": "afterDelay",
     "files.autoSaveDelay": 1,
-    "accessibility.signals.sounds.volume": 0
+    "accessibility.signalOptions": {
+        "volume": 0
+    }
 }

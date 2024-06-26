@@ -1,4 +1,4 @@
-# MindSet
+# PrepNITA
 
 ## Table of Contents
 

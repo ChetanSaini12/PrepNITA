@@ -1,11 +1,11 @@
 export const mutations = `#graphql
-    getInterview : [Interview]
+    getInterview(intervieweeId : Int, interviewerId : Int) : [Interview]
 
     getInterviewById(interviewId : Int!) : Interview
 
     createInterview(Interview : InterviewInput) : Interview
     
-    updateInterview(interviewId : Int!) : Interview
+    updateInterview(interviewId : Int!, Interview : InterviewInput) : Interview
 
     deleteInterview(interviewId : Int!) : String
 
@@ -13,5 +13,5 @@ export const mutations = `#graphql
 
     giveFeedback(Feedback : FeedbackInput) : Feedback
 
-    revokeInterview(Interview : InterviewInput) : Interview
+    revokeInterview(interviewId : Int!) : Interview
 `

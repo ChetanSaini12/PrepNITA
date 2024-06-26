@@ -14,7 +14,10 @@ function Header() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { theme } = useSelector(state => state.theme)
-    const { loggedIn } = useSelector((state) => state.user);
+    const { loggedIn,id } = useSelector((state) => state.user);
+
+    
+    console.log("user state at header ", loggedIn,id);
 
     const logoutHandler = () => {
         dispatch(LogoutUser());
@@ -30,10 +33,10 @@ function Header() {
 
 
     return (
-        <Navbar>
+        <Navbar className='w-full z-10 top-0 border-b-2 dark:bg-gray-800'>
             <Link to="/" className='font-bold text-lg flex-col '>
             
-                <span className='px-2 py-1 bg-gradient-to-r from from-indigo-500  via-purple-500 to-pink-500 rounded-lg text-white text-lg font-bold ab'>PreP</span> NITA
+                <span className='px-2 py-1 bg-gradient-to-r from from-cyan-400  via-cyan-500 to-cyan-900 rounded-lg text-white text-lg font-bold ab'>PreP</span> NITA
             </Link>
             <div className='flex gap-2 md:order-2'>
                 <Button className='w-12 h-10 border-spacing-2 sm:inline' color='grey' pill onClick={() => {
@@ -56,27 +59,31 @@ function Header() {
             </div>
             <Navbar.Collapse>
                 {/* <Navbar.Link active={path==='/'}  as={'div'}> */}
-                <Navbar.Link className={path === '/' ? "nav-links-active" : "nav-links"} as={'div'}>
+                <Navbar.Link active={path==='/'} as={'div'}>
                     <Link to='/'>Home</Link>
                 </Navbar.Link>
                 {/* <Navbar.Link active={path==='/quizes'} as={'div'}> */}
-                <Navbar.Link className={path === '/quizes' ? "nav-links-active" : "nav-links"} as={'div'}>
+                <Navbar.Link active={path==='/quizes'} as={'div'}>
                     <Link to='/quizes'>Quizes</Link>
                 </Navbar.Link>
+                <Navbar.Link active={path==='/questions'} as={'div'}>
+                    <Link to='/questions'>Questions</Link>
+                </Navbar.Link>
                 {/* <Navbar.Link active={path==='/dashboard'} as={'div'}> */}
-                <Navbar.Link className={path === '/dashboard' ? "nav-links-active" : "nav-links"} as={'div'}>
+                <Navbar.Link active={path === '/dashboard'} as={'div'}>
                     <Link to='/dashboard'>Dashboard</Link>
                 </Navbar.Link>
                 {/* <Navbar.Link active={path==='/interview'} as={'div'}> */}
-                <Navbar.Link className={path === '/interview' ? "nav-links-active" : "nav-links"} as={'div'}>
+                <Navbar.Link active={path === '/interview'} as={'div'}>
                     <Link to='/interview'>Interviews</Link>
                 </Navbar.Link>
                 {/* <Navbar.Link active={path==='/discuss'} as={'div'}> */}
-                <Navbar.Link className={path === '/discuss' ? "nav-links-active" : "nav-links"} as={'div'}>
-                    <Link to='/discuss'>Discuss</Link>
+                <Navbar.Link active={path === '/contribute' } as={'div'}>
+                    <Link to='/contribute'>Contribute</Link>
                 </Navbar.Link>
-                <Navbar.Link className={path === '/profile' ? "nav-links-active" : "nav-links"} as={'div'}>
-                    <Link to='/profile'>Profile</Link>
+                <Navbar.Link active={path === '/profile'} as={'div'}>
+                    {/* <Link to={`/profile/${id}`}>Profile</Link> */}
+                    <Link to={`/profile`}>Profile</Link>
                 </Navbar.Link>
 
             </Navbar.Collapse>
