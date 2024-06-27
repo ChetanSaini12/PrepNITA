@@ -149,7 +149,7 @@ const InterviewDetails = () => {
                     ? interview.intervieweeName
                     : "N/A"}
                 </h1>
-                <div className="border-2 bg-teal-700 border-gray-500 rounded p-2 flex flex-col justify-center items-center gap-2 h-20">
+                <div className="border-2 bg-teal-700 border-gray-500 text-white rounded p-2 flex flex-col justify-center items-center gap-2 h-20">
                   <div className="flex flex-row gap-2 justify-center">
                     <span>
                       {moment(interview.startTime).format("DD-MM-YY")}
@@ -169,7 +169,7 @@ const InterviewDetails = () => {
                     ? interview.interviewerName
                     : "N/A"}
                 </h1>
-                <div className="border-2 bg-teal-700 border-gray-500 rounded p-2 flex flex-col justify-center items-center gap-2 h-20">
+                <div className="border-2 bg-teal-700 border-gray-500 text-white rounded p-2 flex flex-col justify-center items-center gap-2 h-20">
                   <div>Duration : </div>
                   <div className="text-xl">{interview.duration} Minutes</div>
                 </div>
