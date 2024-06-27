@@ -14,6 +14,7 @@ import animationData from '../../src/lotties/startup.json';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import toast from "react-hot-toast";
 import TakeUserDetails from "../Components/TakeUserDetails";
+import { useDropzone } from "react-dropzone"
 
 function Onboarding() {
   const navigate = useNavigate();
@@ -34,7 +35,7 @@ function Onboarding() {
         if (response.authentication.isBoarded) {
           dispatch(setLoading(false));
           // console.log("1");
-          navigate('/');
+          // navigate('/');
         }
       } catch (error) {
         console.log("Error in Auth try catch:", error);
