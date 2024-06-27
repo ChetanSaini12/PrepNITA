@@ -23,19 +23,15 @@ const InterviewDetails = () => {
   const { isLoading } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
   const [fetch, setFetch] = useState(false);
+  const [currentStatus, setCurrentStatus] = useState(1);
   // console.log("theme", theme);
   const dispatch = useDispatch();
 
   const dummyFeedBack = {
-    communication: 4,
-    development: 3,
-    dsa: 2,
-    csfundamentals: 5,
-    csfundamentals: 4,
-    csfundamentals: 2,
-    csfundamentals: 3,
-    csfundamentals: 5,
-    csfundamentals: 1,
+    communication : 4,
+    development : 3,
+    dsa : 2,
+    csfundamentals : 1,
 
     notes: [
       "Good communication skills",
@@ -87,6 +83,31 @@ const InterviewDetails = () => {
     })();
   }, [id, fetch]);
 
+
+  useEffect(() => {
+    if (!interview) return;
+
+    if (interview.interviewerName) {
+      setCurrentStatus(2);
+    } else if (interview.startTime && interview.duration) {
+      const startTime = moment(interview.startTime);
+      const endTime = moment(interview.startTime).add(interview.duration, 'minutes');
+      const now = moment();
+
+      if (now.isBetween(startTime, endTime)) {
+        setCurrentStatus(3);
+      } else if (interview.isCompleted) {
+        setCurrentStatus(4);
+      } else if (interview.feedback) {
+        setCurrentStatus(5);
+      } else {
+        setCurrentStatus(1);
+      }
+    } else {
+      setCurrentStatus(1);
+    }
+  }, [interview]);
+
   const assignInterviewHandler = async (e) => {
     e.preventDefault();
     const userConfirmed = window.confirm("Do you want to take the interview?");
@@ -119,7 +140,7 @@ const InterviewDetails = () => {
         <div className="w-full p-5">
           <h1 className="text-4xl"> Intrerview Id : #{id}</h1>
           <hr></hr>
-          <div className="m-4">
+          <div className="m-4 flex flex-col gap-4">
             <div className="flex flex-row justify-between ">
               <div>
                 <p className="border-b-2 w-fit">Interviewee Name : </p>
@@ -128,7 +149,7 @@ const InterviewDetails = () => {
                     ? interview.intervieweeName
                     : "N/A"}
                 </h1>
-                <div className="border-2 border-gray-500 rounded p-2">
+                <div className="border-2 bg-teal-700 border-gray-500 rounded p-2 flex flex-col justify-center items-center gap-2 h-20">
                   <div className="flex flex-row gap-2 justify-center">
                     <span>
                       {moment(interview.startTime).format("DD-MM-YY")}
@@ -136,7 +157,7 @@ const InterviewDetails = () => {
                     <span>|</span>
                     <span>{moment(interview.startTime).format("ddd")}</span>
                   </div>
-                  <div>
+                  <div className="flex justify-center w-full text-xl">
                     <span>{moment(interview.startTime).format("h:mm A")}</span>
                   </div>
                 </div>
@@ -148,12 +169,24 @@ const InterviewDetails = () => {
                     ? interview.interviewerName
                     : "N/A"}
                 </h1>
-                <div>{interview.duration} minutes</div>
+                <div className="border-2 bg-teal-700 border-gray-500 rounded p-2 flex flex-col justify-center items-center gap-2 h-20">
+                  <div>Duration : </div>
+                  <div className="text-xl">{interview.duration} Minutes</div>
+                </div>
               </div>
             </div>
-            <div>
-              <p>Topics : </p>
-              <h1>{interview.topics?.join(", ")}</h1>
+            <div className="">
+              <p className="text-lg font-semibold mb-2">Topics:</p>
+              <div className="flex flex-wrap gap-2">
+                {interview.topics?.map((topic, index) => (
+                  <span
+                    key={index}
+                    className="bg-teal-700 text-white text-sm font-medium py-1 px-3 rounded-full"
+                  >
+                    {topic}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -207,7 +240,7 @@ const InterviewDetails = () => {
         </div>
       )} */}
         <div>
-          <ProgressBar currentStatus={3} />
+          <ProgressBar currentStatus={currentStatus} />
         </div>
         {dummyFeedBack && (
           <>
@@ -219,12 +252,6 @@ const InterviewDetails = () => {
                     "Development",
                     "DSA",
                     "CS Fundamentals",
-                    "CS Fundamentals",
-                    "CS Fundamentals",
-                    "CS Fundamentals",
-                    "CS Fundamentals",
-                    "CS Fundamentals",
-                    "CS Fundamentals",
                   ],
                   // labels: interview.topics.map((topic) => topic),
                   datasets: [
@@ -234,10 +261,6 @@ const InterviewDetails = () => {
                         dummyFeedBack.communication,
                         dummyFeedBack.development,
                         dummyFeedBack.dsa,
-                        dummyFeedBack.csfundamentals,
-                        dummyFeedBack.csfundamentals,
-                        dummyFeedBack.csfundamentals,
-                        dummyFeedBack.csfundamentals,
                         dummyFeedBack.csfundamentals,
                       ],
                       backgroundColor: [
