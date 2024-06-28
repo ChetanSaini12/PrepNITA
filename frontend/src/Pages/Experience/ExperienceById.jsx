@@ -10,7 +10,7 @@ import { BiUpvote, BiDownvote, BiShare } from "react-icons/bi";
 import { FaUserCircle } from "react-icons/fa";
 import { IoIosArrowBack } from "react-icons/io";
 import { LiaCommentSolid } from "react-icons/lia";
-import moment from "moment"
+import moment from "moment";
 
 
 
@@ -190,12 +190,12 @@ export const ExperienceById = () => {
                     {/* //Experience details */}
                     <div className=' flex flex-col sm:flex-row gap-2 sm:gap-2 justify-start w-full px-2 sm:px-0'>
                         {/* //left part upVote and down VOte  */}
-                        <div className='sm:max-w-40 mt-3 px-1 sm:px-4  flex sm:flex-col gap-2 sm:gap-0 justify-start items-start '>
+                        <div className='sm:max-w-40 mt-3  sm:px-4  flex sm:flex-col gap-3 sm:gap-0 justify-start items-center sm:items-start '>
                             <button className='flex justify-center items-center gap-1 mr-2 sm:mr-0 hover:text-red-500'>
                                 <IoIosArrowBack />
                                 <h2 className='border-r border-gray-300 pr-1 '>Back</h2>
                             </button>
-                            <div className=' sm:mt-8 flex sm:flex-col gap-2 '>
+                            <div className=' sm:mt-8 flex sm:flex-col gap-2 items-center '>
                                 <button className='flex justify-center p-1 rounded-md hover:text-red-500 bg-gray-300 dark:bg-gray-700'>
                                     <BiUpvote size={20} />
                                 </button>
@@ -274,16 +274,16 @@ export const ExperienceById = () => {
                                     {/* // COMMENT FUNCTIONS   */}
                                     <div className='text-xs  pl-10 py-1 flex gap-5 items-center justify-start'>
                                         <div className='flex gap-2 justify-start items-center'>
-                                            <button className='hover:text-red-500'><BiUpvote /></button>
+                                            <button className='hover:text-red-500'><BiUpvote size={13} /></button>
                                             <h2>{comment.likes}</h2>
-                                            <button className='hover:text-red-500 pt-0.5'><BiDownvote /></button>
+                                            <button className='hover:text-red-500 pt-0.5'><BiDownvote size={13} /></button>
                                         </div>
                                         <div>
                                             {comment.reply?.length > 0 && (
                                                 <button className='flex gap-1 items-center hover:text-red-500'
                                                     onClick={() => handleShowReply(comment.id)}
                                                 >
-                                                    <LiaCommentSolid className='' />
+                                                    <LiaCommentSolid size={13} className='' />
                                                     <h2>{!showReply[comment.id] ? "Show reply" : "Hide reply"}</h2>
                                                 </button>
 
@@ -293,7 +293,7 @@ export const ExperienceById = () => {
                                             <button className='flex items-center gap-1 hover:text-red-500'
                                                 onClick={() => handleUserWantToReply(comment.id)}
                                             >
-                                                <BiShare />
+                                                <BiShare size={13} />
                                                 <h2>Reply</h2>
                                             </button>
                                         </div>
