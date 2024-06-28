@@ -10,6 +10,7 @@ import { BiUpvote, BiDownvote, BiShare } from "react-icons/bi";
 import { FaUserCircle } from "react-icons/fa";
 import { IoIosArrowBack } from "react-icons/io";
 import { LiaCommentSolid } from "react-icons/lia";
+import moment from "moment"
 
 
 
@@ -152,7 +153,27 @@ export const ExperienceById = () => {
         ))
     };
 
+    const calculateReadingTime = (text) => {
+        if (typeof text !== 'string') {
+            throw new Error('Input must be a string');
+        }
+    
+        const wordsPerMinute = 200;
+        const words = text?.split(/\s+/).length; // Split text by spaces to get word count
+        const totalMinutes = words / wordsPerMinute;
+        const minutes = Math.floor(totalMinutes);
+        const seconds = Math.round((totalMinutes - minutes) * 60);
+    
+        // Round to the nearest minute
+        const roundedMinutes = seconds <= 30 ? minutes : minutes + 1;
+    
+        return `${roundedMinutes} min read`;
+    }
 
+    const formatDate = (dateString) => {
+        return moment(dateString).format('DD MMMM YYYY');
+    }
+    
 
     if (isLoading || !ready) {
         return <Loader />;
@@ -163,7 +184,7 @@ export const ExperienceById = () => {
     }
 
     return (
-        <div className='flex flex-col items-center mb-5 dark:mt-0.5 mx-1 gap-5 min-w-screen max-w-screen min-h-screen bg-gray-200 dark:bg-gray-800' >
+        <div className='flex flex-col items-center mb-5 dark:mt-0.5 mx-1 gap-5 min-w-screen max-w-screen min-h-screen bg-gray-200 dark:bg-gray-800 bg-opacity-75 dark:bg-opacity-75' >
             {experienceData && (
                 <div className='flex flex-col gap-5'>
                     {/* //Experience details */}
@@ -195,18 +216,25 @@ export const ExperienceById = () => {
                             </div>
                             <div className=' border-t border-gray-300 dark:border-gray-700'></div>
                             {/* //User details */}
-                            <div className='flex gap-2'>
-                                <div>
-                                    <FaUserCircle size={30} />
+                            <div className='flex flex-row justify-between items-center'>
+                                <div className='flex gap-2'>
+                                    <div>
+                                        <FaUserCircle size={30} />
+                                    </div>
+                                    {experienceData.anonymous && (
+                                        <h3 className=' flex items-center'>Anonymous User</h3>
+                                    )}
+                                    {!experienceData.anonymous && (
+                                        <button className='text-md sm:lg hover:underline'>
+                                            {experienceData.creatorName}
+                                        </button>
+                                    )}
                                 </div>
-                                {experienceData.anonymous && (
-                                    <h3 className=' flex items-center'>Anonymous User</h3>
-                                )}
-                                {!experienceData.anonymous && (
-                                    <button className='text-md sm:lg hover:underline'>
-                                        {experienceData.creatorName}
-                                    </button>
-                                )}
+                                <div className='flex gap-2 text-slate-400'>
+                                    <div>
+                                        {calculateReadingTime(experienceData.description)} : {formatDate(experienceData.createdAt)}
+                                    </div>
+                                </div>
                             </div>
                             {/* //description */}
                             <div className=''>
