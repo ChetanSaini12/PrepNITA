@@ -77,6 +77,9 @@ function Header() {
                 <Navbar.Link active={path === '/interview'} as={'div'}>
                     <Link to='/interview'>Interviews</Link>
                 </Navbar.Link>
+                <Navbar.Link active={path === '/experience'} as={'div'}>
+                    <Link to='/experience'>Experience</Link>
+                </Navbar.Link>
                 {/* <Navbar.Link active={path==='/discuss'} as={'div'}> */}
                 <Navbar.Link active={path === '/contribute' } as={'div'}>
                     <Link to='/contribute'>Contribute</Link>
