@@ -169,10 +169,10 @@ export const AllExperience = () => {
         <div className='flex flex-col items-center mb-5 mx-1 gap-5 min-w-screen max-w-screen min-h-screen' >
             <h1 className='text-3xl font-bold'>All Experiences</h1>
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5 text-wrap'>
-                {ready && experienceData.length === 0 && <h1 className='text-2xl font-semibold'>No experiences to show</h1>}
-                {experienceData && experienceData.map((exp, index) => {
+                {ready && experienceData?.length === 0 && <h1 className='text-2xl font-semibold'>No experiences to show</h1>}
+                {experienceData && experienceData?.map((exp, index) => {
                     return (
-                        <div key={experienceData.id} className="mx-2 bg-gray-200 dark:bg-gray-800 rounded-lg shadow-md py-3 px-5 md:px-6 md:py-4 hover:shadow-lg hover:bg-gray-300
+                        <div key={experienceData?.id} className="mx-2 bg-gray-200 dark:bg-gray-800 rounded-lg shadow-md py-3 px-5 md:px-6 md:py-4 hover:shadow-lg hover:bg-gray-300
                         dark:hover:bg-gray-700 transition duration-300 min-w-72 md:min-w-80  min-h-36">
                             <h1 className='text-lg sm:text-2xl font-semibold'>{exp.company}</h1>
                             <h2 className='text-md sm:text-lg '> Role: {exp.role}</h2>
