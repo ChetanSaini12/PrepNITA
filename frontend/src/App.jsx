@@ -32,6 +32,8 @@ import TextEditor from "./Components/sampleTextEditor.jsx";
 import CreateExperience from "./Pages/Contribute/CreateExperience.jsx";
 import RoleManagement from "./Pages/UserPages/RoleManagement.jsx";
 import MyQuizes from "./Pages/Quiz/MyQuizes.jsx";
+import { AllExperience } from "./Pages/Experience/AllExperience.jsx";
+import { ExperienceById } from "./Pages/Experience/ExperienceById.jsx";
 
 function App() {
   const { theme } = useSelector((state) => state.theme);
@@ -86,6 +88,10 @@ function App() {
               element={<AdminInterview />}
             ></Route>
             <Route path="/interview/:id" element={<InterviewDetail />}></Route>
+
+            <Route path="/experience" element={<AllExperience/>}></Route>
+            <Route path="/experience/:id" element={<ExperienceById/>}></Route>
+
             <Route path="/contribute" element={<Contribute />}></Route>
             <Route path="/texted" element={<TextEditor />}></Route>
             <Route path="/notFound" element={<PageNotFound />}></Route>
