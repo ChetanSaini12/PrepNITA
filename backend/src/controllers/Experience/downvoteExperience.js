@@ -5,21 +5,85 @@ import { addNameExp } from './addnameExp.js'
 export const downvoteExperience = async (_, payload, context) => {
   try {
     if (context.isUser) {
-      let experience = await prisma.experience.update({
+      const voteEntry = await prisma.userVotes.findFirst({
         where: {
-          id: payload.id,
+          userId: context.userId,
+          area: 'EXPERIENCE',
+          areaId: payload.id,
         },
-        data: {
-          downvotes: {
-            increment: 1,
-          },
-        },
-        include : {
-          comments : true
-        }
       })
-      experience = addNameExp(experience)
-      return experience
+      if (voteEntry) {
+        if (voteEntry.type === 'DISLIKE') {
+          // delete voteEntry, decrement downvote count
+          await prisma.userVotes.delete({ where: { id: voteEntry.id } })
+          let experience = await prisma.experience.update({
+            where: {
+              id: payload.id,
+            },
+            data: {
+              downvotes: {
+                decrement: 1,
+              },
+            },
+            include: {
+              comments: true,
+            },
+          })
+          experience = addNameExp(experience)
+          return experience
+        } else {
+          await prisma.userVotes.update({
+            where: {
+              id: voteEntry.id,
+            },
+            data: {
+              type: 'DISLIKE',
+            },
+          })
+          let experience = await prisma.experience.update({
+            where: {
+              id: payload.id,
+            },
+            data: {
+              downvotes: {
+                increment: 1,
+              },
+              upvotes: {
+                decrement: 1,
+              },
+            },
+            include: {
+              comments: true,
+            },
+          })
+          experience = addNameExp(experience)
+          return experience
+        }
+      } else {
+        await prisma.userVotes.create({
+          data: {
+            userId: context.userId,
+            area: 'EXPERIENCE',
+            areaId: payload.id,
+            type: 'DISLIKE',
+          },
+        })
+        let experience = await prisma.experience.update({
+          where: {
+            id: payload.id,
+          },
+          data: {
+            downvotes: {
+              increment: 1,
+            },
+          },
+          include: {
+            comments: true,
+          },
+        })
+        experience = addNameExp(experience)
+        return experience
+      }
     } else {
       throw new GraphQLError('You are not authorised user!!', {
         extensions: {
@@ -31,7 +95,8 @@ export const downvoteExperience = async (_, payload, context) => {
     if (
       error &&
       error.extensions &&
-      error.extensions.code === 'USER_IS_NOT_AUTHORISED'
+      (error.extensions.code === 'USER_IS_NOT_AUTHORISED' ||
+        error.extensions.code === 'ALREADY_DOWNVOTED')
     ) {
       throw error
     }
