@@ -17,6 +17,9 @@ export const addCommentExp = async (_, payload, context) => {
           experienceId: payload.Comment.experienceId,
           commentorId: context.userId,
         },
+        include : {
+          reply : true
+        }
       })
       expComment = addUserName(expComment)
       return expComment
