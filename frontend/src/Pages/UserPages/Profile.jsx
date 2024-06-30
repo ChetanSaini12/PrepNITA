@@ -1,23 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Loader } from '../Loader';
-import { useDispatch, useSelector } from 'react-redux';
-import { setLoading } from '../../app/user/userSlice';
-import toast from 'react-hot-toast';
-import { Alert, Spinner, Button, Label, TextInput } from 'flowbite-react';
-import { Link } from 'react-router-dom';
-import OAuth from '../../Components/OAuth';
-import Lottie from 'react-lottie';
-import animationData from '../../lotties/startup.json';
-import { useMutation, useQuery } from '@apollo/client';
-import MyApolloProvider from '../../index';
-import { GET_USER_FOR_PROFILE, GET_USER_STATUS, GET_USER_STATUS_WITH_ALL_DETAILS } from '../../gqlOperatons/User/queries';
-import { VerifyToken } from '../../utils/verifyToken';
-import { CircularProgressbar } from 'react-circular-progressbar';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Loader } from "../Loader";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoading } from "../../app/user/userSlice";
+import toast from "react-hot-toast";
+import { Alert, Spinner, Button, Label, TextInput } from "flowbite-react";
+import { Link } from "react-router-dom";
+import OAuth from "../../Components/OAuth";
+import Lottie from "react-lottie";
+import animationData from "../../lotties/startup.json";
+import { useMutation, useQuery } from "@apollo/client";
+import MyApolloProvider from "../../index";
+import {
+  GET_USER_FOR_PROFILE,
+  GET_USER_STATUS,
+  GET_USER_STATUS_WITH_ALL_DETAILS,
+} from "../../gqlOperatons/User/queries";
+import { VerifyToken } from "../../utils/verifyToken";
+import { CircularProgressbar } from "react-circular-progressbar";
 
-import TakeUserDetails from '../../Components/TakeUserDetails';
-import { UPDATE_USER } from '../../gqlOperatons/User/mutations';
-import { UserProfile } from '../../Components/UserProfile';
+import TakeUserDetails from "../../Components/TakeUserDetails";
+import { UPDATE_USER } from "../../gqlOperatons/User/mutations";
+import { UserProfile } from "../../Components/UserProfile";
 
 export const Profile = () => {
   const client = MyApolloProvider.client;
@@ -27,10 +31,11 @@ export const Profile = () => {
     loop: true,
     autoplay: true,
     animationData: animationData,
-
   };
 
-  const { loggedIn, isLoading, profilePic } = useSelector((state) => state.user);
+  const { loggedIn, isLoading, profilePic } = useSelector(
+    (state) => state.user
+  );
   const [formData, setFormData] = useState({});
   const [ready, setReady] = useState(false);
   const [userData, setUserData] = useState({});
@@ -43,29 +48,80 @@ export const Profile = () => {
   const [updateUser] = useMutation(UPDATE_USER, {
     onError(error) {
       return setError(error);
-    }
+    },
   });
 
+  const optionMappings = {
+    college: {
+      "National Institute of Technology AGARTALA": "NIT AGARTALA",
+      "Indian Institute of Information Technology AGARTALA": "IIIT AGARTALA"
+    },
+    course: {
+      "BTech": "BTech",
+      "MCA": "MCA",
+      "MTech": "MTech"
+    },
+    hosteller: {
+      "YES": "true",
+      "NO": "false"
+    },
+    gender: {
+      "Male": "MALE",
+      "Female": "FEMALE",
+      "Transgender": "TRANSGENDER",
+      "Prefer not to say": "PREFER_NOT_TO_SAY"
+    },
+    department: {
+      "Computer Science & Engineering": "COMPUTER_SCIENCE_AND_ENGINEERING",
+      "Electronics & Communication Engineering": "ELECTRONICS_AND_COMMUNICATIONS_ENGINEERING",
+      "Electrical Engineering": "ELECTRICAL_ENGINEERING",
+      "Electronics & Instrumentation Engineering": "ELECTRONICS_AND_INSTRUMENTATION_ENGINEERING",
+      "Mechanical Engineering": "MECHANICAL_ENGINEERING",
+      "Chemical Engineering": "CHEMICAL_ENGINEERING",
+      "Civil Engineering": "CIVIL_ENGINEERING",
+      "Production Engineering": "PRODUCTION_ENGINEERING",
+      "Bio Tech & Bio Engineering": "BIO_TECH_AND_BIO_ENGINEERING"
+    }
+  };
+  
 
   useEffect(() => {
     (async () => {
-
       dispatch(setLoading(true));
       try {
         const data = await VerifyToken(dispatch);
         if (data.verified) {
           try {
             const res = await MyApolloProvider.client.query({
-              //  query: GET_USER_FOR_PROFILE 
-              query: GET_USER_STATUS_WITH_ALL_DETAILS
+              //  query: GET_USER_FOR_PROFILE
+              query: GET_USER_STATUS_WITH_ALL_DETAILS,
             });
             if (!res.data || res.errors) {
               setReady(true);
-              return setError(res.errors || { message: " something went wrong " });
-            }
-            else {
+              return setError(
+                res.errors || { message: " something went wrong " }
+              );
+            } else {
               console.log("User Data in Profile", res);
-              setUserData(res.data.getMe.userInformation);
+              // Transform the user data using optionMappings
+            const transformUserData = (userData) => {
+              const transformed = { ...userData };
+              Object.keys(optionMappings).forEach((key) => {
+                if (userData[key]) {
+                  const mappedValue = Object.keys(optionMappings[key]).find(
+                    (displayValue) => optionMappings[key][displayValue] === userData[key]
+                  );
+                  if (mappedValue) {
+                    transformed[key] = mappedValue;
+                  }
+                }
+              });
+              return transformed;
+            };
+
+            const transformedData = transformUserData(res.data.getMe.userInformation);
+
+            setUserData(transformedData);
               dispatch(setLoading(false));
             }
             setReady(true);
@@ -76,8 +132,7 @@ export const Profile = () => {
             setReady(true);
             return setError(error);
           }
-        }
-        else {
+        } else {
           dispatch(setLoading(false));
           setReady(true);
         }
@@ -88,42 +143,67 @@ export const Profile = () => {
         return setError(error);
       }
     })();
-
   }, []);
-
 
   const handleSubmit = async (e) => {
     dispatch(setLoading(true));
     // console.log("Form Data at Updating user ", formData);
     e.preventDefault();
-    const { username,
-      name, mobileNum, profilePic, gender,
-      collegeId, graduationYear, cgpa, college, department, course, state,
-      hosteler, leetcodeProfile, codeforcesProfile, linkedinProfile, githubProfile } = formData;
-      // console.log("hostel",hosteler);
+    const {
+      username,
+      name,
+      mobileNum,
+      profilePic,
+      gender,
+      collegeId,
+      graduationYear,
+      cgpa,
+      college,
+      department,
+      course,
+      state,
+      hosteler,
+      leetcodeProfile,
+      codeforcesProfile,
+      linkedinProfile,
+      githubProfile,
+    } = formData;
+    // console.log("hostel",hosteler);
     try {
       const res = await updateUser({
         variables: {
           user: {
-            name, username, mobileNum, gender, collegeId, graduationYear: parseInt(graduationYear, 10), cgpa: parseFloat(cgpa), college,
-            department, course, state, hosteler: hosteler === "true", leetcodeProfile, codeforcesProfile, linkedinProfile, githubProfile
-          }
-        }
-      })
+            name,
+            username,
+            mobileNum,
+            gender,
+            collegeId,
+            graduationYear: parseInt(graduationYear, 10),
+            cgpa: parseFloat(cgpa),
+            college,
+            department,
+            course,
+            state,
+            hosteler: hosteler === "true",
+            leetcodeProfile,
+            codeforcesProfile,
+            linkedinProfile,
+            githubProfile,
+          },
+        },
+      });
       if (res.errors || !res.data) {
         dispatch(setLoading(false));
         console.log("Error in updating user", res.errors);
-        return setError(res.errors || { message: "something went wrong " })
-      }
-      else if (res.data) {
+        return setError(res.errors || { message: "something went wrong " });
+      } else if (res.data) {
         console.log("User Updated ** ", res);
         setUserData(res.data.updateUserProfile.userInformation);
         setFormData(res.data.updateUserProfile.userInformation);
         dispatch(setLoading(false));
         toast.success("User Updated");
         return setEditMode(false);
-      }
-      else {
+      } else {
         console.log("Error in updating user");
         return setError({ message: "Error in updating user" });
       }
@@ -136,9 +216,10 @@ export const Profile = () => {
   };
 
   const handleChange = (e) => {
-      setFormData({ ...formData, [e.target.id]: e.target.value });
-    // console.log("Form Data at Changing", formData);
-  }
+    const { id, value } = e.target;
+    const mappedValue = optionMappings[id] ? optionMappings[id][value] : value;
+    setFormData({ ...formData, [id]: mappedValue });
+  };
 
   const handleEditMode = async () => {
     // dispatch(setLoading(true));
@@ -170,15 +251,19 @@ export const Profile = () => {
     toast.error(ERROR.message ? ERROR.message : "Something went wrong");
   }
   if (isLoading || ready === false) return <Loader />;
-  if (!isLoading && loggedIn === false) navigate('/register');
+  if (!isLoading && loggedIn === false) navigate("/register");
   if (editMode) {
     // const userInfo = await client.query({ query: GET_USER_STATUS_WITH_ALL_DETAILS });
     return (
       <div>
-        <div className='flex justify-end mx-10 my-2'>
-          <button className='text-red-700 text-xl  bg-white px-2 py-1 rounded-sm hover:bg-red-300 hover:text-white'
+        <div className="flex justify-end mx-10 my-2">
+          <button
+            className="text-red-700 text-xl  bg-white px-2 py-1 rounded-sm hover:bg-red-300 hover:text-white"
             onClick={() => setEditMode(false)}
-          > X </button>
+          >
+            {" "}
+            X{" "}
+          </button>
         </div>
         <TakeUserDetails
           handleChange={handleChange}
@@ -194,17 +279,16 @@ export const Profile = () => {
       </div>
     );
     // return "helloo";
-  }
-  else {
+  } else {
     return (
-      <div className='px-2'>
+      <div className="px-2">
         <UserProfile userData={userData} />
         <div className="flex justify-start w-full my-5 mx-3 max-w-4xl gap-5 ">
-          <Button className='' onClick={handleEditMode}>⚙️Edit</Button>
+          <Button className="" onClick={handleEditMode}>
+            ⚙️Edit
+          </Button>
         </div>
       </div>
-    )
+    );
   }
-
 };
-
