@@ -6,16 +6,62 @@ export const downVoteQuestion = async (_, payload, context) => {
   try {
     console.log('DownVote Question with ID : ', payload.QuestionId)
     if (context.isUser) {
-      await getQuestionByIdHelper(payload.QuestionId)
-      const updQuestion = await prisma.question.update({
-        where: { id: payload.QuestionId },
-        data: { downvotes: { increment: 1 } },
+      const voteEntry = await prisma.userVotes.findFirst({
+        where: {
+          userId: context.userId,
+          area: 'QUESTION',
+          areaId: payload.QuestionId,
+        },
       })
-      console.log(
-        'Successfully DownVoted Question with ID : ',
-        payload.QuestionId
-      )
-      return updQuestion
+
+      if (voteEntry) {
+        if (voteEntry.type === 'DISLIKE') {
+          // delete voteEntry and decrement downvotes
+          await prisma.userVotes.delete({ where: { id: voteEntry.id } })
+          const updQuestion = await prisma.question.update({
+            where: { id: payload.QuestionId },
+            data: { downvotes: { decrement: 1 } },
+          })
+          console.log(
+            'Successfully Disliked Count Decreased of Question with ID : ',
+            payload.QuestionId
+          )
+          return updQuestion
+        } else {
+          // Update vote entry type to DISLIKE, and increment downvotes and decrement upvotes
+          await prisma.userVotes.update({
+            where: { id: voteEntry.id },
+            data: { type: 'DISLIKE' },
+          })
+          const updQuestion = await prisma.question.update({
+            where: { id: payload.QuestionId },
+            data: { downvotes: { increment: 1 }, upvotes: { decrement: 1 } },
+          })
+          console.log(
+            'Successfully like count decreased and dislike count increased of Question with ID : ',
+            payload.QuestionId
+          )
+          return updQuestion
+        }
+      } else {
+        await prisma.userVotes.create({
+          data: {
+            userId: context.userId,
+            area: 'QUESTION',
+            areaId: payload.QuestionId,
+            type: 'DISLIKE',
+          },
+        })
+        const updQuestion = await prisma.question.update({
+          where: { id: payload.QuestionId },
+          data: { downvotes: { increment: 1 } },
+        })
+        console.log(
+          'Successfully Disliked Count Increased of Question with ID : ',
+          payload.QuestionId
+        )
+        return updQuestion
+      }
     }
 
     console.log('Failed DownVote Question with ID : ', payload.QuestionId)
