@@ -18,6 +18,100 @@ const TakeUserDetails = (props) => {
   } = props;
   const [errors, setErrors] = useState({});
 
+  const fields = [
+    {
+      label: "College",
+      id: "college",
+      placeholder: "Choose your college",
+      options: [
+        "National Institute of Technology AGARTALA",
+        "Indian Institute of Information Technology AGARTALA",
+      ],
+    },
+    {
+      label: "Course",
+      id: "course",
+      placeholder: "Choose your course",
+      options: ["BTech", "MCA", "MTech"],
+    },
+    {
+      label: "Hosteller",
+      id: "hosteller",
+      placeholder: "Are you a hosteller",
+      options: ["YES", "NO"],
+    },
+    {
+      label: "Gender",
+      id: "gender",
+      placeholder: "Choose your gender",
+      options: ["Male", "Female", "Transgender", "Prefer not to say"],
+    },
+    {
+      label: "Department",
+      id: "department",
+      placeholder: "Choose your department",
+      options: [
+        "Computer Science & Engineering",
+        "Electronics & Communication Engineering",
+        "Electrical Engineering",
+        "Electronics & Instrumentation Engineering",
+        "Mechanical Engineering",
+        "Chemical Engineering",
+        "Civil Engineering",
+        "Production Engineering",
+        "Bio Tech & Bio Engineering",
+      ],
+    },
+  ];
+  
+  const textFields = [
+    {
+      label: "Username",
+      id: "username",
+      type: "text",
+      placeholder: "john_doe12",
+    },
+    {
+      label: "Full Name",
+      id: "name",
+      type: "text",
+      placeholder: "John Doe",
+    },
+    {
+      label: "Contact",
+      id: "mobileNum",
+      type: "text",
+      placeholder: "0000000000",
+      maxLength: 10,
+      minLength: 10,
+    },
+    {
+      label: "Enrollment Number",
+      id: "collegeId",
+      type: "text",
+      placeholder: "21UXX001",
+    },
+    {
+      label: "Graduation Year",
+      id: "graduationYear",
+      type: "number",
+      placeholder: "2025",
+    },
+    {
+      label: "CGPA",
+      id: "cgpa",
+      type: "text",
+      placeholder: "9.23",
+      pattern: "^(?:10(?:\\.0+)?|\\d(\\.\\d{1,2})?)$",
+    },
+    {
+      label: "State",
+      id: "state",
+      type: "text",
+      placeholder: "Rajasthan",
+    },
+  ]
+
   const handleValidation = (e) => {
     const { id, value } = e.target;
     setErrors((prevErrors) => ({
@@ -55,7 +149,9 @@ const TakeUserDetails = (props) => {
       <Dropdown label={formData?.[id] || placeholder} className="px-2 py-1">
         {options.map((option, index) => (
           <Dropdown.Item
-            className={`transition-all ${index !== options.length - 1 ? 'border-b-2 border-slate-400' : ''}`}
+            className={`transition-all ${
+              index !== options.length - 1 ? "border-b-2 border-slate-400" : ""
+            }`}
             key={option}
             onClick={() => handleChange({ target: { id, value: option } })}
           >
@@ -122,55 +218,9 @@ const TakeUserDetails = (props) => {
 
             <div className="w-full md:w-1/2 px-4 mb-6">
               <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
-              Textual Information
+                Textual Information
               </h2>
-              {[
-                {
-                  label: "Username",
-                  id: "username",
-                  type: "text",
-                  placeholder: "john_doe12",
-                },
-                {
-                  label: "Full Name",
-                  id: "name",
-                  type: "text",
-                  placeholder: "John Doe",
-                },
-                {
-                  label: "Contact",
-                  id: "mobileNum",
-                  type: "text",
-                  placeholder: "0000000000",
-                  maxLength: 10,
-                  minLength: 10,
-                },
-                {
-                  label: "Enrollment Number",
-                  id: "collegeId",
-                  type: "text",
-                  placeholder: "21UXX001",
-                },
-                {
-                  label: "Graduation Year",
-                  id: "graduationYear",
-                  type: "number",
-                  placeholder: "2025",
-                },
-                {
-                  label: "CGPA",
-                  id: "cgpa",
-                  type: "text",
-                  placeholder: "9.23",
-                  pattern: "^(?:10(?:\\.0+)?|\\d(\\.\\d{1,2})?)$",
-                },
-                {
-                  label: "State",
-                  id: "state",
-                  type: "text",
-                  placeholder: "Rajasthan",
-                },
-              ].map(({ label, id, type, placeholder, ...rest }) => (
+              {textFields.map(({ label, id, type, placeholder, ...rest }) => (
                 <div key={id} className="mb-4">
                   <label
                     htmlFor={id}
@@ -201,53 +251,7 @@ const TakeUserDetails = (props) => {
               <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
                 Selective Information
               </h2>
-              {[
-                {
-                  label: "College",
-                  id: "college",
-                  placeholder: "Choose your college",
-                  options: ["NIT AGARTALA", "IIIT AGARTALA"],
-                },
-                {
-                  label: "Course",
-                  id: "course",
-                  placeholder: "Choose your course",
-                  options: ["BTech", "MCA", "MTech"],
-                },
-                {
-                  label: "Hosteller",
-                  id: "hosteller",
-                  placeholder: "Are you a hosteller",
-                  options: ["YES", "NO"],
-                },
-                {
-                  label: "Gender",
-                  id: "gender",
-                  placeholder: "Choose your gender",
-                  options: [
-                    "MALE",
-                    "FEMALE",
-                    "TRANSGENDER",
-                    "PREFER_NOT_TO_SAY",
-                  ],
-                },
-                {
-                  label: "Department",
-                  id: "department",
-                  placeholder: "Choose your department",
-                  options: [
-                    "CSE",
-                    "ECE",
-                    "EE",
-                    "EI",
-                    "Mechanical",
-                    "Chemical",
-                    "Civil",
-                    "Production",
-                    "Bio_Tech",
-                  ],
-                },
-              ].map(renderDropdown)}
+              {fields.map(renderDropdown)}
             </div>
 
             <div className="w-full px-4 mb-6">
