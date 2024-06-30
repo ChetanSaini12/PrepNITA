@@ -89,6 +89,11 @@ export const ADD_COMMENT_EXP = gql`
              description
                 reply{
                  id
+                 expcommentId
+                 description
+                 replierId
+                 replierUserName
+                 likes
                 }
                 commentorId
                 commentorUserName
@@ -100,6 +105,11 @@ export const ADD_REPLY_TO_EXP_COMMENT = gql`
     mutation addReplyToExpCommentMutation($Reply : InputExpReply){
         addReplyToExpComment(Reply : $Reply){
             id
+            expcommentId
+            description
+            replierId
+            replierUserName
+            likes
         }
     }
 `;

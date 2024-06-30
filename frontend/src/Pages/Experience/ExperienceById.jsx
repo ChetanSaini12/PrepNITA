@@ -11,7 +11,7 @@ import { FaUserCircle } from "react-icons/fa";
 import { IoIosArrowBack } from "react-icons/io";
 import { LiaCommentSolid } from "react-icons/lia";
 import moment from "moment";
-import { ADD_COMMENT_EXP, DELETE_EXP_COMMENT, DOWNVOTE_EXPERIENCE, GET_EXPERIENCE_BY_ID, UPVOTE_EXPERIENCE } from '../../gqlOperatons/Experience/mutations';
+import { ADD_COMMENT_EXP, ADD_REPLY_TO_EXP_COMMENT, DELETE_EXP_COMMENT, DOWNVOTE_EXPERIENCE, GET_EXPERIENCE_BY_ID, UPVOTE_EXPERIENCE } from '../../gqlOperatons/Experience/mutations';
 import { Loader2 } from '../../Components/Loader2';
 
 
@@ -43,6 +43,7 @@ export const ExperienceById = () => {
     const [downVoteExp] = useMutation(DOWNVOTE_EXPERIENCE);
     const [addComment] = useMutation(ADD_COMMENT_EXP);
     const [deleteComment] = useMutation(DELETE_EXP_COMMENT);
+    const [addReply] = useMutation(ADD_REPLY_TO_EXP_COMMENT);
 
 
     useEffect(() => {
@@ -110,21 +111,22 @@ export const ExperienceById = () => {
 
     const handleSubmitComment = () => { };
 
-    const handleAddComment = async (comment, expId, expCommentId) => {
+    const handleAddCommentOrReplyFunction = async (comment, expId, expCommentId) => {
+        expId = parseInt(expId);
+        expCommentId = parseInt(expCommentId);
         const trimmedComment = comment.trim();
         if (trimmedComment === '') {
             console.error("Comment is empty after trimming");
             return;
         }
 
-        const isComment = expId === 0;
+        const isComment = (expId !== 0);
         const variableName = isComment ? "Comment" : "Reply";
-        const idVariableName = isComment ? "expcommentId" : "experienceId";
-        const id = isComment ? expCommentId : expId;
+        const idVariableName = isComment ? "experienceId" : "expcommentId";
+        const id = isComment ? expId : expCommentId;
 
         setSmallLoading(true);
         setLoadingLocation(2);
-
         try {
             const variables = {
                 [variableName]: {
@@ -132,19 +134,29 @@ export const ExperienceById = () => {
                     [idVariableName]: id,
                 }
             };
-
-            console.log("Constructed variables:", variables);
-
-            const { data } = await addComment({
-                variables:variables,
+            // console.log("Constructed variables:", expId, expCommentId, variables);
+            const { data } = isComment ? await addComment({
+                variables: variables,
+            }) : await addReply({
+                variables: variables,
             });
 
             if (data) {
-                console.log("Comment added successfully", data);
-                // Update state as needed, for example:
-                // let prevComments = experienceData.comments;
-                // prevComments.push(data.addCommentExp);
-                // setExperienceData({ ...experienceData, comments: prevComments });
+                console.log("Comment/Reply added successfully", data);
+                if (isComment) {
+                    let prevComments = experienceData.comments;
+                    prevComments?.push(data.addCommentExp);
+                    setExperienceData({ ...experienceData, comments: prevComments });
+                }
+                else {
+                    let prevComments = experienceData.comments;
+                    let commentIndex = prevComments.findIndex((comment) => comment.id === data.addReplyToExpComment.expcommentId);
+                    console.log("commentIndex", commentIndex);
+                    console.log("coment", prevComments[commentIndex]);
+                    prevComments[commentIndex]?.reply?.push(data.addReplyToExpComment);
+                    setExperienceData({ ...experienceData, comments: prevComments });
+                }
+
             } else {
                 console.error("No data returned from mutation");
             }
@@ -152,6 +164,13 @@ export const ExperienceById = () => {
             console.error("Error adding comment", error);
             setError(error);
         } finally {
+            if (!isComment) {
+                setUserWantToReply((prev) => ({
+                    ...prev,
+                    [expCommentId]: false,
+
+                }));
+            }
             setSmallLoading(false);
             setLoadingLocation(0); // to remove loading indication
         }
@@ -320,7 +339,7 @@ export const ExperienceById = () => {
                         {loadingLocation !== 2 && (
                             <InputBoxForComment
                                 handleCancleFunction={handleCancelReplyInputBox}
-                                handleSubmitFunction={handleAddComment}
+                                handleSubmitFunction={handleAddCommentOrReplyFunction}
                                 expId={experienceData.id}
                             />
                         )}
@@ -376,10 +395,10 @@ export const ExperienceById = () => {
                                     <InputBoxForComment
                                         ml={12}
                                         mr={5}
-
                                         expCommentId={comment.id}
+
                                         handleCancleFunction={handleCancelReplyInputBox}
-                                        handleSubmitFunction={handleAddComment}
+                                        handleSubmitFunction={handleAddCommentOrReplyFunction}
                                     />
                                 )}
 
