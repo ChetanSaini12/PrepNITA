@@ -144,3 +144,44 @@
 }
 
 /* styles.css */
+
+.loader-2-overlay {
+  /* position: fixed; */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* background: rgba(0, 0, 0, 0.7); */
+  z-index: 9998;
+}
+
+.loader-2-container {
+  /* position: absolute; */
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loader-2 {
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid #fff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.screenInActive {
+  z-index: 9000; /* Ensure it is above other elements */
+  pointer-events: none; /* Prevent any mouse interactions */
+  user-select: none; /* Prevent text selection and keyboard interactions */
+  outline: none; /* Remove any focus outlines */
+  opacity: 0.7; /* Make it semi-transparent */
+}
+
