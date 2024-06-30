@@ -22,6 +22,40 @@ export const likeExpComment = async (_, payload, context) => {
       })
     }
     if (context.isUser) {
+      const voteEntry = await prisma.userVotes.findFirst({
+        where: {
+          userId: context.userId,
+          area: 'COMMENT',
+          areaId: payload.commentId,
+        },
+      })
+      if (voteEntry) {
+        await prisma.userVotes.delete({
+          where: {
+            id: voteEntry.id
+          },
+        })
+        let likedComment = await prisma.expComment.update({
+          where: {
+            id: payload.commentId,
+          },
+          data: {
+            likes: {
+              decrement: 1,
+            },
+          },
+        })
+        likedComment = addUserName(likedComment)
+        return likedComment
+      }
+      await prisma.userVotes.create({
+        data: {
+          userId: context.userId,
+          area: 'COMMENT',
+          areaId: payload.commentId,
+          type: 'LIKE',
+        },
+      })
       let likedComment = await prisma.expComment.update({
         where: {
           id: payload.commentId,
