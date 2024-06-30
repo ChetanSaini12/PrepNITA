@@ -6,16 +6,62 @@ export const upVoteQuestion = async (_, payload, context) => {
   try {
     console.log('UpVote Question with ID : ', payload.QuestionId)
     if (context.isUser) {
-      await getQuestionByIdHelper(payload.QuestionId)
-      const updQuestion = await prisma.question.update({
-        where: { id: payload.QuestionId },
-        data: { upvotes: { increment: 1 } },
+      const voteEntry = await prisma.userVotes.findFirst({
+        where: {
+          userId: context.userId,
+          area: 'QUESTION',
+          areaId: payload.QuestionId,
+        },
       })
-      console.log(
-        'Successfully UpVoted Question with ID : ',
-        payload.QuestionId
-      )
-      return updQuestion
+
+      if (voteEntry) {
+        if (voteEntry.type === 'LIKE') {
+          // Delte voteEntry, and decrement upvotes
+          await prisma.userVotes.delete({ where: { id: voteEntry.id } })
+          const updQuestion = await prisma.question.update({
+            where: { id: payload.QuestionId },
+            data: { upvotes: { decrement: 1 } },
+          })
+          console.log(
+            'Successfully Liked Count Decreased of Question with ID : ',
+            payload.QuestionId
+          )
+          return updQuestion
+        } else {
+          // Update vote entry type to LIKE, and increment upvotes and decrement downvotes
+          await prisma.userVotes.update({
+            where: { id: voteEntry.id },
+            data: { type: 'LIKE' },
+          })
+          const updQuestion = await prisma.question.update({
+            where: { id: payload.QuestionId },
+            data: { upvotes: { increment: 1 }, downvotes: { decrement: 1 } },
+          })
+          console.log(
+            'Successfully dislike count decreased and like count increased of Question with ID : ',
+            payload.QuestionId
+          )
+          return updQuestion
+        }
+      } else {
+        await prisma.userVotes.create({
+          data: {
+            userId: context.userId,
+            area: 'QUESTION',
+            areaId: payload.QuestionId,
+            type: 'LIKE',
+          },
+        })
+        const updQuestion = await prisma.question.update({
+          where: { id: payload.QuestionId },
+          data: { upvotes: { increment: 1 } },
+        })
+        console.log(
+          'Successfully Liked Count Increased of Question with ID : ',
+          payload.QuestionId
+        )
+        return updQuestion
+      }
     }
 
     console.log('Failed UpVote Question with ID : ', payload.QuestionId)
@@ -34,6 +80,7 @@ export const upVoteQuestion = async (_, payload, context) => {
     ) {
       throw error
     } else {
+      console.log('ERROR : ', error)
       throw new GraphQLError('Error while upvoting question!!', {
         extensions: {
           code: 'UPVOTE_QUESTION_FAILED',
