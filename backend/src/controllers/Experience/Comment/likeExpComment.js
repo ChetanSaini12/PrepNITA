@@ -25,7 +25,7 @@ export const likeExpComment = async (_, payload, context) => {
       const voteEntry = await prisma.userVotes.findFirst({
         where: {
           userId: context.userId,
-          area: 'COMMENT',
+          area: 'EXP_COMMENT',
           areaId: payload.commentId,
         },
       })
@@ -51,7 +51,7 @@ export const likeExpComment = async (_, payload, context) => {
       await prisma.userVotes.create({
         data: {
           userId: context.userId,
-          area: 'COMMENT',
+          area: 'EXP_COMMENT',
           areaId: payload.commentId,
           type: 'LIKE',
         },
@@ -84,6 +84,7 @@ export const likeExpComment = async (_, payload, context) => {
     ) {
       throw error
     }
+    console.log("Error while liking comment : ", error)
     throw new GraphQLError('Something went wrong!!')
   }
 }
