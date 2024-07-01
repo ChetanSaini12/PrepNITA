@@ -8,8 +8,9 @@ import { Loader } from '../Loader';
 import toast from 'react-hot-toast';
 import { BiUpvote, BiDownvote, BiShare } from "react-icons/bi";
 import { FaUserCircle } from "react-icons/fa";
-import { IoIosArrowBack } from "react-icons/io";
+import { IoIosArrowBack, IoIosHeart } from "react-icons/io";
 import { LiaCommentSolid } from "react-icons/lia";
+import { CiHeart } from "react-icons/ci";
 import moment from "moment";
 import { ADD_COMMENT_EXP, ADD_REPLY_TO_EXP_COMMENT, DELETE_EXP_COMMENT, DOWNVOTE_EXPERIENCE, GET_EXPERIENCE_BY_ID, LIKE_EXP_COMMENT, LIKE_EXP_COMMENT_REPLY, UPVOTE_EXPERIENCE } from '../../gqlOperatons/Experience/mutations';
 import { Loader2 } from '../../Components/Loader2';
@@ -191,7 +192,15 @@ export const ExperienceById = () => {
             });
             if (data) {
                 console.log("upvoted exp successfullly", data);
-                experienceData.upvotes = data.upvoteExperience.upvotes;
+
+                setExperienceData({
+                    ...experienceData,
+                    upvotes: data.upvoteExperience.upvotes,
+                    downvotes: data.upvoteExperience.downvotes,
+                    isLiked: data.upvoteExperience.isLiked,
+                    isDisliked: data.upvoteExperience.isDisliked
+                });
+                // experienceData.upvotes = data.upvoteExperience.upvotes;
             }
         } catch (error) {
             setError(error);
@@ -200,6 +209,7 @@ export const ExperienceById = () => {
             setLoadingLocation(0);
         }
     };
+
     const handleDownVoteExp = async (expId) => {
         setSmallLoading(true);
         setLoadingLocation(1);
@@ -211,7 +221,14 @@ export const ExperienceById = () => {
             });
             if (data) {
                 console.log("downvoted exp successfullly", data);
-                experienceData.downvotes = data.downvoteExperience.downvotes;
+                setExperienceData({
+                    ...experienceData,
+                    upvotes: data.downvoteExperience.upvotes,
+                    downvotes: data.downvoteExperience.downvotes,
+                    isLiked: data.downvoteExperience.isLiked,
+                    isDisliked: data.downvoteExperience.isDisliked
+                });
+                // experienceData.downvotes = data.downvoteExperience.downvotes;
             }
         } catch (error) {
             setError(error);
@@ -222,6 +239,7 @@ export const ExperienceById = () => {
     };
 
     const handleLikeComment = async (commentId) => {
+        console.log("call hua hai ", commentId);
         commentId = parseInt(commentId);
         setSmallLoading(true);
         setLoadingLocation(3);
@@ -236,6 +254,8 @@ export const ExperienceById = () => {
                 let prevComments = experienceData.comments;
                 let commentIndex = prevComments.findIndex((comment) => comment.id === commentId);
                 prevComments[commentIndex].likes = data.likeExpComment.likes;
+                prevComments[commentIndex].isLiked = data.likeExpComment.isLiked;
+                prevComments[commentIndex].isDisliked = data.likeExpComment.isDisliked;
                 setExperienceData({ ...experienceData, comments: prevComments });
             }
         } catch (error) {
@@ -246,8 +266,8 @@ export const ExperienceById = () => {
         }
     };
     const handleLikeCommentReply = async (replyId, commentId) => {
-        replyId=parseInt(replyId);
-        commentId=parseInt(commentId);
+        replyId = parseInt(replyId);
+        commentId = parseInt(commentId);
         setSmallLoading(true);
         setLoadingLocation(5);
         try {
@@ -262,6 +282,8 @@ export const ExperienceById = () => {
                 let commentIndex = prevComments.findIndex((comment) => comment.id === commentId);
                 let replyIndex = prevComments[commentIndex].reply.findIndex((reply) => reply.id === replyId);
                 prevComments[commentIndex].reply[replyIndex].likes = data.likeExpCommentReply.likes;
+                prevComments[commentIndex].reply[replyIndex].isLiked = data.likeExpCommentReply.isLiked;
+                prevComments[commentIndex].reply[replyIndex].isDisliked = data.likeExpCommentReply.isDisliked;
                 setExperienceData({ ...experienceData, comments: prevComments });
             }
         } catch (error) {
@@ -293,6 +315,9 @@ export const ExperienceById = () => {
     const formatDate = (dateString) => {
         return moment(dateString).format('DD MMMM YYYY');
     };
+    const likedClass = "text-green-500";
+    const disLikedClass = "text-red-500";
+
 
 
     if (isLoading || !ready) {
@@ -317,21 +342,21 @@ export const ExperienceById = () => {
                     <div className=' flex flex-col sm:flex-row gap-2 sm:gap-2 justify-start w-full px-2 sm:px-0'>
                         {/* //left part upVote and down VOte  */}
                         <div className='sm:max-w-40 mt-3  sm:px-4  flex sm:flex-col gap-3 sm:gap-0 justify-between sm:justify-start items-center sm:items-start '>
-                            <button className='flex justify-center items-center gap-1 mr-2 sm:mr-0 hover:text-red-500'>
+                            <Link to={'/experience'} className='flex justify-center items-center gap-1 mr-2 sm:mr-0 hover:text-red-500'>
                                 <IoIosArrowBack />
                                 <h2 className='border-r border-gray-300 pr-1 '>Back</h2>
-                            </button>
+                            </Link>
                             {smallLoading && loadingLocation === 1 && <Loader2 />}
                             {loadingLocation !== 1 && (
                                 <div className=' sm:mt-8 flex sm:flex-col gap-2 items-center '>
-                                    <button className='flex justify-center p-1 rounded-md hover:text-red-500 bg-gray-300 dark:bg-gray-700'
+                                    <button className={`${experienceData.isLiked ? likedClass : ""} flex justify-center p-1 rounded-md hover:text-red-500 bg-gray-300 dark:bg-gray-700`}
                                         onClick={() => handleUpVoteExp(experienceData.id)}
                                     >
 
                                         <BiUpvote size={20} />
                                     </button>
                                     <h3 className='flex justify-center'>{experienceData.upvotes - experienceData.downvotes}</h3>
-                                    <button className='flex justify-center p-1 rounded-md hover:text-red-500 bg-gray-300 dark:bg-gray-700'
+                                    <button className={`${experienceData.isDisliked ? disLikedClass : ""} flex justify-center p-1 rounded-md hover:text-red-500 bg-gray-300 dark:bg-gray-700`}
                                         onClick={() => handleDownVoteExp(experienceData.id)}
                                     >
                                         <BiDownvote size={20} />
@@ -373,7 +398,7 @@ export const ExperienceById = () => {
                             </div>
                             {/* //description */}
                             <div className=''>
-                                <div className=' flex flex-wrap text-pretty leading-relaxed sm:leading-loose' dangerouslySetInnerHTML={{ __html : experienceData.description}} />
+                                <div className=' flex flex-wrap text-pretty leading-relaxed sm:leading-loose' dangerouslySetInnerHTML={{ __html: experienceData.description }} />
                             </div>
 
                         </div>
@@ -419,7 +444,7 @@ export const ExperienceById = () => {
                                     {/* // COMMENT FUNCTIONS   */}
                                     <div className='text-xs  pl-10 py-1 flex gap-5 items-center justify-start'>
                                         {smallLoading && loadingLocation === 3 && <Loader2 />}
-                                        {loadingLocation !== 3 && (
+                                        {/* {loadingLocation !== 3 && (
                                             <div className='flex gap-2 justify-start items-center'>
                                                 <button className='hover:text-red-500'
                                                     onClick={() => handleLikeComment(comment.id)}   >
@@ -429,9 +454,27 @@ export const ExperienceById = () => {
                                                     onClick={() => handleLikeComment(comment.id)}  >
                                                     <BiDownvote size={13} /></button>
                                             </div>
+                                        )} */}
+                                        {loadingLocation !== 3 && comment.isLiked && (
+                                            <div className='flex items-center gap-1'>
+                                                <button className=' hover:text-gray-300' onClick={() => handleLikeComment(comment.id)}>
+                                                    <IoIosHeart size={13} color='red' />
+                                                </button>
+                                                <h2>{comment.likes}</h2>
+                                            </div>
                                         )}
-                                        <div>
-                                            {comment.reply?.length > 0 && (
+                                        {loadingLocation !== 3 && !comment.isLiked && (
+                                            <div className='flex items-center gap-1'>
+                                                <button className='hover:text-red-500' onClick={() => handleLikeComment(comment.id)}>
+                                                    <CiHeart size={13} />
+                                                </button>
+                                                <h2>
+                                                    {comment.likes}
+                                                </h2>
+                                            </div>
+                                        )}
+                                        {comment.reply?.length > 0 && (
+                                            <div>
                                                 <button className='flex gap-1 items-center hover:text-red-500'
                                                     onClick={() => handleShowReply(comment.id)}
                                                 >
@@ -439,8 +482,8 @@ export const ExperienceById = () => {
                                                     <h2>{!showReply[comment.id] ? `Show ${comment.reply?.length} reply` : "Hide reply"}</h2>
                                                 </button>
 
-                                            )}
-                                        </div>
+                                            </div>
+                                        )}
                                         <div>
                                             <button className='flex items-center gap-1 hover:text-red-500'
                                                 onClick={() => handleUserWantToReply(comment.id)}
@@ -480,17 +523,17 @@ export const ExperienceById = () => {
                                                     {smallLoading && loadingLocation === 5 && <Loader2 />}
                                                     {loadingLocation !== 5 && (
                                                         <div className='ml-9 -mt-0.5 text-xs flex gap-2 justify-start items-center'>
-                                                            {/* <button className='hover:text-red-500'
-                                                                onClick={() => handleLikeComment(comment.id)}   >
-                                                                <BiUpvote size={13} /></button>
-                                                            <h2>{comment.likes}</h2>
-                                                            <button className='hover:text-red-500 pt-0.5'
-                                                                onClick={() => handleLikeComment(comment.id)}  >
-                                                                <BiDownvote size={13} /></button> */}
-                                                            <button className=' hover:text-red-500' onClick={()=>handleLikeCommentReply(reply.id,comment.id)}>
-                                                                Like:
-                                                            </button>
-                                                            <h2 className='-mt-0.5'>{reply.likes}</h2>
+                                                            {reply.isLiked && (
+                                                                <button className=' hover:text-gray-300' onClick={() => handleLikeCommentReply(reply.id, comment.id)}>
+                                                                    <IoIosHeart size={13} color='red' />
+                                                                </button>
+                                                            )}
+                                                            {reply.isLiked === false && (
+                                                                <button className='hover:text-red-500' onClick={() => handleLikeCommentReply(reply.id, comment.id)}>
+                                                                    <CiHeart size={13} />
+                                                                </button>
+                                                            )}
+                                                            <h2 className='-ml-0.5 -mt-0.5'>{reply.likes}</h2>
                                                         </div>
                                                     )}
                                                 </div>
