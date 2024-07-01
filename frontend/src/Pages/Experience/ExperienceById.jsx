@@ -11,8 +11,9 @@ import { FaUserCircle } from "react-icons/fa";
 import { IoIosArrowBack, IoIosHeart } from "react-icons/io";
 import { LiaCommentSolid } from "react-icons/lia";
 import { CiHeart } from "react-icons/ci";
+import { MdDeleteOutline } from "react-icons/md";
 import moment from "moment";
-import { ADD_COMMENT_EXP, ADD_REPLY_TO_EXP_COMMENT, DELETE_EXP_COMMENT, DOWNVOTE_EXPERIENCE, GET_EXPERIENCE_BY_ID, LIKE_EXP_COMMENT, LIKE_EXP_COMMENT_REPLY, UPVOTE_EXPERIENCE } from '../../gqlOperatons/Experience/mutations';
+import { ADD_COMMENT_EXP, ADD_REPLY_TO_EXP_COMMENT, DELETE_EXP_COMMENT, DELETE_EXP_REPLY, DOWNVOTE_EXPERIENCE, GET_EXPERIENCE_BY_ID, LIKE_EXP_COMMENT, LIKE_EXP_COMMENT_REPLY, UPVOTE_EXPERIENCE } from '../../gqlOperatons/Experience/mutations';
 import { Loader2 } from '../../Components/Loader2';
 
 
@@ -22,7 +23,7 @@ export const ExperienceById = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const params = useParams();
-    const { isLoading, loggedIn, ready } = useSelector((state) => state.user);
+    const { isLoading, loggedIn, ready, id: userId } = useSelector((state) => state.user);
 
     const [ERROR, setError] = useState(null);
     const [experienceData, setExperienceData] = useState(null);
@@ -32,21 +33,16 @@ export const ExperienceById = () => {
     const [smallLoading, setSmallLoading] = useState(false);
     const [loadingLocation, setLoadingLocation] = useState(0);
 
-
-    const [getExperienceData] = useMutation(GET_EXPERIENCE_BY_ID, {
-        onError: (error) => {
-            setError(error);
-        }
-    });
-
+    //MUTATIONS
+    const [getExperienceData] = useMutation(GET_EXPERIENCE_BY_ID);
     const [upVoteExp] = useMutation(UPVOTE_EXPERIENCE);
     const [downVoteExp] = useMutation(DOWNVOTE_EXPERIENCE);
     const [addComment] = useMutation(ADD_COMMENT_EXP);
     const [deleteComment] = useMutation(DELETE_EXP_COMMENT);
+    const [deleteReply] = useMutation(DELETE_EXP_REPLY);
     const [addReply] = useMutation(ADD_REPLY_TO_EXP_COMMENT);
     const [likeComment] = useMutation(LIKE_EXP_COMMENT);
     const [likeCommentReply] = useMutation(LIKE_EXP_COMMENT_REPLY);
-
 
 
     useEffect(() => {
@@ -64,15 +60,12 @@ export const ExperienceById = () => {
         const fetchExperience = async () => {
             dispatch(setLoading(true));
             try {
-                const { data, errors } = await getExperienceData({
+                const { data } = await getExperienceData({
                     variables: {
                         experienceId: experienceId,
                     }
                 });
-                if (errors) {
-                    return setError(errors);
-                }
-                else if (data) {
+                if (data) {
                     console.log("experience by id  data ", data);
                     setExperienceData(data.getExperienceById);
                 }
@@ -180,6 +173,53 @@ export const ExperienceById = () => {
         }
     };
 
+    const handleDeleteComment = async (commentId) => {
+        setSmallLoading(true);
+        setLoadingLocation(5);
+        try {
+            const { data } = await deleteComment({
+                variables: {
+                    commentId: commentId,
+                }
+            });
+            if (data) {
+                console.log("deleted comment successfullly", data);
+                let prevComments = experienceData.comments;
+                let commentIndex = prevComments.findIndex((comment) => comment.id === commentId);
+                prevComments.splice(commentIndex, 1);
+                setExperienceData({ ...experienceData, comments: prevComments });
+            }
+        } catch (error) {
+            setError(error);
+        } finally {
+            setSmallLoading(false);
+            setLoadingLocation(0);
+        }
+    };
+    const handleDeleteReply = async (commentId, replyId) => {
+        setSmallLoading(true);
+        setLoadingLocation(5);
+        try {
+            const { data } = await deleteReply({
+                variables: {
+                    replyId: replyId,
+                }
+            });
+            if (data) {
+                console.log("deleted reply successfullly", data);
+                let prevComments = experienceData.comments;
+                let commentIndex = prevComments.findIndex((comment) => comment.id === commentId);
+                let replyIndex = prevComments[commentIndex].reply.findIndex((reply) => reply.id === replyId);
+                prevComments[commentIndex].reply.splice(replyIndex, 1);
+                setExperienceData({ ...experienceData, comments: prevComments });
+            }
+        } catch (error) {
+            setError(error);
+        } finally {
+            setSmallLoading(false);
+            setLoadingLocation(0);
+        }
+    };
 
     const handleUpVoteExp = async (expId) => {
         setSmallLoading(true);
@@ -385,9 +425,9 @@ export const ExperienceById = () => {
                                     )}
 
                                     {!experienceData.anonymous && (
-                                        <button className='text-md sm:lg hover:underline'>
+                                        <Link to={`/profile/${experienceData.creatorUsername}`} className='text-md sm:lg hover:underline'>
                                             {experienceData.creatorName}
-                                        </button>
+                                        </Link>
                                     )}
                                 </div>
                                 <div className='flex gap-2 text-slate-400'>
@@ -396,7 +436,7 @@ export const ExperienceById = () => {
                                     </div>
                                 </div>
                             </div>
-                            {/* //description */}
+                            {/* //Description */}
                             <div className=''>
                                 <div className=' flex flex-wrap text-pretty leading-relaxed sm:leading-loose' dangerouslySetInnerHTML={{ __html: experienceData.description }} />
                             </div>
@@ -441,20 +481,11 @@ export const ExperienceById = () => {
                                         {comment.description}
                                     </div>
 
-                                    {/* // COMMENT FUNCTIONS   */}
+                                    {/* // COMMENT FUNCTIONS (LIKE , REPLY , DELETE )    */}
                                     <div className='text-xs  pl-10 py-1 flex gap-5 items-center justify-start'>
                                         {smallLoading && loadingLocation === 3 && <Loader2 />}
-                                        {/* {loadingLocation !== 3 && (
-                                            <div className='flex gap-2 justify-start items-center'>
-                                                <button className='hover:text-red-500'
-                                                    onClick={() => handleLikeComment(comment.id)}   >
-                                                    <BiUpvote size={13} /></button>
-                                                <h2>{comment.likes}</h2>
-                                                <button className='hover:text-red-500 pt-0.5'
-                                                    onClick={() => handleLikeComment(comment.id)}  >
-                                                    <BiDownvote size={13} /></button>
-                                            </div>
-                                        )} */}
+
+                                        {/* LIKE COMMENT */}
                                         {loadingLocation !== 3 && comment.isLiked && (
                                             <div className='flex items-center gap-1'>
                                                 <button className=' hover:text-gray-300' onClick={() => handleLikeComment(comment.id)}>
@@ -473,6 +504,8 @@ export const ExperienceById = () => {
                                                 </h2>
                                             </div>
                                         )}
+
+                                        {/* //SHOW REPLY */}
                                         {comment.reply?.length > 0 && (
                                             <div>
                                                 <button className='flex gap-1 items-center hover:text-red-500'
@@ -484,6 +517,21 @@ export const ExperienceById = () => {
 
                                             </div>
                                         )}
+
+                                        {/* //DELETE COMMENT */}
+                                        {comment.commentorId === userId && (
+                                            <div>
+                                                <button className='flex items-center gap-0.5 hover:text-red-500'
+                                                    onClick={() => handleDeleteComment(comment.id)}
+                                                >
+                                                    <MdDeleteOutline size={13} />
+                                                    <h2>Delete</h2>
+                                                </button>
+                                            </div>
+
+                                        )}
+                                        {/* //REPLY TO A COMMENT BUTTON */}
+
                                         <div>
                                             <button className='flex items-center gap-1 hover:text-red-500'
                                                 onClick={() => handleUserWantToReply(comment.id)}
@@ -513,14 +561,17 @@ export const ExperienceById = () => {
                                         <div className='flex flex-col gap-1'>
                                             {comment.reply.map((reply, index) => (
                                                 <div key={index} className='flex flex-col gap-1'>
+                                                    {/* REPLIER USER DETAILS */}
                                                     <div className='flex items-center gap-2'>
                                                         <FaUserCircle size={20} />
                                                         <h3 className='text-xs'> {reply.replierUserName}</h3>
                                                     </div>
+                                                    {/* REPLY DESCRIPTION */}
                                                     <div className='ml-8 flex flex-col gap-1'>
                                                         <div className='flex flex-wrap'>{reply.description}</div>
                                                     </div>
                                                     {smallLoading && loadingLocation === 5 && <Loader2 />}
+                                                    {/* REPLY FUNCTIONS (LIKE DELETE ) */}
                                                     {loadingLocation !== 5 && (
                                                         <div className='ml-9 -mt-0.5 text-xs flex gap-2 justify-start items-center'>
                                                             {reply.isLiked && (
@@ -534,8 +585,19 @@ export const ExperienceById = () => {
                                                                 </button>
                                                             )}
                                                             <h2 className='-ml-0.5 -mt-0.5'>{reply.likes}</h2>
+                                                            {reply.replierId === userId && (
+                                                                <div>
+                                                                    <button className='flex items-center gap-0.5 hover:text-red-500'
+                                                                        onClick={() => handleDeleteReply(comment.id, reply.id)}
+                                                                    >
+                                                                        <MdDeleteOutline size={13} />
+                                                                        <h2>Delete</h2>
+                                                                    </button>
+                                                                </div>
+                                                            )}
                                                         </div>
                                                     )}
+
                                                 </div>
                                             ))}
                                         </div>
