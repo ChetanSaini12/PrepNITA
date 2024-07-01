@@ -59,6 +59,8 @@ export const GET_QUESTION_BY_ID = gql`
             isApproved 
             upvotes 
             downvotes
+            isLiked
+            isDisliked
         }
     }
 `;
@@ -69,6 +71,8 @@ export const UP_VOTE_QUESTION = gql`
             id
             upvotes 
             downvotes
+            isLiked
+            isDisliked
         }
     }
 `;
@@ -77,9 +81,10 @@ export const DOWN_VOTE_QUESTION = gql`
     mutation downVoteQuestionMutation($QuestionId:Int!){
         downVoteQuestion(QuestionId:$QuestionId){
             id 
- 
             upvotes 
             downvotes
+            isLiked
+            isDisliked
         }
     }
 `;
