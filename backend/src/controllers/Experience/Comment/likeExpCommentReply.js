@@ -1,6 +1,7 @@
 import { GraphQLError } from 'graphql'
 import { prisma } from '../../../../prisma/index.js'
 import { addUserName } from './addUserName.js'
+import { addLikeStatus } from '../../../utils/addLikeStatus.js'
 
 export const likeExpCommentReply = async (_, payload, context) => {
   try {
@@ -26,7 +27,7 @@ export const likeExpCommentReply = async (_, payload, context) => {
       const voteEntry = await prisma.userVotes.findFirst({
         where: {
           userId: context.userId,
-          area: 'REPLY',
+          area: 'EXP_REPLY',
           areaId: replyId,
         },
       })
@@ -42,14 +43,15 @@ export const likeExpCommentReply = async (_, payload, context) => {
             },
           },
         })
-        likedReply = addUserName(likedReply)
+        likedReply = await addLikeStatus(likedReply, context.userId, 'EXP_REPLY')
+        likedReply = await addUserName(likedReply)
         return likedReply
       }
 
       await prisma.userVotes.create({
         data: {
           userId: context.userId,
-          area: 'REPLY',
+          area: 'EXP_REPLY',
           areaId: replyId,
           type: 'LIKE',
         },
@@ -65,7 +67,8 @@ export const likeExpCommentReply = async (_, payload, context) => {
           },
         },
       })
-      likedReply = addUserName(likedReply)
+      likedReply = await addLikeStatus(likedReply, context.userId, 'EXP_REPLY')
+      likedReply = await addUserName(likedReply)
       return likedReply
     } else {
       throw new GraphQLError('You are not authorised user!!', {

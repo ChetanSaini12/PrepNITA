@@ -2,7 +2,7 @@ import { useMutation } from '@apollo/client';
 import React, { useEffect, useState } from 'react';
 import { TextInput, Textarea } from "flowbite-react";
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { setLoading } from '../../app/user/userSlice';
 import { Loader } from '../Loader';
 import toast from 'react-hot-toast';
@@ -11,119 +11,79 @@ import { FaUserCircle } from "react-icons/fa";
 import { IoIosArrowBack } from "react-icons/io";
 import { LiaCommentSolid } from "react-icons/lia";
 import moment from "moment";
+import { ADD_COMMENT_EXP, ADD_REPLY_TO_EXP_COMMENT, DELETE_EXP_COMMENT, DOWNVOTE_EXPERIENCE, GET_EXPERIENCE_BY_ID, LIKE_EXP_COMMENT, LIKE_EXP_COMMENT_REPLY, UPVOTE_EXPERIENCE } from '../../gqlOperatons/Experience/mutations';
+import { Loader2 } from '../../Components/Loader2';
 
 
 
 export const ExperienceById = () => {
 
-
-
-    // type ExpReply {
-    //     id            : Int
-    //     expcommentId  : Int
-    //     description   : String
-    //     replierId     : Int
-    //     replierUserName : String
-    //     likes         : Int 
-    // }
-
-
-    const data = {
-        "id": 1,
-        "company": "Google",
-        "role": "SDE",
-        "location": "Banglore",
-        "description": "Process:A recruiter reached out to me through mail and asked if I was interested in the Software Engineer (University Graduate) role. Phone Screen(September 2020):A straightforward LC medium qestion based on Trees and DFS. (LINK)I was well versed with Trees.Quickly came up with the optimal solution, explained the time and space complexities, and coded the proposed solution.Interviewer was satisfied with my solution and we finished this round in less than 30 minutes.Onsites(March 2021):There was a 6 month gap between my Phone Screen and Onsites.My recruiter explained that Onsites will be split into(3+ 2) interviews.They'll review the feedback after the first 3 DSA interviews and will schedule another 2 interviews (1 DSA, 1 Googlyness) only if the feedback is positive in the initial 3 DSA interviews.Round 1: LC Hard DP question. (LINK)I quickly came with up the recursive solution but struggled to convert the recursive solution into a DP based solution.This was my worst round.Round 2: LC Medium Sliding Window question. (LINK)Quickly explained the optimal solution, Time and space complexities and coded the solution.Interviewer was satisfied and came up with a follow up question that involved DP.I used memoization to solve the follow up question.Provided optimal solution and coded it.This was my best round.Round 3: A question based on the intersection of intervals. (I had forgotten that question.)In this round, I got into tunnel vision and just wasn't able to come up with a more efficient solution. I was livid with myself since I had solved numerous interval intersection problems on Leetcode.Result: Recruiter contacted me after 3 - 4 days and informed me that they won't be scheduling the next 2 rounds since I got mixed feedback in the first set of 3 DSA interviews. Recruiter didn't provide feedback specific to each round.My thoughts:Don't have any weak areas while interviewing with Google. I covered pretty much all topics in-depth, except for DP. DP was my slightly weaker area as compared to the other topics. As it turned out, 2 out of my 3 Onsite interviews had a DP question. All hail Murphy's Law:Leetcode's Google frequent questions list does help. A total of 3 questions I faced in the Google interviews are in the top 20 of LC's Google questions(sorted by frequency) Solved 465 LC problems - 166 Easy, 258 Medium, 41 HardI hope it will help you all.",
-        "createdBy": 16,
-        "creatorName": "Vikram Saini",
-        "creatorUsername": "chandan_1357",
-        "createdAt": "2024-06-23T07:50:19.906Z",
-        "upvotes": 0,
-        "downvotes": 0,
-        "anonymous": false,
-        "comments": [
-            {
-                "id": 1,
-                "comment": "Great Experience",
-                "createdBy": 1,
-                "creatorName": "Vikram Saini",
-                "creatorUsername": "chandan_1357",
-                "createdAt": "2024-06-23T07:50:19.906Z",
-                "likes": 5,
-                "reply": [
-                    {
-                        "id": 1,
-                        "expcommentId": 1,
-                        "description": "Great Experience",
-                        "replierId": 2,
-                        "replierUserName": "vks",
-                        "likes": 2
-                    }
-                ]
-            },
-            {
-                "id": 2,
-                "comment": "Great Experience",
-                "createdBy": 2,
-                "creatorName": "Vikram Saini",
-                "creatorUsername": "vks",
-                "createdAt": "2024-06-23T07:50:19.906Z",
-                "likes": 2,
-                "reply": [
-                    {
-                        "id": 1,
-                        "expcommentId": 2,
-                        "description": "Great Experience",
-                        "replierId": 3,
-                        "replierUserName": "chetan",
-                        "likes": 3
-                    }
-                ],
-            }
-        ],
-    }
-
-
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const params = useParams();
     const { isLoading, loggedIn, ready } = useSelector((state) => state.user);
 
     const [ERROR, setError] = useState(null);
     const [experienceData, setExperienceData] = useState(null);
     const [showReply, setShowReply] = useState({});
     const [userWantToReply, setUserWantToReply] = useState({});
+    const [experienceId, setExperienceId] = useState(parseInt(params.id));
+    const [smallLoading, setSmallLoading] = useState(false);
+    const [loadingLocation, setLoadingLocation] = useState(0);
+
+
+    const [getExperienceData] = useMutation(GET_EXPERIENCE_BY_ID, {
+        onError: (error) => {
+            setError(error);
+        }
+    });
+
+    const [upVoteExp] = useMutation(UPVOTE_EXPERIENCE);
+    const [downVoteExp] = useMutation(DOWNVOTE_EXPERIENCE);
+    const [addComment] = useMutation(ADD_COMMENT_EXP);
+    const [deleteComment] = useMutation(DELETE_EXP_COMMENT);
+    const [addReply] = useMutation(ADD_REPLY_TO_EXP_COMMENT);
+    const [likeComment] = useMutation(LIKE_EXP_COMMENT);
+    const [likeCommentReply] = useMutation(LIKE_EXP_COMMENT_REPLY);
+
 
 
     useEffect(() => {
-        setExperienceData(data);
-        dispatch(setLoading(false));
+        if (isNaN(params.id)) {
+            navigate('/notFound');
+            return;
+        }
+        setExperienceId(parseInt(params.id));
+
     }, [ready]);
 
 
-    // useEffect(() => {
-    //     const fetchAllExperience = async () => {
-    //         dispatch(setLoading(true));
-    //         try {
-    //             const { data, errors } = await getAllExperience();
-    //             if (errors) {
-    //                 return setError(errors);
-    //             }
-    //             else if (data) {
-    //                 console.log("experience data ", data);
-    //                 setExperienceData(data.getAllExperience);
-    //             }
-    //             else{
-    //                 ; // do nothing
-    //             }
-    //         } catch (error) {
-    //             return setError(error);
-    //         } finally {
-    //             dispatch(setLoading(false));
-    //         }
-    //     };
+    useEffect(() => {
+        if (!ready) return;
+        const fetchExperience = async () => {
+            dispatch(setLoading(true));
+            try {
+                const { data, errors } = await getExperienceData({
+                    variables: {
+                        experienceId: experienceId,
+                    }
+                });
+                if (errors) {
+                    return setError(errors);
+                }
+                else if (data) {
+                    console.log("experience by id  data ", data);
+                    setExperienceData(data.getExperienceById);
+                }
+            } catch (error) {
+                setError(error);
+            } finally {
+                dispatch(setLoading(false));
+            }
+        };
 
-    //     fetchAllExperience();
-    // }, [ready]);
+        fetchExperience();
+    }, [ready, experienceId]);
 
     const handleShowReply = (id) => {
         // console.log("comment id ", id);
@@ -134,8 +94,6 @@ export const ExperienceById = () => {
             }
         ))
     };
-
-
     const handleUserWantToReply = (id) => {
         setUserWantToReply((prev) => (
             {
@@ -144,66 +102,242 @@ export const ExperienceById = () => {
             }
         ))
     };
-    const handleCancelReplyInputBox = (id) => {
+    const handleCancelReplyInputBox = (setComment, id) => {
         setUserWantToReply((prev) => (
             {
                 ...prev,
                 [id]: false,
             }
-        ))
+        ));
+        setComment("");
+
     };
+
+    const handleAddCommentOrReplyFunction = async (comment, expId, expCommentId) => {
+        expId = parseInt(expId);
+        expCommentId = parseInt(expCommentId);
+        const trimmedComment = comment.trim();
+        if (trimmedComment === '') {
+            console.error("Comment is empty after trimming");
+            return;
+        }
+
+        const isComment = (expId !== 0);
+        const variableName = isComment ? "Comment" : "Reply";
+        const idVariableName = isComment ? "experienceId" : "expcommentId";
+        const id = isComment ? expId : expCommentId;
+
+        setSmallLoading(true);
+        if (isComment) setLoadingLocation(2);
+        else setLoadingLocation(4);
+        try {
+            const variables = {
+                [variableName]: {
+                    description: trimmedComment,
+                    [idVariableName]: id,
+                }
+            };
+            // console.log("Constructed variables:", expId, expCommentId, variables);
+            const { data } = isComment ? await addComment({
+                variables: variables,
+            }) : await addReply({
+                variables: variables,
+            });
+
+            if (data) {
+                console.log("Comment/Reply added successfully", data);
+                if (isComment) {
+                    let prevComments = experienceData.comments;
+                    prevComments?.push(data.addCommentExp);
+                    setExperienceData({ ...experienceData, comments: prevComments });
+                }
+                else {
+                    let prevComments = experienceData.comments;
+                    let commentIndex = prevComments.findIndex((comment) => comment.id === data.addReplyToExpComment.expcommentId);
+                    console.log("commentIndex", commentIndex);
+                    console.log("coment", prevComments[commentIndex]);
+                    prevComments[commentIndex]?.reply?.push(data.addReplyToExpComment);
+                    setExperienceData({ ...experienceData, comments: prevComments });
+                }
+
+            } else {
+                console.error("No data returned from mutation");
+            }
+        } catch (error) {
+            console.error("Error adding comment", error);
+            setError(error);
+        } finally {
+            if (!isComment) {
+                setUserWantToReply((prev) => ({
+                    ...prev,
+                    [expCommentId]: false,
+
+                }));
+            }
+            setSmallLoading(false);
+            setLoadingLocation(0); // to remove loading indication
+        }
+    };
+
+
+    const handleUpVoteExp = async (expId) => {
+        setSmallLoading(true);
+        setLoadingLocation(1);
+        try {
+            const { data } = await upVoteExp({
+                variables: {
+                    id: expId,
+                }
+            });
+            if (data) {
+                console.log("upvoted exp successfullly", data);
+                experienceData.upvotes = data.upvoteExperience.upvotes;
+            }
+        } catch (error) {
+            setError(error);
+        } finally {
+            setSmallLoading(false);
+            setLoadingLocation(0);
+        }
+    };
+    const handleDownVoteExp = async (expId) => {
+        setSmallLoading(true);
+        setLoadingLocation(1);
+        try {
+            const { data } = await downVoteExp({
+                variables: {
+                    id: expId,
+                }
+            });
+            if (data) {
+                console.log("downvoted exp successfullly", data);
+                experienceData.downvotes = data.downvoteExperience.downvotes;
+            }
+        } catch (error) {
+            setError(error);
+        } finally {
+            setSmallLoading(false);
+            setLoadingLocation(0);
+        }
+    };
+
+    const handleLikeComment = async (commentId) => {
+        commentId = parseInt(commentId);
+        setSmallLoading(true);
+        setLoadingLocation(3);
+        try {
+            const { data } = await likeComment({
+                variables: {
+                    commentId: commentId,
+                }
+            });
+            if (data) {
+                console.log("liked comment successfullly", data);
+                let prevComments = experienceData.comments;
+                let commentIndex = prevComments.findIndex((comment) => comment.id === commentId);
+                prevComments[commentIndex].likes = data.likeExpComment.likes;
+                setExperienceData({ ...experienceData, comments: prevComments });
+            }
+        } catch (error) {
+            setError(error);
+        } finally {
+            setSmallLoading(false);
+            setLoadingLocation(0);
+        }
+    };
+    const handleLikeCommentReply = async (replyId, commentId) => {
+        replyId=parseInt(replyId);
+        commentId=parseInt(commentId);
+        setSmallLoading(true);
+        setLoadingLocation(5);
+        try {
+            const { data } = await likeCommentReply({
+                variables: {
+                    replyId: replyId,
+                }
+            });
+            if (data) {
+                console.log("liked comment reply successfullly", data);
+                let prevComments = experienceData.comments;
+                let commentIndex = prevComments.findIndex((comment) => comment.id === commentId);
+                let replyIndex = prevComments[commentIndex].reply.findIndex((reply) => reply.id === replyId);
+                prevComments[commentIndex].reply[replyIndex].likes = data.likeExpCommentReply.likes;
+                setExperienceData({ ...experienceData, comments: prevComments });
+            }
+        } catch (error) {
+            setError(error);
+        } finally {
+            setSmallLoading(false);
+            setLoadingLocation(0);
+        }
+    };
+
 
     const calculateReadingTime = (text) => {
         if (typeof text !== 'string') {
             throw new Error('Input must be a string');
         }
-    
+
         const wordsPerMinute = 200;
         const words = text?.split(/\s+/).length; // Split text by spaces to get word count
         const totalMinutes = words / wordsPerMinute;
         const minutes = Math.floor(totalMinutes);
         const seconds = Math.round((totalMinutes - minutes) * 60);
-    
+
         // Round to the nearest minute
         const roundedMinutes = seconds <= 30 ? minutes : minutes + 1;
-    
+
         return `${roundedMinutes} min read`;
-    }
+    };
 
     const formatDate = (dateString) => {
         return moment(dateString).format('DD MMMM YYYY');
-    }
-    
+    };
+
 
     if (isLoading || !ready) {
         return <Loader />;
     }
+    if (ready && !loggedIn) {
+        return navigate('/register');
+    }
     if (ERROR) {
         console.log("error at fetch experienceById ", ERROR);
         toast.error(ERROR.message ? ERROR.message : "Something went wrong");
+        setTimeout(() => {
+            setError(null);
+        }, 2000);
     }
 
     return (
-        <div className='flex flex-col items-center mb-5 dark:mt-0.5 mx-1 gap-5 min-w-screen max-w-screen min-h-screen bg-gray-200 dark:bg-gray-800 bg-opacity-75 dark:bg-opacity-75' >
+        <div className={`${smallLoading === true ? "screenInActive" : ""} flex flex-col items-center mb-5 dark:mt-0.5 mx-1 gap-5 min-w-screen max-w-screen min-h-screen bg-gray-200 dark:bg-gray-800 bg-opacity-75 dark:bg-opacity-75`} >
             {experienceData && (
-                <div className='flex flex-col gap-5'>
+                <div className='w-full flex flex-col gap-5'>
                     {/* //Experience details */}
                     <div className=' flex flex-col sm:flex-row gap-2 sm:gap-2 justify-start w-full px-2 sm:px-0'>
                         {/* //left part upVote and down VOte  */}
-                        <div className='sm:max-w-40 mt-3  sm:px-4  flex sm:flex-col gap-3 sm:gap-0 justify-start items-center sm:items-start '>
+                        <div className='sm:max-w-40 mt-3  sm:px-4  flex sm:flex-col gap-3 sm:gap-0 justify-between sm:justify-start items-center sm:items-start '>
                             <button className='flex justify-center items-center gap-1 mr-2 sm:mr-0 hover:text-red-500'>
                                 <IoIosArrowBack />
                                 <h2 className='border-r border-gray-300 pr-1 '>Back</h2>
                             </button>
-                            <div className=' sm:mt-8 flex sm:flex-col gap-2 items-center '>
-                                <button className='flex justify-center p-1 rounded-md hover:text-red-500 bg-gray-300 dark:bg-gray-700'>
-                                    <BiUpvote size={20} />
-                                </button>
-                                <h3 className='flex justify-center'>{experienceData.upvotes - experienceData.downvotes}</h3>
-                                <button className='flex justify-center p-1 rounded-md hover:text-red-500 bg-gray-300 dark:bg-gray-700'>
-                                    <BiDownvote size={20} />
-                                </button>
-                            </div>
+                            {smallLoading && loadingLocation === 1 && <Loader2 />}
+                            {loadingLocation !== 1 && (
+                                <div className=' sm:mt-8 flex sm:flex-col gap-2 items-center '>
+                                    <button className='flex justify-center p-1 rounded-md hover:text-red-500 bg-gray-300 dark:bg-gray-700'
+                                        onClick={() => handleUpVoteExp(experienceData.id)}
+                                    >
+
+                                        <BiUpvote size={20} />
+                                    </button>
+                                    <h3 className='flex justify-center'>{experienceData.upvotes - experienceData.downvotes}</h3>
+                                    <button className='flex justify-center p-1 rounded-md hover:text-red-500 bg-gray-300 dark:bg-gray-700'
+                                        onClick={() => handleDownVoteExp(experienceData.id)}
+                                    >
+                                        <BiDownvote size={20} />
+                                    </button>
+                                </div>
+                            )}
                         </div>
                         {/* // experience details */}
                         <div className='flex flex-col gap-3 w-full py-2 mb-5 pr-2'>
@@ -224,6 +358,7 @@ export const ExperienceById = () => {
                                     {experienceData.anonymous && (
                                         <h3 className=' flex items-center'>Anonymous User</h3>
                                     )}
+
                                     {!experienceData.anonymous && (
                                         <button className='text-md sm:lg hover:underline'>
                                             {experienceData.creatorName}
@@ -238,7 +373,7 @@ export const ExperienceById = () => {
                             </div>
                             {/* //description */}
                             <div className=''>
-                                <div className=' flex flex-wrap text-pretty leading-relaxed sm:leading-loose'>{experienceData.description}</div>
+                                <div className=' flex flex-wrap text-pretty leading-relaxed sm:leading-loose' dangerouslySetInnerHTML={{ __html : experienceData.description}} />
                             </div>
 
                         </div>
@@ -252,7 +387,17 @@ export const ExperienceById = () => {
                             <h2 className=' pl-1'>Comments</h2>
                             <h2>{experienceData.comments ? experienceData.comments.length : ""}</h2>
                         </div>
-                        {/* COMMENT SECTION */}
+
+                        {/* {COMMENT INPUT BOX } */}
+                        {smallLoading && loadingLocation === 2 && <Loader2 />}
+                        {loadingLocation !== 2 && (
+                            <InputBoxForComment
+                                handleCancleFunction={handleCancelReplyInputBox}
+                                handleSubmitFunction={handleAddCommentOrReplyFunction}
+                                expId={experienceData.id}
+                            />
+                        )}
+                        {/* USER COMMENTS */}
                         {experienceData.comments.map((comment, index) => (
                             <div key={index} className='flex flex-col gap-2'>
                                 <div className='flex flex-col gap-1 pl-4'>
@@ -262,29 +407,36 @@ export const ExperienceById = () => {
                                         </div>
                                         <div className='flex flex-col gap-1'>
                                             <div className='text-xs flex gap-2'>
-                                                <Link to={`/profile/${comment.creatorUsername}`} >{comment.creatorUsername}</Link>
+                                                <Link to={`/profile/${comment.commentorUserName}`} >{comment.commentorUserName}</Link>
                                             </div>
                                         </div>
                                     </div>
                                     {/* COMMENT descreption  */}
                                     <div className='pl-9  text-pretty'>
-                                        {comment.comment}
+                                        {comment.description}
                                     </div>
 
                                     {/* // COMMENT FUNCTIONS   */}
                                     <div className='text-xs  pl-10 py-1 flex gap-5 items-center justify-start'>
-                                        <div className='flex gap-2 justify-start items-center'>
-                                            <button className='hover:text-red-500'><BiUpvote size={13} /></button>
-                                            <h2>{comment.likes}</h2>
-                                            <button className='hover:text-red-500 pt-0.5'><BiDownvote size={13} /></button>
-                                        </div>
+                                        {smallLoading && loadingLocation === 3 && <Loader2 />}
+                                        {loadingLocation !== 3 && (
+                                            <div className='flex gap-2 justify-start items-center'>
+                                                <button className='hover:text-red-500'
+                                                    onClick={() => handleLikeComment(comment.id)}   >
+                                                    <BiUpvote size={13} /></button>
+                                                <h2>{comment.likes}</h2>
+                                                <button className='hover:text-red-500 pt-0.5'
+                                                    onClick={() => handleLikeComment(comment.id)}  >
+                                                    <BiDownvote size={13} /></button>
+                                            </div>
+                                        )}
                                         <div>
                                             {comment.reply?.length > 0 && (
                                                 <button className='flex gap-1 items-center hover:text-red-500'
                                                     onClick={() => handleShowReply(comment.id)}
                                                 >
                                                     <LiaCommentSolid size={13} className='' />
-                                                    <h2>{!showReply[comment.id] ? "Show reply" : "Hide reply"}</h2>
+                                                    <h2>{!showReply[comment.id] ? `Show ${comment.reply?.length} reply` : "Hide reply"}</h2>
                                                 </button>
 
                                             )}
@@ -301,40 +453,46 @@ export const ExperienceById = () => {
                                 </div>
                                 {/* REPLY INPUT BOX */}
                                 {userWantToReply[comment.id] && (
-                                    <div className='ml-12 mr-5 pt-2 min-w-3/4 rounded border border-gray-400'>
-                                        <Textarea
-                                            placeholder='Type comment here...'
-                                            className='w-full flex flex-wrap bg-gray-200 dark:bg-gray-800 outline-none border-none focus:ring-0'
-                                        />
-                                        <div className='flex items-stretch justify-end gap-1 h-full border-t border-gray-400'>
-                                            <button
-                                                className='p-1  my-0 h-full border-l border-gray-400 hover:text-red-500'
-                                                onClick={() => handleCancelReplyInputBox(comment.id)}
-                                            >
-                                                Cancel
-                                            </button>
-                                            <button className='p-1 pl-2 border my-0 h-full text-gray-100 bg-gray-600 dark:bg-gray-400 hover:text-red-500'>
-                                                Post
-                                            </button>
-                                        </div>
-                                    </div>
+                                    <InputBoxForComment
+                                        ml={12}
+                                        mr={5}
+                                        expCommentId={comment.id}
+
+                                        handleCancleFunction={handleCancelReplyInputBox}
+                                        handleSubmitFunction={handleAddCommentOrReplyFunction}
+                                    />
                                 )}
+                                {smallLoading && loadingLocation === 4 && <Loader2 />}
 
                                 {/* //COMMENT REPLY SECTION  */}
                                 {showReply[comment.id] && (
                                     <div className='flex gap-3 pl-12 pt-1 pb-2'>
                                         <div className='flex flex-col gap-1'>
                                             {comment.reply.map((reply, index) => (
-                                                <div key={index} className='flex gap-2'>
-                                                    <div>
+                                                <div key={index} className='flex flex-col gap-1'>
+                                                    <div className='flex items-center gap-2'>
                                                         <FaUserCircle size={20} />
+                                                        <h3 className='text-xs'> {reply.replierUserName}</h3>
                                                     </div>
-                                                    <div className='flex flex-col gap-1'>
-                                                        <div className='flex gap-2'>
-                                                            <h3 className=''> {reply.replierUserName}</h3>
-                                                        </div>
+                                                    <div className='ml-8 flex flex-col gap-1'>
                                                         <div className='flex flex-wrap'>{reply.description}</div>
                                                     </div>
+                                                    {smallLoading && loadingLocation === 5 && <Loader2 />}
+                                                    {loadingLocation !== 5 && (
+                                                        <div className='ml-9 -mt-0.5 text-xs flex gap-2 justify-start items-center'>
+                                                            {/* <button className='hover:text-red-500'
+                                                                onClick={() => handleLikeComment(comment.id)}   >
+                                                                <BiUpvote size={13} /></button>
+                                                            <h2>{comment.likes}</h2>
+                                                            <button className='hover:text-red-500 pt-0.5'
+                                                                onClick={() => handleLikeComment(comment.id)}  >
+                                                                <BiDownvote size={13} /></button> */}
+                                                            <button className=' hover:text-red-500' onClick={()=>handleLikeCommentReply(reply.id,comment.id)}>
+                                                                Like:
+                                                            </button>
+                                                            <h2 className='-mt-0.5'>{reply.likes}</h2>
+                                                        </div>
+                                                    )}
                                                 </div>
                                             ))}
                                         </div>
@@ -349,4 +507,38 @@ export const ExperienceById = () => {
 
         </div >
     )
-}
+};
+
+export const InputBoxForComment = ({ expId = 0, expCommentId = 0, handleCancleFunction, handleSubmitFunction, ml = 1, mr = 1 }) => {
+    const [comment, setComment] = useState('');
+
+    const handleChangeForCommentInput = (e) => {
+        setComment(e.target.value);
+    };
+
+    const id = expId === 0 ? expCommentId : expId;
+    return (
+        <div className={`ml-${ml} mr-${mr}  min-w-3/4 rounded border border-gray-400`}>
+            <Textarea
+                required
+                value={comment}
+                onChange={handleChangeForCommentInput}
+                placeholder='Type comment here...'
+                className='w-full flex flex-wrap bg-gray-200 dark:bg-gray-800 outline-none border-none focus:ring-0'
+            />
+            <div className='flex items-stretch justify-end gap-1 h-full border-t border-gray-400'>
+                <button
+                    className='p-1  my-0 h-full border-l border-gray-400 hover:text-red-500'
+                    onClick={(e) => handleCancleFunction(setComment, id)}
+                >
+                    Cancel
+                </button>
+                <button className='p-1 pl-2 border my-0 h-full text-gray-100 bg-gray-600 dark:bg-gray-400 hover:text-red-500'
+                    onClick={() => handleSubmitFunction(comment, expId, expCommentId)}
+                >
+                    Post
+                </button>
+            </div>
+        </div>
+    );
+};
