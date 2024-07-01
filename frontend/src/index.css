@@ -180,6 +180,6 @@
   pointer-events: none; /* Prevent any mouse interactions */
   user-select: none; /* Prevent text selection and keyboard interactions */
   outline: none; /* Remove any focus outlines */
-  opacity: 0.7; /* Make it semi-transparent */
+  opacity: 0.6; /* Make it semi-transparent */
 }
 

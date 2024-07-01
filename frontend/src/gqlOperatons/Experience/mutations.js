@@ -52,13 +52,19 @@ export const GET_EXPERIENCE_BY_ID = gql`
                     replierId
                     replierUserName
                     likes
+                    isLiked
+                    isDisliked
                 }
                 commentorId
                 commentorUserName
                 likes
+                isLiked
+                isDisliked
             }
             upvotes
             downvotes
+            isLiked
+            isDisliked
         }
     }
 `;
@@ -69,6 +75,8 @@ export const UPVOTE_EXPERIENCE = gql`
             id
             upvotes
             downvotes
+            isLiked
+            isDisliked
         }
     }
 `;
@@ -78,6 +86,8 @@ export const DOWNVOTE_EXPERIENCE = gql`
             id
             upvotes
             downvotes
+            isLiked
+            isDisliked
         }
     }
 `;
@@ -94,10 +104,14 @@ export const ADD_COMMENT_EXP = gql`
                  replierId
                  replierUserName
                  likes
+                 isLiked
+                 isDisliked
                 }
                 commentorId
                 commentorUserName
                 likes
+                isLiked
+                isDisliked
         }
     }
 `;
@@ -110,20 +124,46 @@ export const ADD_REPLY_TO_EXP_COMMENT = gql`
             replierId
             replierUserName
             likes
+            isLiked
+            isDisliked
         }
     }
 `;
 export const DELETE_EXP_COMMENT = gql`
     mutation deleteExpCommentMutation($commentId : Int){
         deleteExpComment(commentId : $commentId){
-            id
+             id 
+             experienceId
+             description
+                reply{
+                 id
+                 expcommentId
+                 description
+                 replierId
+                 replierUserName
+                 likes
+                 isLiked
+                 isDisliked
+                }
+                commentorId
+                commentorUserName
+                likes
+                isLiked
+                isDisliked
         }
     }
 `;
 export const DELETE_EXP_REPLY = gql`
     mutation deleteExpReplyMutation($replyId : Int){
         deleteExpReply(replyId : $replyId){
-            id
+             id
+            expcommentId
+            description
+            replierId
+            replierUserName
+            likes
+            isLiked
+            isDisliked
         }
     }
 `;
@@ -140,10 +180,14 @@ export const LIKE_EXP_COMMENT = gql`
                  replierId
                  replierUserName
                  likes
+                 isLiked
+                 isDisliked
                 }
                 commentorId
                 commentorUserName
                 likes
+                isDisliked
+                isLiked
         }
     }
 `;
@@ -156,6 +200,8 @@ export const LIKE_EXP_COMMENT_REPLY = gql`
             replierId
             replierUserName
             likes
+            isDisliked
+            isLiked
         }
     }
 `;
