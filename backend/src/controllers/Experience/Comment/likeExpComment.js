@@ -1,6 +1,7 @@
 import { GraphQLError } from 'graphql'
 import { prisma } from '../../../../prisma/index.js'
 import { addUserName } from './addUserName.js'
+import { addLikeStatus } from '../../../utils/addLikeStatus.js'
 
 export const likeExpComment = async (_, payload, context) => {
   try {
@@ -32,7 +33,7 @@ export const likeExpComment = async (_, payload, context) => {
       if (voteEntry) {
         await prisma.userVotes.delete({
           where: {
-            id: voteEntry.id
+            id: voteEntry.id,
           },
         })
         let likedComment = await prisma.expComment.update({
@@ -44,8 +45,23 @@ export const likeExpComment = async (_, payload, context) => {
               decrement: 1,
             },
           },
+          include: {
+            reply: true,
+          },
         })
-        likedComment = addUserName(likedComment)
+        likedComment = await addLikeStatus(
+          likedComment,
+          context.userId,
+          'EXP_COMMENT'
+        )
+        likedComment = await addUserName(likedComment)
+        for (let i = 0; i < likedComment.reply.length; i++) {
+          likedComment.reply[i] = await addLikeStatus(
+            likedComment.reply[i],
+            context.userId,
+            'EXP_REPLY'
+          )
+        }
         return likedComment
       }
       await prisma.userVotes.create({
@@ -65,8 +81,23 @@ export const likeExpComment = async (_, payload, context) => {
             increment: 1,
           },
         },
+        include: {
+          reply: true,
+        },
       })
-      likedComment = addUserName(likedComment)
+      likedComment = await addLikeStatus(
+        likedComment,
+        context.userId,
+        'EXP_COMMENT'
+      )
+      likedComment = await addUserName(likedComment)
+      for (let i = 0; i < likedComment.reply.length; i++) {
+        likedComment.reply[i] = await addLikeStatus(
+          likedComment.reply[i],
+          context.userId,
+          'EXP_REPLY'
+        )
+      }
       return likedComment
     } else {
       throw new GraphQLError('You are not authorised user!!', {
@@ -84,7 +115,7 @@ export const likeExpComment = async (_, payload, context) => {
     ) {
       throw error
     }
-    console.log("Error while liking comment : ", error)
+    console.log('Error while liking comment : ', error)
     throw new GraphQLError('Something went wrong!!')
   }
 }

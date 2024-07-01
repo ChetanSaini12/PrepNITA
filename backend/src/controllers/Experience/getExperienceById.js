@@ -2,8 +2,10 @@ import { GraphQLError } from 'graphql'
 import { prisma } from '../../../prisma/index.js'
 import { addNameExp } from './addnameExp.js'
 import { addUserName } from './Comment/addUserName.js'
+import { addLikeStatus } from '../../utils/addLikeStatus.js'
+import { formatExp } from './formatExp.js'
 
-export const getExperienceById = async (_, payload) => {
+export const getExperienceById = async (_, payload, context) => {
   try {
     /*
             payload : {experienceId}
@@ -14,23 +16,16 @@ export const getExperienceById = async (_, payload) => {
       },
       include: {
         comments: {
-          include : {
-            reply : true
-          }
-        }
+          include: {
+            reply: true,
+          },
+        },
       },
     })
-    experience = await addNameExp(experience)
-    console.log('The length of exp.comments : ', experience);
-    for (let i = 0; i < experience.comments?.length; i++) {
-      experience.comments[i] = await addUserName(experience.comments[i])
-      for(let j = 0; j < experience.comments[i]?.reply?.length; j++) {
-        experience.comments[i].reply[j] = await addUserName(experience.comments[i].reply[j])
-      }
-    }
+    experience = await formatExp(experience, context)
     return experience
   } catch (error) {
-    console.log('Error while getting experience by id : ', error);
+    console.log('Error while getting experience by id : ', error)
     throw new GraphQLError('Something went wrong!!')
   }
 }

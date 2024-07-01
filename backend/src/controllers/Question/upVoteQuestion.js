@@ -1,6 +1,7 @@
 import { GraphQLError } from 'graphql'
 import { prisma } from '../../../prisma/index.js'
 import { getQuestionByIdHelper } from './getQuestionByIdHelper.js'
+import { addLikeStatus } from '../../utils/addLikeStatus.js'
 
 export const upVoteQuestion = async (_, payload, context) => {
   try {
@@ -18,7 +19,7 @@ export const upVoteQuestion = async (_, payload, context) => {
         if (voteEntry.type === 'LIKE') {
           // Delte voteEntry, and decrement upvotes
           await prisma.userVotes.delete({ where: { id: voteEntry.id } })
-          const updQuestion = await prisma.question.update({
+          let updQuestion = await prisma.question.update({
             where: { id: payload.QuestionId },
             data: { upvotes: { decrement: 1 } },
           })
@@ -26,6 +27,8 @@ export const upVoteQuestion = async (_, payload, context) => {
             'Successfully Liked Count Decreased of Question with ID : ',
             payload.QuestionId
           )
+
+          updQuestion = addLikeStatus(updQuestion, context.userId, 'QUESTION')
           return updQuestion
         } else {
           // Update vote entry type to LIKE, and increment upvotes and decrement downvotes
@@ -33,7 +36,7 @@ export const upVoteQuestion = async (_, payload, context) => {
             where: { id: voteEntry.id },
             data: { type: 'LIKE' },
           })
-          const updQuestion = await prisma.question.update({
+          let updQuestion = await prisma.question.update({
             where: { id: payload.QuestionId },
             data: { upvotes: { increment: 1 }, downvotes: { decrement: 1 } },
           })
@@ -41,6 +44,8 @@ export const upVoteQuestion = async (_, payload, context) => {
             'Successfully dislike count decreased and like count increased of Question with ID : ',
             payload.QuestionId
           )
+
+          updQuestion = addLikeStatus(updQuestion, context.userId, 'QUESTION')
           return updQuestion
         }
       } else {
@@ -52,7 +57,7 @@ export const upVoteQuestion = async (_, payload, context) => {
             type: 'LIKE',
           },
         })
-        const updQuestion = await prisma.question.update({
+        let updQuestion = await prisma.question.update({
           where: { id: payload.QuestionId },
           data: { upvotes: { increment: 1 } },
         })
@@ -60,6 +65,8 @@ export const upVoteQuestion = async (_, payload, context) => {
           'Successfully Liked Count Increased of Question with ID : ',
           payload.QuestionId
         )
+
+        updQuestion = addLikeStatus(updQuestion, context.userId, 'QUESTION')
         return updQuestion
       }
     }

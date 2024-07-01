@@ -1,6 +1,9 @@
 import { GraphQLError } from 'graphql'
 import { prisma } from '../../../prisma/index.js'
 import { addNameExp } from './addnameExp.js'
+import { addLikeStatus } from '../../utils/addLikeStatus.js'
+import { addUserName } from './Comment/addUserName.js'
+import { formatExp } from './formatExp.js'
 
 export const upvoteExperience = async (_, payload, context) => {
   try {
@@ -19,8 +22,15 @@ export const upvoteExperience = async (_, payload, context) => {
           let experience = await prisma.experience.update({
             where: { id: payload.id },
             data: { upvotes: { decrement: 1 } },
+            include: {
+              comments: {
+                include: {
+                  reply: true,
+                },
+              },
+            },
           })
-          experience = addNameExp(experience)
+          experience = await formatExp(experience, context)
           return experience
         } else {
           await prisma.userVotes.update({
@@ -30,6 +40,7 @@ export const upvoteExperience = async (_, payload, context) => {
             data: {
               type: 'LIKE',
             },
+            
           })
           let experience = await prisma.experience.update({
             where: {
@@ -44,10 +55,14 @@ export const upvoteExperience = async (_, payload, context) => {
               },
             },
             include: {
-              comments: true,
+              comments: {
+                include : {
+                  reply : true
+                }
+              }
             },
           })
-          experience = addNameExp(experience)
+          experience = await formatExp(experience, context)
           return experience
         }
       } else {
@@ -69,10 +84,14 @@ export const upvoteExperience = async (_, payload, context) => {
             },
           },
           include: {
-            comments: true,
+            comments: {
+              include : {
+                reply : true
+              }
+            }
           },
         })
-        experience = addNameExp(experience)
+        experience = await formatExp(experience, context)
         return experience
       }
     } else {
@@ -91,6 +110,7 @@ export const upvoteExperience = async (_, payload, context) => {
     ) {
       throw error
     }
+    console.log("ERROR WHILE UPVOTING EXPERIENCE : ", error)
     throw new GraphQLError('Something went wrong!!')
   }
 }

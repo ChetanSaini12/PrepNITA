@@ -1,6 +1,7 @@
 import { GraphQLError } from 'graphql'
 import { prisma } from '../../../../prisma/index.js'
 import { addUserName } from './addUserName.js'
+import { addLikeStatus } from '../../../utils/addLikeStatus.js'
 
 export const addReplyToExpComment = async (_, payload, context) => {
   try {
@@ -32,7 +33,8 @@ export const addReplyToExpComment = async (_, payload, context) => {
           replierId: context.userId,
         },
       })
-      expReply = addUserName(expReply)
+      expReply = await addLikeStatus(expReply, context.userId, 'EXP_REPLY')
+      expReply = await addUserName(expReply)
       return expReply
     } else {
       throw new GraphQLError('User is not authorised', {

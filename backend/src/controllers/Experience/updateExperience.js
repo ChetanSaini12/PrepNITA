@@ -29,7 +29,8 @@ export const updateExperience = async (_, payload, context) => {
             comments : true
           }
         })
-        updatedExp = addNameExp(updatedExp)
+        updatedExp = await addLikeStatus(updatedExp, context.userId, 'EXPERIENCE')
+        updatedExp = await addNameExp(updatedExp)
         return updatedExp
       } else {
         throw new GraphQLError(
