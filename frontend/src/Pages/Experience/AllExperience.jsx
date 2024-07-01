@@ -93,9 +93,8 @@ export const AllExperience = () => {
                                             <h1 className='text-md sm:text-lg font-semibold'>{exp.company}</h1>
                                             <h2 className='font-semibold'> | {exp.role}</h2>
                                         </div>
-                                        <div className='text-pretty leading-relaxed'>
-                                            {truncatedDescription(exp.description, 10)}
-                                        </div>
+                                        {/* EXP DESCRIPTION */}
+                                        <div className='text-pretty leading-relaxed' dangerouslySetInnerHTML={{ __html: truncatedDescription(exp.description, 20) }} />
                                         <div className=' mt-3 text-xs flex flex-wrap justify-start gap-2'>
                                             <h2>{moment(exp.createdAt).format('DD MMMM')}</h2>
                                             <div className='flex gap-1 items-center '>

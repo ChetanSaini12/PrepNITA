@@ -132,14 +132,38 @@ export const ADD_REPLY_TO_EXP_COMMENT = gql`
 export const DELETE_EXP_COMMENT = gql`
     mutation deleteExpCommentMutation($commentId : Int){
         deleteExpComment(commentId : $commentId){
-            id
+             id 
+             experienceId
+             description
+                reply{
+                 id
+                 expcommentId
+                 description
+                 replierId
+                 replierUserName
+                 likes
+                 isLiked
+                 isDisliked
+                }
+                commentorId
+                commentorUserName
+                likes
+                isLiked
+                isDisliked
         }
     }
 `;
 export const DELETE_EXP_REPLY = gql`
     mutation deleteExpReplyMutation($replyId : Int){
         deleteExpReply(replyId : $replyId){
-            id
+             id
+            expcommentId
+            description
+            replierId
+            replierUserName
+            likes
+            isLiked
+            isDisliked
         }
     }
 `;
