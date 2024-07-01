@@ -13,6 +13,8 @@ export const typeDefs = `#graphql
         comments : [ExpComment]
         upvotes : Int
         downvotes : Int
+        isLiked  : Boolean
+        isDisliked  : Boolean
     }
 
     type ExpComment {
@@ -23,6 +25,8 @@ export const typeDefs = `#graphql
         commentorId  : Int
         commentorUserName : String
         likes    : Int
+        isLiked  : Boolean
+        isDisliked  : Boolean
     }
 
     type ExpReply {
@@ -31,7 +35,9 @@ export const typeDefs = `#graphql
         description   : String
         replierId     : Int
         replierUserName : String
-        likes         : Int 
+        likes         : Int
+        isLiked  : Boolean
+        isDisliked  : Boolean 
     }
 
     input InputExperience {

@@ -18,9 +18,9 @@ const queries = {}
 
 const mutations = {
 
-    getAllExperience : (_, payload, context) => checkRole({_, payload, context}, getAllExperience),
+    getAllExperience : (_, payload, context) => getAllExperience(_, payload, context),
 
-    getExperienceById : (_, payload, context) => checkRole({_, payload, context}, getExperienceById),
+    getExperienceById : (_, payload, context) => getExperienceById(_, payload, context),
 
     createExperience : (_, payload, context) => checkRole({_, payload, context}, createExperience),
     
