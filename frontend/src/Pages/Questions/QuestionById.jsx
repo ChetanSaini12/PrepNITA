@@ -115,7 +115,7 @@ const QuestionById = () => {
         <div className="min-w-screen min-h-screen shadow-md rounded-md p-6 " >
           <div className="flex justify-between items-center mb-4">
             {/* <h2 className="text-2xl font-bold">{question.title}</h2> */}
-              <span className="mr-4 font-bold">Question ID: {question.id}</span>
+            <span className="mr-4 font-bold">Question ID: {question.id}</span>
             <div className="flex items-center text-sm mx-2 ">
               <span className='font-bold'>Upvotes: {upvote} | Downvotes: {downvote}</span>
             </div>
@@ -124,10 +124,13 @@ const QuestionById = () => {
             {/* <h1 className='text-2xl font-bold'>{question.links?question.links[0].title:"TITLE not available"}</h1> */}
             <p className='text-2xl font-semibold' dangerouslySetInnerHTML={{ __html: question.description }} />
           </div>
-          <div className=" mb-4">
-            <strong>Tags:</strong> {question.tags?.map(tag => (
-              <span key={tag} className="inline-block bg-gray-200 text-gray-800 rounded-full px-2 py-1 text-xs font-semibold mr-2" dangerouslySetInnerHTML={{ __html: tag }}/>
-            ))}
+          <div className=" mb-4 flex flex-col gap-1">
+            <strong>Tags:</strong>
+            <div className='flex gap-2 flex-wrap overflow-x-auto'>
+              {question.tags?.map((tag, index) => (
+                <div key={index} className=" bg-gray-200 text-gray-800 rounded-full px-2 py-1 text-xs font-semibold mr-2 " dangerouslySetInnerHTML={{ __html: tag }} />
+              ))}
+            </div>
           </div>
           <div className=" mb-4">
             <h3 className="font-bold">Answer:</h3>
@@ -141,7 +144,7 @@ const QuestionById = () => {
           <div className="flex gap-5  mb-4" >
             <button onClick={handleUpVote}
               className='w-8 h-8 bg-white rounded-md hover:bg-green-200'>
-                {/* <i class="fa-solid fa-thumbs-up"></i> */}
+              {/* <i class="fa-solid fa-thumbs-up"></i> */}
               <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAACF0lEQVR4nO2ZPUgcQRTHf6IIMWrwA0ULbQxpIqSwEgXTWCiCRIu0YmOpRZrEJgTBVHapQho7QSwPTSOmE60UPwohjQbxE0VEMLkw8D+YYs+du9yaGdg/PFhu3syb38y+3bm3kCpVqlRSGTAObAK3wE/gC9BAIJP/CmQjbBd4huf6oMleAW+BJ8Ar7Yb5/RseawD4LTPXttqAe+AaqMJDPQcutMpmF6K0r/aXeKZqYFuTW1QeROlUPq14pDJgwUrS2jx+7fI5wTNNa2LnQMcDfm/kl8Ej9SsxTdIOxvjOCOATHibtewf/ZfkO80iqBD4DR3leSlmHpLV1HDNO1sEuge8Rj+hIzToOWuO4IGslAMhaFnsrHsqxO097bqDHVB0wCdwp9oM7ETfB/wGQ05Rim9spSIBGKyeCBGgIHWBEsVdDBZhX7HchApRbh8IXIQK8tg6OhAgwp7jmRRskwEHMC9ZrgE7FPFYuBAcwrZim6kGIAOuKORQiQCvwB7hxrWr4BjCheEuuHXwDyCjeWIgA1aqxmv/ezSECjCrWj0I6+QQw73J48xWg3PXwVixAE8mqT3H2Cu3oCrCVMMSc4pgSTyIASULUA2eK0VVo51xZpSeirdc6VG3p+kBljqclKqr1ABsae6WYQVwKWzNa+dzXlyRsH2gpdhVmrZ2w7ZfaKuRbpfrojlV0+he70/eGjyF8U0uVKhWl0V+Fmz8hJyRYQAAAAABJRU5ErkJggg==" />
             </button>
 
