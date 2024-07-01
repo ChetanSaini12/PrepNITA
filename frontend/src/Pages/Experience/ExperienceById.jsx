@@ -373,7 +373,7 @@ export const ExperienceById = () => {
                             </div>
                             {/* //description */}
                             <div className=''>
-                                <div className=' flex flex-wrap text-pretty leading-relaxed sm:leading-loose'>{experienceData.description}</div>
+                                <div className=' flex flex-wrap text-pretty leading-relaxed sm:leading-loose' dangerouslySetInnerHTML={{ __html : experienceData.description}} />
                             </div>
 
                         </div>

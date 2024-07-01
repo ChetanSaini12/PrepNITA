@@ -1,6 +1,9 @@
 import { GraphQLError } from 'graphql'
 import { prisma } from '../../../prisma/index.js'
 import { addNameExp } from './addnameExp.js'
+import { addLikeStatus } from '../../utils/addLikeStatus.js'
+import { addUserName } from './Comment/addUserName.js'
+import { formatExp } from './formatExp.js'
 
 export const downvoteExperience = async (_, payload, context) => {
   try {
@@ -26,10 +29,14 @@ export const downvoteExperience = async (_, payload, context) => {
               },
             },
             include: {
-              comments: true,
+              comments: {
+                include: {
+                  reply: true,
+                },
+              },
             },
           })
-          experience = addNameExp(experience)
+          experience = await formatExp(experience, context)
           return experience
         } else {
           await prisma.userVotes.update({
@@ -53,10 +60,14 @@ export const downvoteExperience = async (_, payload, context) => {
               },
             },
             include: {
-              comments: true,
+              comments: {
+                include: {
+                  reply: true,
+                },
+              },
             },
           })
-          experience = addNameExp(experience)
+          experience = await formatExp(experience, context)
           return experience
         }
       } else {
@@ -78,10 +89,14 @@ export const downvoteExperience = async (_, payload, context) => {
             },
           },
           include: {
-            comments: true,
+            comments: {
+              include: {
+                reply: true,
+              },
+            },
           },
         })
-        experience = addNameExp(experience)
+        experience = await formatExp(experience, context)
         return experience
       }
     } else {
