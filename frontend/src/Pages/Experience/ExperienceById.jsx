@@ -11,7 +11,7 @@ import { FaUserCircle } from "react-icons/fa";
 import { IoIosArrowBack } from "react-icons/io";
 import { LiaCommentSolid } from "react-icons/lia";
 import moment from "moment";
-import { ADD_COMMENT_EXP, ADD_REPLY_TO_EXP_COMMENT, DELETE_EXP_COMMENT, DOWNVOTE_EXPERIENCE, GET_EXPERIENCE_BY_ID, UPVOTE_EXPERIENCE } from '../../gqlOperatons/Experience/mutations';
+import { ADD_COMMENT_EXP, ADD_REPLY_TO_EXP_COMMENT, DELETE_EXP_COMMENT, DOWNVOTE_EXPERIENCE, GET_EXPERIENCE_BY_ID, LIKE_EXP_COMMENT, LIKE_EXP_COMMENT_REPLY, UPVOTE_EXPERIENCE } from '../../gqlOperatons/Experience/mutations';
 import { Loader2 } from '../../Components/Loader2';
 
 
@@ -30,7 +30,6 @@ export const ExperienceById = () => {
     const [experienceId, setExperienceId] = useState(parseInt(params.id));
     const [smallLoading, setSmallLoading] = useState(false);
     const [loadingLocation, setLoadingLocation] = useState(0);
-    const [clickableScreen, setClickableScreen] = useState(true);
 
 
     const [getExperienceData] = useMutation(GET_EXPERIENCE_BY_ID, {
@@ -44,6 +43,9 @@ export const ExperienceById = () => {
     const [addComment] = useMutation(ADD_COMMENT_EXP);
     const [deleteComment] = useMutation(DELETE_EXP_COMMENT);
     const [addReply] = useMutation(ADD_REPLY_TO_EXP_COMMENT);
+    const [likeComment] = useMutation(LIKE_EXP_COMMENT);
+    const [likeCommentReply] = useMutation(LIKE_EXP_COMMENT_REPLY);
+
 
 
     useEffect(() => {
@@ -100,16 +102,16 @@ export const ExperienceById = () => {
             }
         ))
     };
-    const handleCancelReplyInputBox = (id) => {
+    const handleCancelReplyInputBox = (setComment, id) => {
         setUserWantToReply((prev) => (
             {
                 ...prev,
                 [id]: false,
             }
-        ))
-    };
+        ));
+        setComment("");
 
-    const handleSubmitComment = () => { };
+    };
 
     const handleAddCommentOrReplyFunction = async (comment, expId, expCommentId) => {
         expId = parseInt(expId);
@@ -126,7 +128,8 @@ export const ExperienceById = () => {
         const id = isComment ? expId : expCommentId;
 
         setSmallLoading(true);
-        setLoadingLocation(2);
+        if (isComment) setLoadingLocation(2);
+        else setLoadingLocation(4);
         try {
             const variables = {
                 [variableName]: {
@@ -209,6 +212,57 @@ export const ExperienceById = () => {
             if (data) {
                 console.log("downvoted exp successfullly", data);
                 experienceData.downvotes = data.downvoteExperience.downvotes;
+            }
+        } catch (error) {
+            setError(error);
+        } finally {
+            setSmallLoading(false);
+            setLoadingLocation(0);
+        }
+    };
+
+    const handleLikeComment = async (commentId) => {
+        commentId = parseInt(commentId);
+        setSmallLoading(true);
+        setLoadingLocation(3);
+        try {
+            const { data } = await likeComment({
+                variables: {
+                    commentId: commentId,
+                }
+            });
+            if (data) {
+                console.log("liked comment successfullly", data);
+                let prevComments = experienceData.comments;
+                let commentIndex = prevComments.findIndex((comment) => comment.id === commentId);
+                prevComments[commentIndex].likes = data.likeExpComment.likes;
+                setExperienceData({ ...experienceData, comments: prevComments });
+            }
+        } catch (error) {
+            setError(error);
+        } finally {
+            setSmallLoading(false);
+            setLoadingLocation(0);
+        }
+    };
+    const handleLikeCommentReply = async (replyId, commentId) => {
+        replyId=parseInt(replyId);
+        commentId=parseInt(commentId);
+        setSmallLoading(true);
+        setLoadingLocation(5);
+        try {
+            const { data } = await likeCommentReply({
+                variables: {
+                    replyId: replyId,
+                }
+            });
+            if (data) {
+                console.log("liked comment reply successfullly", data);
+                let prevComments = experienceData.comments;
+                let commentIndex = prevComments.findIndex((comment) => comment.id === commentId);
+                let replyIndex = prevComments[commentIndex].reply.findIndex((reply) => reply.id === replyId);
+                prevComments[commentIndex].reply[replyIndex].likes = data.likeExpCommentReply.likes;
+                setExperienceData({ ...experienceData, comments: prevComments });
             }
         } catch (error) {
             setError(error);
@@ -364,18 +418,25 @@ export const ExperienceById = () => {
 
                                     {/* // COMMENT FUNCTIONS   */}
                                     <div className='text-xs  pl-10 py-1 flex gap-5 items-center justify-start'>
-                                        <div className='flex gap-2 justify-start items-center'>
-                                            <button className='hover:text-red-500'><BiUpvote size={13} /></button>
-                                            <h2>{comment.likes}</h2>
-                                            <button className='hover:text-red-500 pt-0.5'><BiDownvote size={13} /></button>
-                                        </div>
+                                        {smallLoading && loadingLocation === 3 && <Loader2 />}
+                                        {loadingLocation !== 3 && (
+                                            <div className='flex gap-2 justify-start items-center'>
+                                                <button className='hover:text-red-500'
+                                                    onClick={() => handleLikeComment(comment.id)}   >
+                                                    <BiUpvote size={13} /></button>
+                                                <h2>{comment.likes}</h2>
+                                                <button className='hover:text-red-500 pt-0.5'
+                                                    onClick={() => handleLikeComment(comment.id)}  >
+                                                    <BiDownvote size={13} /></button>
+                                            </div>
+                                        )}
                                         <div>
                                             {comment.reply?.length > 0 && (
                                                 <button className='flex gap-1 items-center hover:text-red-500'
                                                     onClick={() => handleShowReply(comment.id)}
                                                 >
                                                     <LiaCommentSolid size={13} className='' />
-                                                    <h2>{!showReply[comment.id] ? "Show reply" : "Hide reply"}</h2>
+                                                    <h2>{!showReply[comment.id] ? `Show ${comment.reply?.length} reply` : "Hide reply"}</h2>
                                                 </button>
 
                                             )}
@@ -401,22 +462,37 @@ export const ExperienceById = () => {
                                         handleSubmitFunction={handleAddCommentOrReplyFunction}
                                     />
                                 )}
+                                {smallLoading && loadingLocation === 4 && <Loader2 />}
 
                                 {/* //COMMENT REPLY SECTION  */}
                                 {showReply[comment.id] && (
                                     <div className='flex gap-3 pl-12 pt-1 pb-2'>
                                         <div className='flex flex-col gap-1'>
                                             {comment.reply.map((reply, index) => (
-                                                <div key={index} className='flex gap-2'>
-                                                    <div>
+                                                <div key={index} className='flex flex-col gap-1'>
+                                                    <div className='flex items-center gap-2'>
                                                         <FaUserCircle size={20} />
+                                                        <h3 className='text-xs'> {reply.replierUserName}</h3>
                                                     </div>
-                                                    <div className='flex flex-col gap-1'>
-                                                        <div className='flex gap-2'>
-                                                            <h3 className=''> {reply.replierUserName}</h3>
-                                                        </div>
+                                                    <div className='ml-8 flex flex-col gap-1'>
                                                         <div className='flex flex-wrap'>{reply.description}</div>
                                                     </div>
+                                                    {smallLoading && loadingLocation === 5 && <Loader2 />}
+                                                    {loadingLocation !== 5 && (
+                                                        <div className='ml-9 -mt-0.5 text-xs flex gap-2 justify-start items-center'>
+                                                            {/* <button className='hover:text-red-500'
+                                                                onClick={() => handleLikeComment(comment.id)}   >
+                                                                <BiUpvote size={13} /></button>
+                                                            <h2>{comment.likes}</h2>
+                                                            <button className='hover:text-red-500 pt-0.5'
+                                                                onClick={() => handleLikeComment(comment.id)}  >
+                                                                <BiDownvote size={13} /></button> */}
+                                                            <button className=' hover:text-red-500' onClick={()=>handleLikeCommentReply(reply.id,comment.id)}>
+                                                                Like:
+                                                            </button>
+                                                            <h2 className='-mt-0.5'>{reply.likes}</h2>
+                                                        </div>
+                                                    )}
                                                 </div>
                                             ))}
                                         </div>
@@ -453,7 +529,7 @@ export const InputBoxForComment = ({ expId = 0, expCommentId = 0, handleCancleFu
             <div className='flex items-stretch justify-end gap-1 h-full border-t border-gray-400'>
                 <button
                     className='p-1  my-0 h-full border-l border-gray-400 hover:text-red-500'
-                    onClick={() => handleCancleFunction(id)}
+                    onClick={(e) => handleCancleFunction(setComment, id)}
                 >
                     Cancel
                 </button>

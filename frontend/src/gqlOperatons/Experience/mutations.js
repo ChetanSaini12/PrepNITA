@@ -130,8 +130,20 @@ export const DELETE_EXP_REPLY = gql`
 export const LIKE_EXP_COMMENT = gql`
     mutation likeExpCommentMutation($commentId : Int){
         likeExpComment(commentId : $commentId){
-            id
-            likes
+          id 
+             experienceId
+             description
+                reply{
+                 id
+                 expcommentId
+                 description
+                 replierId
+                 replierUserName
+                 likes
+                }
+                commentorId
+                commentorUserName
+                likes
         }
     }
 `;
@@ -139,6 +151,10 @@ export const LIKE_EXP_COMMENT_REPLY = gql`
     mutation likeExpCommentReplyMutation($replyId : Int){
         likeExpCommentReply(replyId : $replyId){
             id
+            expcommentId
+            description
+            replierId
+            replierUserName
             likes
         }
     }
