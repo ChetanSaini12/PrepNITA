@@ -26,7 +26,7 @@ export const likeExpCommentReply = async (_, payload, context) => {
       const voteEntry = await prisma.userVotes.findFirst({
         where: {
           userId: context.userId,
-          area: 'REPLY',
+          area: 'EXP_REPLY',
           areaId: replyId,
         },
       })
@@ -49,7 +49,7 @@ export const likeExpCommentReply = async (_, payload, context) => {
       await prisma.userVotes.create({
         data: {
           userId: context.userId,
-          area: 'REPLY',
+          area: 'EXP_REPLY',
           areaId: replyId,
           type: 'LIKE',
         },
