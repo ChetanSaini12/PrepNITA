@@ -77,12 +77,12 @@ export const AllExperience = () => {
 
     return (
         <div className='flex flex-col my-3 items-center py-0.5 gap-5 min-w-screen max-w-screen min-h-screen' >
-            <h1 className='text-3xl font-bold'>Explore Latest Companies Experiences</h1>
-            <div className='flex flex-col w-5/6'>
+            <h1 className='mx-1 w-full text-xl sm:text-3xl font-bold  text-center'>Explore Latest Companies Experiences</h1>
+            <div className='flex flex-col w-full'>
                 {ready && experienceData?.length === 0 && <h1 className='text-2xl font-semibold'>No experiences to show</h1>}
                 {experienceData && experienceData?.map((exp, index) => {
                     return (
-                        <div key={index} className=" flex flex-col bg-gray-200 dark:bg-gray-800 dark:opacity-75 rounded shadow-md py-4 px-4 md:px-6  hover:shadow-lg hover:bg-gray-300
+                        <div key={index} className="mx-5 sm:mx-20 flex flex-col bg-gray-200 dark:bg-gray-800 dark:opacity-75 rounded shadow-md py-4 px-4 md:px-6  hover:shadow-lg hover:bg-gray-300
                          dark:hover:bg-gray-700 transition duration-300  mb-2">
                             <Link to={`/experience/${exp.id}`}>
                                 <div className='flex justify-between items-center gap-1'>

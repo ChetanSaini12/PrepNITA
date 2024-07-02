@@ -511,7 +511,7 @@ export const ExperienceById = () => {
             {smallLoading && loadingLocation === 2 && <Loader2 />}
             {loadingLocation !== 2 && (
               <InputBoxForComment
-                handleCancleFunction={handleCancelReplyInputBox}
+              handleCancelFunction={handleCancelReplyInputBox}
                 handleSubmitFunction={handleAddCommentOrReplyFunction}
                 expId={experienceData.id}
               />
@@ -611,7 +611,7 @@ export const ExperienceById = () => {
                     ml={12}
                     mr={5}
                     expCommentId={comment.id}
-                    handleCancleFunction={handleCancelReplyInputBox}
+                    handleCancelFunction={handleCancelReplyInputBox}
                     handleSubmitFunction={handleAddCommentOrReplyFunction}
                   />
                 )}
