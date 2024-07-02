@@ -5,94 +5,96 @@
 /* styles.css */
 
 :root {
-    /* Color Variables */
-    --primary-color: #1f252d;
-    --secondary-color: #52b36d;
-    --accent-color: #d0916f;
-    --element-color: #417a55;
-    --helper-color: #4ea8d0;
-    --text-color: '#000000'
+  /* Color Variables */
+  --primary-color: #1f252d;
+  --secondary-color: #52b36d;
+  --accent-color: #d0916f;
+  --element-color: #417a55;
+  --helper-color: #4ea8d0;
+  --text-color: '#000000'
 
 
     /* Font Variables */
     --main-font-family: 'Arial', sans-serif;
-    --heading-font-family: 'Roboto', sans-serif;
+  --heading-font-family: 'Roboto', sans-serif;
 
-    /* Spacing Variables */
-    --default-padding: 16px;
-    --medium-spacing: 8px;
-    --small-spacing: 4px;
+  /* Spacing Variables */
+  --default-padding: 16px;
+  --medium-spacing: 8px;
+  --small-spacing: 4px;
 
-    /* Border Variables */
-    --border-radius: 4px;
-    --border-width: 1px;
+  /* Border Variables */
+  --border-radius: 4px;
+  --border-width: 1px;
 
 }
 
 
 .dark {
-    --text-color: #FEFEFA; /* Text color for dark mode */
+  --text-color: #FEFEFA;
+  /* Text color for dark mode */
 }
 
 
 
 .white-image {
-        filter: brightness(0) saturate(100%) invert(35%) sepia(100%) saturate(2000%) hue-rotate(-50deg);
-      
-  }
+  filter: brightness(0) saturate(100%) invert(35%) sepia(100%) saturate(2000%) hue-rotate(-50deg);
 
-  
-  /* App.css */
+}
+
+
+/* App.css */
 .animate-Enter {
-    opacity: 1;
-    transition: opacity 0.1s ease-in;
-  }
-  
-  .animate-Leave {
-    opacity: 0;
-    transition: opacity 0.1s ease-out;
-  }
-  
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-  }
-  
-  .modal-content {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    text-align: center;
-  }
-  
-  .modal-actions {
-    margin-top: 20px;
-  }
-  
-  .modal-actions button {
-    margin: 0 10px;
-  }
-  
-  .disabledButton {
-    cursor: not-allowed;
-    opacity: 0.5;
-    pointer-events: none;
-  } 
-  
-  /* HTML: <div class="loader"></div> */
+  opacity: 1;
+  transition: opacity 0.1s ease-in;
+}
+
+.animate-Leave {
+  opacity: 0;
+  transition: opacity 0.1s ease-out;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.modal-actions {
+  margin-top: 20px;
+}
+
+.modal-actions button {
+  margin: 0 10px;
+}
+
+.disabledButton {
+  cursor: not-allowed;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* HTML: <div class="loader"></div> */
 .loader {
   width: 40px;
   aspect-ratio: 1;
   position: relative;
 }
+
 .loader:before,
 .loader:after {
   content: "";
@@ -104,23 +106,52 @@
   aspect-ratio: 1;
   background: #3FB8AF;
   animation:
-    l2-1 2s  infinite,
-    l2-2 1s infinite ;
+    l2-1 2s infinite,
+    l2-2 1s infinite;
 }
+
 .loader:after {
-  background:#FF3D7F;
-  animation-delay: -1s,0s;
+  background: #FF3D7F;
+  animation-delay: -1s, 0s;
 }
+
 @keyframes l2-1 {
-  0%   {top:0   ;left:0}
-  25%  {top:100%;left:0}
-  50%  {top:100%;left:100%}
-  75%  {top:0   ;left:100%}
-  100% {top:0   ;left:0}
+  0% {
+    top: 0;
+    left: 0
+  }
+
+  25% {
+    top: 100%;
+    left: 0
+  }
+
+  50% {
+    top: 100%;
+    left: 100%
+  }
+
+  75% {
+    top: 0;
+    left: 100%
+  }
+
+  100% {
+    top: 0;
+    left: 0
+  }
 }
+
 @keyframes l2-2 {
-   40%,50% {transform: rotate(0.25turn) scale(0.5)}
-   100%    {transform: rotate(0.5turn) scale(1)}
+
+  40%,
+  50% {
+    transform: rotate(0.25turn) scale(0.5)
+  }
+
+  100% {
+    transform: rotate(0.5turn) scale(1)
+  }
 }
 
 .progress-bar-container {
@@ -140,7 +171,7 @@
 .progress-node {
   display: flex;
   flex-direction: column;
-  
+
 }
 
 /* styles.css */
@@ -172,14 +203,54 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-.screenInActive {
-  z-index: 9000; /* Ensure it is above other elements */
-  pointer-events: none; /* Prevent any mouse interactions */
-  user-select: none; /* Prevent text selection and keyboard interactions */
-  outline: none; /* Remove any focus outlines */
-  opacity: 0.6; /* Make it semi-transparent */
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
+.screenInActive {
+  z-index: 9000;
+  /* Ensure it is above other elements */
+  pointer-events: none;
+  /* Prevent any mouse interactions */
+  user-select: none;
+  /* Prevent text selection and keyboard interactions */
+  outline: none;
+  /* Remove any focus outlines */
+  opacity: 0.6;
+  /* Make it semi-transparent */
+}
+
+.linearLoader-container {
+  width: 100%;
+  height: 4px;
+  /* Adjust the height of the loader */
+  background-color: #e0e0e0;
+  /* Background color of the container */
+  position: relative;
+  overflow: hidden;
+}
+
+.linearLoader {
+  width: 0;
+  height: 100%;
+  background-color: #3b82f6;
+  /* Color of the loader */
+  position: absolute;
+  animation: load 2s linear infinite;
+  /* Duration and repeat of the animation */
+}
+
+@keyframes load {
+  from {
+    width: 0%;
+  }
+
+  to {
+    width: 100%;
+  }
+}

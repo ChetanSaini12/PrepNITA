@@ -109,7 +109,7 @@ const Question = () => {
                 {ready && data?.length === 0 && <h1 className='text-2xl font-semibold'>No questions to show</h1>}
                 {ready && data && data?.map((question, index) => {
                     return (
-                        <div key={index} className="mx-5 sm:mx-20 flex flex-col bg-gray-200 dark:bg-gray-800 dark:opacity-75 rounded shadow-md py-3 px-4 md:px-6  hover:shadow-lg hover:bg-gray-400
+                        <div key={index} className="mx-5 sm:mx-20 flex flex-col bg-gray-200 dark:bg-gray-800 dark:opacity-75 rounded shadow-md py-4 px-4 md:px-6  hover:shadow-lg hover:bg-gray-400
                          dark:hover:bg-gray-700 transition duration-300  mb-2">
                             <Link to={`/questions/${question.id}`}>
                                 <div className='flex justify-between items-center gap-1'>
