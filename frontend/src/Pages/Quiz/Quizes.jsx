@@ -108,8 +108,8 @@ function Quizes() {
     toast.error(ERROR.message ? ERROR.message : ERROR || "something went wrong");
   }
   return (
-    <div className='flex flex-col items-center mb-5 mx-1 gap-5 min-w-screen max-w-screen min-h-screen' >
-      <img className='w-full h-80 object-cover' src={QuizLogo1} alt="Quiz logo" />
+    <div className='flex flex-col my-4 items-center mb-5 mx-1 gap-5 min-w-screen max-w-screen min-h-screen' >
+      <img className=' w-2/3 rounded object-cover' src={QuizLogo1} alt="Quiz logo" />
       <div className='w-full flex'>
         <button className={`${baseButtonClass} ${buttonIndex === 0 ? selectedButtonClass : nonSelectedButtonClass
           }`}
