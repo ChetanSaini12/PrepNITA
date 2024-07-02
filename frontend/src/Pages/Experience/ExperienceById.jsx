@@ -489,7 +489,7 @@ export const ExperienceById = () => {
                                         {loadingLocation !== 3 && comment.isLiked && (
                                             <div className='flex items-center gap-1'>
                                                 <button className=' hover:text-gray-300' onClick={() => handleLikeComment(comment.id)}>
-                                                    <IoIosHeart size={13} color='red' />
+                                                    <IoIosHeart size={15} color='red' />
                                                 </button>
                                                 <h2>{comment.likes}</h2>
                                             </div>
@@ -497,7 +497,7 @@ export const ExperienceById = () => {
                                         {loadingLocation !== 3 && !comment.isLiked && (
                                             <div className='flex items-center gap-1'>
                                                 <button className='hover:text-red-500' onClick={() => handleLikeComment(comment.id)}>
-                                                    <CiHeart size={13} />
+                                                    <CiHeart size={15} />
                                                 </button>
                                                 <h2>
                                                     {comment.likes}
@@ -576,15 +576,15 @@ export const ExperienceById = () => {
                                                         <div className='ml-9 -mt-0.5 text-xs flex gap-2 justify-start items-center'>
                                                             {reply.isLiked && (
                                                                 <button className=' hover:text-gray-300' onClick={() => handleLikeCommentReply(reply.id, comment.id)}>
-                                                                    <IoIosHeart size={13} color='red' />
+                                                                    <IoIosHeart size={15} color='red' />
                                                                 </button>
                                                             )}
                                                             {reply.isLiked === false && (
                                                                 <button className='hover:text-red-500' onClick={() => handleLikeCommentReply(reply.id, comment.id)}>
-                                                                    <CiHeart size={13} />
+                                                                    <CiHeart size={15} />
                                                                 </button>
                                                             )}
-                                                            <h2 className='-ml-0.5 -mt-0.5'>{reply.likes}</h2>
+                                                            <h2 className='-ml-0.5'>{reply.likes}</h2>
                                                             {reply.replierId === userId && (
                                                                 <div>
                                                                     <button className='flex items-center gap-0.5 hover:text-red-500'
