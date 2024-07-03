@@ -136,4 +136,9 @@ export const typeDefs = `#graphql
         githubProfile           : String
     }
 
+    type File {
+        filename: String!
+        mimetype: String!
+        encoding: String!
+    }
 `

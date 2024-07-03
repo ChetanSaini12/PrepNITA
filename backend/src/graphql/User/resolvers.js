@@ -8,6 +8,7 @@ import { getCurrentUser } from '../../controllers/User/getCurrentUser.js'
 import { onboardUser } from '../../controllers/Auth/onboardUser.js'
 import { updateUserProfile } from '../../controllers/User/updateUserProfile.js'
 import { getUserById } from '../../controllers/User/getUserById.js'
+import { profilePicUpload } from '../../controllers/User/profilePicUpload.js'
 
 
 const queries = {
@@ -22,7 +23,8 @@ const mutations = {
   updateUserProfile: (_, payload, context) => updateUserProfile(_, payload, context),
   updateUserRole: (_, payload, context) => checkRole({_, payload, context}, updateUserRole),
   getUserById: (_, payload) => getUserById(_, payload.id),
-  getAllUser: (_, payload) => getAllUserData(_, payload)
+  getAllUser: (_, payload) => getAllUserData(_, payload),
+  profilePicUpload: (_, payload) => profilePicUpload(_, payload)
 } 
 
 export const resolvers = { queries, mutations }
