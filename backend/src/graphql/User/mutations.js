@@ -16,7 +16,7 @@ export const mutations = `#graphql
 
     getAllUser(user : UserInputOptional) : [User]
 
-    profilePicUpload(file: Upload!): File!
+    profilePicUpload(file: Upload!): String!
 `
     
     // createUser(User: UserInput) : UserWithJWT

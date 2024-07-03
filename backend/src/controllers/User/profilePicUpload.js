@@ -1,13 +1,8 @@
-import { finished } from 'stream/promises'
-import { createWriteStream } from 'fs';
+import { storeFile } from "../../utils/storeFile.js"
 
 export const profilePicUpload = async (_, payload) => {
-  const file = await payload.file
-  const { createReadStream, filename, mimetype, encoding } = await file
-  const stream = createReadStream()
-  const out = createWriteStream('local-file-output.jpeg')
-  stream.pipe(out)
-  await finished(out)
-
-  return { filename, mimetype, encoding }
+  const localFilePath = await storeFile(payload.file)
+  console.log('FILEPATH : ' , localFilePath)
+  console.log('TYPE OF localfilepath' , typeof(localFilePath))
+  return localFilePath
 }
