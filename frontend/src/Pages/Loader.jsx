@@ -39,7 +39,7 @@ export const Loader = () => {
   }, []);
 
   return (
-    <div className="flex flex-col gap-10 items-center justify-center h-screen border-spacing-0">
+    <div className="flex flex-col gap-10 items-center justify-center h-screen border-spacing-0 px-2">
       {/* <Lottie
           options={defaultOptions}
           height={100}

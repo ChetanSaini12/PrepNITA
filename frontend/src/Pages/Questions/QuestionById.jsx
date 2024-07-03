@@ -35,10 +35,6 @@ const QuestionById = () => {
   const [updateAproveStatus] = useMutation(CHANGE_APPROVE_STATUS_OF_QUE);
   const [updateVisibilityStatus] = useMutation(CHANGE_VISIBILIY_STATUS_OF_QUE);
 
-  if(ready){
-    console.log("userId",userId);
-    console.log("role",role);
-  }
 
   useEffect(() => {
     dispatch(setLoading(true));
@@ -155,7 +151,7 @@ const QuestionById = () => {
 
   const likedClass = "text-green-500";
   const disLikedClass = "text-red-500";
-  const notAllowedToSeeApproveButton=["USER","ADMIN"];
+  const notAllowedToSeeApproveButton = ["USER", "ADMIN"];
 
   if (isLoading || !ready) return <Loader />;
   if (ERROR) {
@@ -167,7 +163,7 @@ const QuestionById = () => {
   }
   return (
     <>
-      <div className='w-full'>
+      <div className=' w-full'>
         {smallLoading && (
           <LinearLoader />
         )}
@@ -178,7 +174,7 @@ const QuestionById = () => {
             <div className="flex justify-between items-center gap-2 mb-4">
               {/* <h2 className="text-2xl font-bold">{question.title}</h2> */}
               <Link to={'/questions'} className='flex items-center justify-start gap-1 hover:text-red-500'>
-                <IoIosArrowBack />
+                <IoIosArrowBack className='mt-0.5' />
                 <h3>Back</h3>
               </Link>
               <div className="flex  gap-2 items-center ">
@@ -223,9 +219,9 @@ const QuestionById = () => {
                 ))}
               </div>
               <div className='text-sm flex gap-2 ml-0.5 mt-4'>
-                <button onClick={() => handleQuestionAproveStatus(question.id)} className={`${notAllowedToSeeApproveButton.map((val)=>val===role) ? 'disabledButton' : ""} border border-gray-300 dark:border-gray-700 
+                <button onClick={() => handleQuestionAproveStatus(question.id)} className={`${notAllowedToSeeApproveButton.map((val) => val === role) ? 'disabledButton' : ""} border border-gray-300 dark:border-gray-700 
                 hover:border-red-500 dark:hover:border-red-400 py-0.5 px-2 rounded-lg`}>Approved {question.isApproved ? "✅" : "❌"} </button>
-                <button onClick={() => handleQuestionVisibilityStatus(question.id)} className={`${userId!== question.createdBy ? `disabledButton` : ""} border border-gray-300 dark:border-gray-700 
+                <button onClick={() => handleQuestionVisibilityStatus(question.id)} className={`${userId !== question.createdBy ? `disabledButton` : ""} border border-gray-300 dark:border-gray-700 
                 hover:border-red-500 dark:hover:border-red-400 py-0.5 px-2 rounded-lg`}>Visibility {question.isVisible ? "✅" : "❌"} </button>
                 {/* <button onClick={handleQuizEdit} className={`${!isOwner ? `disabledButton` : ""} border border-gray-300 dark:border-gray-700 
                 hover:border-red-500 dark:hover:border-red-400 px-2 rounded-lg`}>Edit </button>
