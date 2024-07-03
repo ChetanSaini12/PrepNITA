@@ -9,6 +9,8 @@ export const typeDefs = `#graphql
         links : [QueAddOnLink]
         isApproved : Boolean
         isVisible : Boolean
+        creatorUsername : String
+        creatorName : String
         upvotes : Int
         downvotes : Int
         isLiked  : Boolean
