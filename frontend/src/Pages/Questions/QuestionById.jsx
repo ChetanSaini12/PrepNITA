@@ -35,10 +35,6 @@ const QuestionById = () => {
   const [updateAproveStatus] = useMutation(CHANGE_APPROVE_STATUS_OF_QUE);
   const [updateVisibilityStatus] = useMutation(CHANGE_VISIBILIY_STATUS_OF_QUE);
 
-  if (ready) {
-    console.log("userId", userId);
-    console.log("role", role);
-  }
 
   useEffect(() => {
     dispatch(setLoading(true));
