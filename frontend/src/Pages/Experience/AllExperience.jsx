@@ -14,6 +14,10 @@ import { AiTwotoneLike } from "react-icons/ai";
 import { PiHandsClappingLight } from "react-icons/pi";
 import { FaRegComment } from "react-icons/fa";
 import moment from 'moment';
+import { FaLocationDot } from "react-icons/fa6";
+import { TbTargetArrow } from "react-icons/tb";
+import { BsPencilFill } from "react-icons/bs";
+import { FaRegCalendarAlt } from "react-icons/fa";
 
 export const AllExperience = () => {
 
@@ -77,12 +81,12 @@ export const AllExperience = () => {
 
     return (
         <div className='flex flex-col my-3 items-center py-0.5 gap-5 min-w-screen max-w-screen min-h-screen' >
-            <h1 className='text-3xl font-bold'>Explore Latest Companies Experiences</h1>
-            <div className='flex flex-col w-5/6'>
+            <h1 className='mx-1 w-full text-xl sm:text-3xl font-bold  text-center'>Explore Latest Companies Experiences</h1>
+            <div className='flex flex-col w-full'>
                 {ready && experienceData?.length === 0 && <h1 className='text-2xl font-semibold'>No experiences to show</h1>}
                 {experienceData && experienceData?.map((exp, index) => {
                     return (
-                        <div key={index} className=" flex flex-col bg-gray-200 dark:bg-gray-800 dark:opacity-75 rounded shadow-md py-4 px-4 md:px-6  hover:shadow-lg hover:bg-gray-300
+                        <div key={index} className="mx-5 sm:mx-20 flex flex-col bg-gray-200 dark:bg-gray-800 dark:opacity-75 rounded shadow-md py-4 px-4 md:px-6  hover:shadow-lg hover:bg-gray-300
                          dark:hover:bg-gray-700 transition duration-300  mb-2">
                             <Link to={`/experience/${exp.id}`}>
                                 <div className='flex justify-between items-center gap-1'>
@@ -94,9 +98,22 @@ export const AllExperience = () => {
                                         <div className='flex gap-1 items-center'>
                                             <h1 className='text-md sm:text-lg font-semibold'>{exp.company} | {exp.role}</h1>
                                         </div>
+                                        <div className='my-2 text-sm flex flex-wrap justify-start gap-2'>
+                                            <FaRegCalendarAlt />
+                                            <h2>{moment(exp.eventDate).format('DD MMMM')}</h2>
+                                            <div className='flex gap-1 items-center '>
+                                                <TbTargetArrow />
+                                                <h3 className=''>{exp.type == "ON_CAMPUS" ? "On Campus" : "Off Campus"}</h3>
+                                            </div>
+                                            <div className='flex gap-1 items-center '>
+                                                <FaLocationDot />
+                                                <h3 className=''>{exp.location}</h3>
+                                            </div>
+                                        </div>
                                         {/* EXP DESCRIPTION */}
                                         <div className='text-pretty text-xs text-slate-600 dark:text-slate-400 leading-relaxed' dangerouslySetInnerHTML={{ __html: truncatedDescription(exp.description, 20) }} />
                                         <div className=' mt-3 text-xs flex flex-wrap justify-start gap-2'>
+                                            <BsPencilFill size={10} />
                                             <h2>{moment(exp.createdAt).format('DD MMMM')}</h2>
                                             <div className='flex gap-1 items-center '>
                                                 <PiHandsClappingLight size={13} />
@@ -108,7 +125,7 @@ export const AllExperience = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <img src="https://t4.ftcdn.net/jpg/02/84/25/75/240_F_284257577_cSLO6IMF6Zcm9EQwdYSONsttvGgRzv8R.jpg" alt="Company image"
+                                    <img src={exp.helperPic} alt="Company image"
                                         className='h-14 sm:h-24 object-cover rounded sm:mr-5'
                                     />
                                 </div>

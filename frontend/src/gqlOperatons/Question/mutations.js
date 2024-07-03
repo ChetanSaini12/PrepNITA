@@ -48,7 +48,7 @@ export const GET_QUESTION_BY_ID = gql`
             id 
             description
             answer
-             
+            createdBy
             tags 
             links {
                 id
@@ -57,6 +57,7 @@ export const GET_QUESTION_BY_ID = gql`
                 questionId
               }
             isApproved 
+            isVisible
             upvotes 
             downvotes
             isLiked
@@ -93,21 +94,15 @@ export const DOWN_VOTE_QUESTION = gql`
 export const CHANGE_APPROVE_STATUS_OF_QUE = gql`
     mutation changeApproveStatusOfQueMutation($QuestionId:Int!){
         changeApproveStatusOfQue(QuestionId:$QuestionId){
-            id 
-        
-            description
-            answer
-             
-            tags 
-            links {
-                id
-                title
-                url
-                questionId
-              }
             isApproved 
-            upvotes 
-            downvotes
+        }
+    }
+`;
+
+export const CHANGE_VISIBILIY_STATUS_OF_QUE=gql`
+    mutation changeVisibilityStatusOfQueMutation($QuestionId:Int!){
+        changeVisibleStatusOfQue(QuestionId:$QuestionId){
+            isVisible
         }
     }
 `;
@@ -124,10 +119,9 @@ export const UPDATE_QUESTION = gql`
     mutation updateQuestionMutation($QuestionId:Int!,$Question:QuestionInput){
         updateQuestion(QuestionId:$QuestionId,Question:$Question){
             id 
-    
             description
             answer
-             
+             createdBy
             tags 
             links {
                 id

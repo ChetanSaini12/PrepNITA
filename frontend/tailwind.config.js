@@ -5,9 +5,13 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
     'node_modules/flowbite-react/lib/esm/**/*.js',
   ],
-darkMode: 'class', //Enables dark mode based on class
+  darkMode: 'class', //Enables dark mode based on class
   theme: {
-    extend: {},
+    extend: {
+      // screens: {
+      //   'custom-md': '800px', // Custom breakpoint at 800px
+      // },
+    },
   },
   variants: {
     extend: {
