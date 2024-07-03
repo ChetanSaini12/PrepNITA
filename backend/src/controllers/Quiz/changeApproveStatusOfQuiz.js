@@ -1,6 +1,7 @@
 import { GraphQLError } from 'graphql'
 import { prisma } from '../../../prisma/index.js'
 import { getQuizByIdHelper } from './getQuizByIdHelper.js'
+import { addUserDetails } from '../../utils/addUserDetails.js'
 
 export const changeApproveStatusOfQuiz = async (_, payload, context) => {
   try {
@@ -8,7 +9,7 @@ export const changeApproveStatusOfQuiz = async (_, payload, context) => {
     if (context.isAdmin) {
       const existingQuiz = await getQuizByIdHelper(payload.quizId)
       const updatedIsApproved = !existingQuiz.isApproved
-      const quiz = await prisma.quiz.update({
+      let quiz = await prisma.quiz.update({
         where: { id: payload.quizId },
         data: { isApproved: updatedIsApproved },
       })
@@ -16,6 +17,7 @@ export const changeApproveStatusOfQuiz = async (_, payload, context) => {
         `Approve Status Changed of Quiz with ID : ${payload.quizId} - ${updatedIsApproved}`
       )
       console.log("APPROVED QUIZ : ", JSON.stringify(quiz));
+      quiz = await addUserDetails(quiz, quiz.createdBy)
       return quiz
     }
     console.log(

@@ -9,6 +9,7 @@ export const interviewNameAdd = async (interview) => {
   console.log('interviewee : ', interviewee);
   interview['intervieweeName'] = interviewee?.name 
   interview['intervieweeEmail'] = interviewee?.email
+  interview['intervieweeUsername'] = interviewee?.username
   if (interview.interviewerId) {
     const interviewer = await prisma.userInformation.findFirst({
       where: {
@@ -18,7 +19,8 @@ export const interviewNameAdd = async (interview) => {
     console.log('Interviewer : ', interviewer);
     interview['interviewerName'] = interviewer?.name
     interview['interviewerEmail'] = interviewer?.email
+    interview['interviewerUsername'] = interviewer?.username
   }
-  console.log('INTERVIEw in function : ', interview);
+  console.log('INTERVIEW in function : ', interview);
   return interview
 }

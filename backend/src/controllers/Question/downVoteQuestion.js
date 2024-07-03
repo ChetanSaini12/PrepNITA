@@ -2,6 +2,7 @@ import { GraphQLError } from 'graphql'
 import { prisma } from '../../../prisma/index.js'
 import { getQuestionByIdHelper } from './getQuestionByIdHelper.js'
 import { addLikeStatus } from '../../utils/addLikeStatus.js'
+import { addUserDetails } from '../../utils/addUserDetails.js'
 
 export const downVoteQuestion = async (_, payload, context) => {
   try {
@@ -29,6 +30,7 @@ export const downVoteQuestion = async (_, payload, context) => {
           )
           
         updQuestion = addLikeStatus(updQuestion, context.userId, 'QUESTION')
+        updQuestion = await addUserDetails(updQuestion, updQuestion.createdBy)
           return updQuestion
         } else {
           // Update vote entry type to DISLIKE, and increment downvotes and decrement upvotes
@@ -46,6 +48,7 @@ export const downVoteQuestion = async (_, payload, context) => {
           )
           
         updQuestion = addLikeStatus(updQuestion, context.userId, 'QUESTION')
+        updQuestion = await addUserDetails(updQuestion, updQuestion.createdBy)
           return updQuestion
         }
       } else {
@@ -67,6 +70,7 @@ export const downVoteQuestion = async (_, payload, context) => {
         )
         
         updQuestion = addLikeStatus(updQuestion, context.userId, 'QUESTION')
+        updQuestion = await addUserDetails(updQuestion, updQuestion.createdBy)
         return updQuestion
       }
     }

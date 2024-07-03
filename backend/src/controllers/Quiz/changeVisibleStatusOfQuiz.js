@@ -18,7 +18,7 @@ export const changeVisibleStatusOfQuiz = async (_, payload, context) => {
     if (quiz) {
       const currenVisibleStatus = quiz.isVisible
       const updatedVisibleStatus = !currenVisibleStatus
-      const updatedQuiz = await prisma.quiz.update({
+      let updatedQuiz = await prisma.quiz.update({
         where: {
           id: payload.quizId,
         },
@@ -29,6 +29,7 @@ export const changeVisibleStatusOfQuiz = async (_, payload, context) => {
       console.log(
         `Updated Visible Status of Quiz with ID : ${payload.quizId} - ${updatedVisibleStatus}`
       )
+      updatedQuiz = await addUserDetails(updatedQuiz, updatedQuiz.createdBy)
       return updatedQuiz
     } else {
       throw new GraphQLError("Quiz with given quizId doesn't exist", {

@@ -1,11 +1,12 @@
 import { GraphQLError } from 'graphql'
 import { prisma } from '../../../prisma/index.js'
+import { addUserDetails } from '../../utils/addUserDetails.js'
 
 export const createQuestion = async (_, payload, context) => {
   try {
     console.log('CREATING QUESTION : ', payload)
     if (context.isUser) {
-      const question = await prisma.question.create({
+      let question = await prisma.question.create({
         data: {
           description: payload.Question.description,
           answer: payload.Question.answer,
@@ -15,6 +16,7 @@ export const createQuestion = async (_, payload, context) => {
         },
       })
       console.log('QUESTION CREATED : ', question)
+      question = await addUserDetails(question, question.createdBy)
       return question
     }
     console.log('QUESTION CREATION FAILED!!')

@@ -1,6 +1,7 @@
 import { GraphQLError } from 'graphql'
 import { prisma } from '../../../prisma/index.js'
 import { getQuizByIdHelper } from './getQuizByIdHelper.js'
+import { addUserDetails } from '../../utils/addUserDetails.js'
 
 export const updateQuiz = async (_, payload, context) => {
   try {
@@ -8,7 +9,7 @@ export const updateQuiz = async (_, payload, context) => {
     const quiz = await getQuizByIdHelper(payload.quizId)
 
     if (quiz.createdBy === context.userId) {
-      const quiz = await prisma.quiz.update({
+      let quiz = await prisma.quiz.update({
         where: { id: payload.quizId },
         data: {
           title: payload.Quiz.title,
@@ -18,6 +19,7 @@ export const updateQuiz = async (_, payload, context) => {
         },
       })
       console.log(`UPDATED QUIZ WITH ID : ${payload.quizId}`)
+      quiz = await addUserDetails(quiz, quiz.createdBy)
       return quiz
     }
 

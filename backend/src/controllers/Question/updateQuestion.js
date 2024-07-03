@@ -1,6 +1,7 @@
 import { GraphQLError } from 'graphql'
 import { prisma } from '../../../prisma/index.js'
 import { getQuestionByIdHelper } from './getQuestionByIdHelper.js'
+import { addUserDetails } from '../../utils/addUserDetails.js'
 
 export const updateQuestion = async (_, payload, context) => {
   try {
@@ -23,6 +24,7 @@ export const updateQuestion = async (_, payload, context) => {
         },
       })
       console.log(`UPDATED QUESTION WITH ID : ${payload.QuestionId}`)
+      question = await addUserDetails(question, question.createdBy)
       return question
     }
 
