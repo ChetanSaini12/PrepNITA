@@ -429,19 +429,29 @@ export const ExperienceById = () => {
               </div>
               {/* // experience details */}
               <div className="flex flex-col gap-3 w-full p-5 mb-5 border-l border-gray-300 dark:border-gray-700">
-                <div className="flex flex-wrap gap-1 justify-start items-start ">
-                  <h1 className="text-lg sm:text-xl -mt-1 sm:mt-0 font-semibold">
-                    {" "}
-                    {experienceData.company}
-                  </h1>
-                  <h3 className="text-md sm:text-lg font-semibold">
-                    | {experienceData.role}
-                  </h3>
-                  {experienceData.location && (
+                <div className="flex flex-row justify-between items-end">
+                  <div className="flex flex-wrap gap-1 justify-start items-start ">
+                    <h1 className="text-lg sm:text-xl -mt-1 sm:mt-0 font-semibold">
+                      {" "}
+                      {experienceData.company}
+                    </h1>
                     <h3 className="text-md sm:text-lg font-semibold">
-                      | {experienceData.location}
+                      | {experienceData.role}
                     </h3>
-                  )}
+                    {experienceData.location && (
+                      <h3 className="text-md sm:text-lg font-semibold">
+                        | {experienceData.location}
+                      </h3>
+                    )}
+                  </div>
+                  <div className="flex flex-wrap gap-1 justify-start items-start ">
+                    <h1 className="text-md -mt-1 sm:mt-0 font-semibold">
+                      {formatDate(experienceData.eventDate)}
+                    </h1>
+                    <h3 className="text-md font-semibold">
+                      | {experienceData.type == "ON_CAMPUS" ? "On Campus" : "Off Campus"}
+                    </h3>
+                  </div>
                 </div>
                 <div className=" border-t border-gray-300 dark:border-gray-700"></div>
                 {/* //User details */}

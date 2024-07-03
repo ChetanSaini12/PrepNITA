@@ -18,13 +18,16 @@ export const GET_ALL_EXPERIENCE = gql`
          role
          description
          anonymous
+         helperPic
+         location
+         type
+         eventDate
          createdBy
          creatorName
          creatorUsername
          createdAt
          upvotes
          downvotes
-         comments{id}
         }
     }
 `;
@@ -37,6 +40,10 @@ export const GET_EXPERIENCE_BY_ID = gql`
             role
             description
             anonymous
+            helperPic
+            location
+            type
+            eventDate                              
             createdBy
             creatorName
             creatorUsername

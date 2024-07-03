@@ -5,6 +5,10 @@ export const typeDefs = `#graphql
         company : String
         role : String
         description : String
+        helperPic : String
+        location : String
+        eventDate : DateTime
+        type : String
         anonymous : Boolean
         createdBy : Int
         creatorName : String
@@ -45,6 +49,10 @@ export const typeDefs = `#graphql
         role : String
         description : String
         anonymous : Boolean
+        helperPic : Upload
+        location : String
+        eventDate : DateTime
+        type : String
     }
 
     input InputExpComment {
