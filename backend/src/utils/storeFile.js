@@ -16,11 +16,12 @@ export const storeFile = async (file) => {
   const newFilename = `file-${curDateTime}${ext}`;
   
   // Create a writable stream to save the file locally
+  const newFilePath = `src/temp.filestorage/${newFilename}`;
   const out = createWriteStream(`src/temp.filestorage/${newFilename}`);
   stream.pipe(out);
   
   // Wait until the writing is finished
   await finished(out);
 
-  return newFilename;
+  return newFilePath;
 };
