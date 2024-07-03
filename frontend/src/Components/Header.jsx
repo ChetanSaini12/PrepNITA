@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { toggleTheme } from '../app/theme/themSlice'
 import Lottie from 'react-lottie';
 import animationData from '../../src/lotties/startup.json';
-import { LogoutUser, setLoading} from '../app/user/userSlice'
+import { LogoutUser, setLoading } from '../app/user/userSlice'
 
 
 function Header() {
@@ -14,10 +14,10 @@ function Header() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { theme } = useSelector(state => state.theme)
-    const { loggedIn,id } = useSelector((state) => state.user);
+    const { loggedIn, id } = useSelector((state) => state.user);
 
-    
-    console.log("user state at header ", loggedIn,id);
+
+    console.log("user state at header ", loggedIn, id);
 
     const logoutHandler = () => {
         dispatch(LogoutUser());
@@ -28,14 +28,14 @@ function Header() {
         loop: true,
         autoplay: true,
         animationData: animationData,
-        
+
     };
 
 
     return (
-        <Navbar className='w-full z-10 top-0 border-b-2 dark:bg-gray-800'>
+        <Navbar className='stickyPosition w-full z-10 mb-30 border-b-2 dark:bg-gray-800'>
             <Link to="/" className='font-bold text-lg flex-col '>
-            
+
                 <span className='px-2 py-1 bg-gradient-to-r from from-cyan-400  via-cyan-500 to-cyan-900 rounded-lg text-white text-lg font-bold ab'>PreP</span> NITA
             </Link>
             <div className='flex gap-2 md:order-2'>
@@ -59,14 +59,14 @@ function Header() {
             </div>
             <Navbar.Collapse>
                 {/* <Navbar.Link active={path==='/'}  as={'div'}> */}
-                <Navbar.Link active={path==='/'} as={'div'}>
+                <Navbar.Link active={path === '/'} as={'div'}>
                     <Link to='/'>Home</Link>
                 </Navbar.Link>
                 {/* <Navbar.Link active={path==='/quizes'} as={'div'}> */}
-                <Navbar.Link active={path==='/quizes'} as={'div'}>
+                <Navbar.Link active={path === '/quizes'} as={'div'}>
                     <Link to='/quizes'>Quizes</Link>
                 </Navbar.Link>
-                <Navbar.Link active={path==='/questions'} as={'div'}>
+                <Navbar.Link active={path === '/questions'} as={'div'}>
                     <Link to='/questions'>Questions</Link>
                 </Navbar.Link>
                 {/* <Navbar.Link active={path==='/dashboard'} as={'div'}> */}
@@ -81,7 +81,7 @@ function Header() {
                     <Link to='/experience'>Experience</Link>
                 </Navbar.Link>
                 {/* <Navbar.Link active={path==='/discuss'} as={'div'}> */}
-                <Navbar.Link active={path === '/contribute' } as={'div'}>
+                <Navbar.Link active={path === '/contribute'} as={'div'}>
                     <Link to='/contribute'>Contribute</Link>
                 </Navbar.Link>
                 <Navbar.Link active={path === '/profile'} as={'div'}>
