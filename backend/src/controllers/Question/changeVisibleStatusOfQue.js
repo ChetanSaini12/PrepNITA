@@ -1,5 +1,6 @@
 import { GraphQLError } from 'graphql'
 import { prisma } from '../../../prisma/index.js'
+import { addUserDetails } from '../../utils/addUserDetails.js'
 
 export const changeVisibleStatusOfQue = async (_, payload, context) => {
   /*
@@ -24,7 +25,7 @@ export const changeVisibleStatusOfQue = async (_, payload, context) => {
         const updatedVisibleStatus = !currenVisibleStatus
         console.log('UPDATED : ', updatedVisibleStatus, ' CURRENT : ', currenVisibleStatus);
         console.log('HEHE : ', payload.QuestionId)
-        const updatedQuestion = await prisma.question.update({
+        let updatedQuestion = await prisma.question.update({
           where: {
             id: payload.QuestionId,
           },
@@ -35,6 +36,7 @@ export const changeVisibleStatusOfQue = async (_, payload, context) => {
         console.log(
           `Updated Visible Status of Question with ID : ${payload.QuestionId} - ${updatedVisibleStatus}`
         )
+        updatedQuestion = await addUserDetails(updatedQuestion, updatedQuestion.createdBy)
         return updatedQuestion
       } else {
         throw new GraphQLError("Question with given questionId doesn't exist", {

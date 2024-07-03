@@ -7,6 +7,8 @@ export const typeDefs = `#graphql
         questions : [QuizQuestion]
         isVisible : Boolean
         isApproved : Boolean
+        creatorUsername : String
+        creatorName : String
         startTime : DateTime
         endTime : DateTime
         QuizAttendees : [QuizAttendees]

@@ -1,9 +1,14 @@
 import { prisma } from '../../../prisma/index.js'
 import { GraphQLError } from 'graphql'
+import { addUserDetails } from '../../utils/addUserDetails.js'
 
 export const getAllQuiz = async (_, payload) => {
   try {
-    const quizes = await prisma.quiz.findMany({ where: payload })
+    let quizes = await prisma.quiz.findMany({ where: payload })
+    for(let i = 0; i < quizes.length; i++)
+      {
+        quizes[i] = await addUserDetails(quizes[i], quizes[i].createdBy)
+      }
     return quizes
   } catch (error) {
     // CHNG
