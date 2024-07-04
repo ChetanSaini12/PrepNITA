@@ -33,6 +33,8 @@ export const GET_ALL_QUIZ = gql`
         getAllQuiz{
             id 
             createdBy
+            creatorUsername
+            creatorName
             title
             description
             isVisible
@@ -49,6 +51,8 @@ export const GET_QUIZ_BY_ID_without_Q = gql`
         getQuizById(QuizId: $QuizId){
             id 
             createdBy
+            creatorUsername
+            creatorName
             title
             description
             isVisible
@@ -65,6 +69,8 @@ export const GET_QUIZ_BY_ID_with_Q = gql`
         getQuizById(QuizId: $QuizId){
             id 
             title
+            creatorUsername
+            creatorName
             questions {
                 id
                 quizId
