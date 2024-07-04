@@ -62,9 +62,13 @@ const userSlice = createSlice({
         setReadyStates(state, actions) {
             state.ready = actions.payload;
         }
+        ,
+        setError: (state, action) => {
+            state.error = action.payload;
+        },
 
     },
 });
 
-export const { LoginUser, LogoutUser, setLoading, setProfilePic, setToken, setReadyStates } = userSlice.actions;
+export const { LoginUser, LogoutUser, setLoading, setError, setProfilePic, setToken, setReadyStates } = userSlice.actions;
 export default userSlice.reducer;
