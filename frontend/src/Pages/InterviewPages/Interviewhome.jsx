@@ -17,12 +17,10 @@ export default function Interviewhome() {
   const [ERROR, setError] = useState(null);
   const dispatch = useDispatch();
 
-  const [getInterviews] = useMutation(GET_INTERVIEW, {
-    onError: (error) => {
-      console.log("error in getting interviews ", error);
-      return setError(error);
-    },
-  });
+  const [getInterviews] = useMutation(GET_INTERVIEW);
+
+  const screenSize = window.innerWidth;
+  console.log("Screen size ", screenSize);
 
   useEffect(() => {
     // console.log("");
@@ -30,26 +28,21 @@ export default function Interviewhome() {
     dispatch(setLoading(true));
     (async () => {
       try {
-        const { data, errors } = await getInterviews({
+        const { data } = await getInterviews({
           variables: { intervieweeId: id },
         });
-        // console.log("Interviews data ", data);
-        if (errors) {
-          dispatch(setLoading(false));
-          return setError(errors);
-        } else if (data) {
+        console.log("Interviews data ", data);
+        if (data) {
           setInterviews(data.getInterview);
-          dispatch(setLoading(false));
-        } else {
-          dispatch(setLoading(false));
-          return setError("Something went wrong in fetching interviews");
         }
       } catch (error) {
         console.log("Error in getting interviews ", error);
-        dispatch(setLoading(false));
-        return setError(error);
+        setError(error);
       }
-      setReady(true);
+      finally {
+        dispatch(setLoading(false));
+        setReady(true);
+      }
     })();
   }, [data]);
 
@@ -74,25 +67,22 @@ export default function Interviewhome() {
       <h1 className="text-1xl">My Interview</h1>
       <div className="flex">
         <button
-          className={`${baseButtonClass} ${
-            buttonIndex === 0 ? selectedButtonClass : nonSelectedButtonClass
-          }`}
+          className={`${baseButtonClass} ${buttonIndex === 0 ? selectedButtonClass : nonSelectedButtonClass
+            }`}
           onClick={() => setButtonIndex(0)}
         >
           Upcoming
         </button>
         <button
-          className={`${baseButtonClass} ${
-            buttonIndex === 1 ? selectedButtonClass : nonSelectedButtonClass
-          }`}
+          className={`${baseButtonClass} ${buttonIndex === 1 ? selectedButtonClass : nonSelectedButtonClass
+            }`}
           onClick={() => setButtonIndex(1)}
         >
           Ongoing
         </button>
         <button
-          className={`${baseButtonClass} ${
-            buttonIndex === 2 ? selectedButtonClass : nonSelectedButtonClass
-          }`}
+          className={`${baseButtonClass} ${buttonIndex === 2 ? selectedButtonClass : nonSelectedButtonClass
+            }`}
           onClick={() => setButtonIndex(2)}
         >
           Past
