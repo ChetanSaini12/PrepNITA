@@ -22,9 +22,9 @@ model UserInformation {
   username          String?     @unique
   name              String?
   password          String
+  profilePic        String?     @default("https://res.cloudinary.com/ddxrqyl1c/image/upload/v1720017347/bdc3eb5c01c7846632a85c2cea776019_w4q1dt.jpg")
   mobileNum         String?
   role              Roles       @default(USER)
-  profilePic        String?
   gender            Gender?
   collegeId         String?
   graduationYear    Int?
@@ -167,9 +167,13 @@ model Feedback {
 model Experience {
   id             Int       @id @unique @default(autoincrement())
   company        String       
-  role           String       
+  role           String    
   anonymous      Boolean   @default(false)
   description    String       
+  helperPic      String   @default("https://res.cloudinary.com/ddxrqyl1c/image/upload/v1720018573/98994d307591550b1e2a0ba1bdab80d8_eyq5z2.jpg")
+  location       String   @default("Bangalore, Karnataka, India")
+  eventDate      DateTime @default("2024-07-03T14:58:39.091Z")
+  type           ExperienceType @default(ON_CAMPUS)
   createdAt      DateTime
   createdBy      Int
   upvotes        Int       @default(0)
@@ -227,8 +231,13 @@ enum Roles {
 enum Gender {
   MALE
   FEMALE
+  NON_BINARY
+  GENDERQUEER
+  AGENDER
   TRANSGENDER
+  TWO_SPIRIT
   PREFER_NOT_TO_SAY
+  OTHER
 }
 
 enum Department {
@@ -241,6 +250,7 @@ enum Department {
   CIVIL_ENGINEERING
   PRODUCTION_ENGINEERING
   BIO_TECH_AND_BIO_ENGINEERING
+  OTHER
 }
 
 enum Course {
@@ -248,4 +258,10 @@ enum Course {
   PhD
   MCA
   MTech
+  Other
+}
+
+enum ExperienceType {
+  ON_CAMPUS
+  OFF_CAMPUS
 }

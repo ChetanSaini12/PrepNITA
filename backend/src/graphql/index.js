@@ -6,8 +6,17 @@ import { Interview } from './Interview/index.js'
 import { Experience } from './Experience/index.js'
 import { Quiz } from './Quiz/index.js'
 import { mergeTypeDefs } from '@graphql-tools/merge'
+import GraphQLUpload from 'graphql-upload/GraphQLUpload.mjs'
+import { ApolloServerPluginLandingPageLocalDefault, gql } from 'apollo-server-core'
+
+const UploadTypeDefinition = gql`
+  scalar Upload
+`;
+
 
 const mergedTypes = mergeTypeDefs([
+  UploadTypeDefinition,
+  DateTimeTypeDefinition,
   User.typeDefs,
   Question.typeDefs,
   Interview.typeDefs,
@@ -17,7 +26,6 @@ const mergedTypes = mergeTypeDefs([
 async function createApolloGraphqlServer() {
   const gqlserver = new ApolloServer({
     typeDefs: [
-      DateTimeTypeDefinition,
       mergedTypes,`
       type Query {
         ${User.queries}
@@ -37,6 +45,7 @@ async function createApolloGraphqlServer() {
     ],
     resolvers: {
       DateTime: DateTimeResolver,
+      Upload: GraphQLUpload,
       Query: {
         ...User.resolvers.queries,
         ...Question.resolvers.queries,
@@ -52,6 +61,9 @@ async function createApolloGraphqlServer() {
         ...Experience.resolvers.mutations,
       },
     },
+    csrfPrevention: true,
+    cache: 'bounded',
+    plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })],
     includeStacktraceInErrorResponses: false,
     introspection : true
   })

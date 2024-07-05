@@ -34,7 +34,7 @@ import RoleManagement from "./Pages/UserPages/RoleManagement.jsx";
 import MyQuizes from "./Pages/Quiz/MyQuizes.jsx";
 import { AllExperience } from "./Pages/Experience/AllExperience.jsx";
 import { ExperienceById } from "./Pages/Experience/ExperienceById.jsx";
-import { Loader } from "./Pages/Loader.jsx";
+import PendingApproval from "./Pages/SuperAdmin/PendingApproval.jsx";
 
 function App() {
   const { theme } = useSelector((state) => state.theme);
@@ -95,6 +95,7 @@ function App() {
 
             <Route path="/contribute" element={<Contribute />}></Route>
             <Route path="/texted" element={<TextEditor />}></Route>
+            <Route path="/pending-approval" element={<PendingApproval />}></Route>
             <Route path="/notFound" element={<PageNotFound />}></Route>
             <Route path="/*" element={<PageNotFound />}></Route>
             {/* <Route path="/loader" element={<Loader/>}></Route> */}

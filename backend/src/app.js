@@ -5,6 +5,7 @@ import 'dotenv/config'
 import authRouter from './routes/auth.route.js'
 import { expressMiddleware } from '@apollo/server/express4'
 import { createApolloGraphqlServer } from './graphql/index.js'
+import graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.mjs'
 import { decodeToken } from './utils/decodeToken.js'
 
 const app = express()
@@ -38,8 +39,12 @@ app.get('/', (req, res) =>
   res.status(200).json({ msg: 'Server is responding' })
 )
 
-app.use('/auth', authRouter)
+app.get('/hello', (req, res) =>
+  res.status(200).json({ msg: 'Radhe Radhe!!' })
+)
 
+app.use('/auth', authRouter)
+app.use(graphqlUploadExpress());
 app.use(
   '/graphql',
   expressMiddleware(await createApolloGraphqlServer(), {

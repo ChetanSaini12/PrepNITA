@@ -1,9 +1,10 @@
 import { GraphQLError } from 'graphql'
 import { prisma } from '../../../prisma/index.js'
+import { addUserDetails } from '../../utils/addUserDetails.js';
 
 export const getQuizByIdHelper = async (id) => {
   console.log('Getting quiz with id : ', id);
-  const quiz = await prisma.quiz.findFirst({
+  let quiz = await prisma.quiz.findFirst({
     where: { id },
     include : {
       questions: true,
@@ -17,5 +18,6 @@ export const getQuizByIdHelper = async (id) => {
       },
     })
   }
+  quiz = await addUserDetails(quiz, quiz.createdBy)
   return quiz
 }

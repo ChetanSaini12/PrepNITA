@@ -7,6 +7,8 @@ export const GET_ALL_QUESTIONS = gql`
             description
             answer
             createdBy 
+            creatorUsername
+            creatorName
             tags 
             links {
                 id
@@ -49,6 +51,8 @@ export const GET_QUESTION_BY_ID = gql`
             description
             answer
             createdBy
+            creatorUsername
+            creatorName
             tags 
             links {
                 id

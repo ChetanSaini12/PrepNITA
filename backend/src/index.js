@@ -8,9 +8,5 @@ app.listen(process.env.PORT, () => {
 })
 
 
-// Schedule a task to run every minute
-cron.schedule('*/5 * * * *', () => {
-  console.log('Running a task every minute');
-});
 
 console.log("moment",JSON.stringify(moment()));
