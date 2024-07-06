@@ -264,20 +264,22 @@ function Interviews() {
           <div className=" ">
             <table className="table-auto w-full my-4">
               <thead>
-                <tr className="bg-gray-100 text-gray-600 font-semibold text-left">
-                  <th className="px-4 py-2">Sr. No.</th>
-                  <th className="px-4 py-2">Interviewee</th>
-                  <th className="px-4 py-2">Interviewer</th>
-                  <th className="px-4 py-2">Start Time</th>
-                  <th className="px-4 py-2">Duration (Min.)</th>
-                  <th className="px-4 py-2">Feedback</th>
-                </tr>
+                {displayInterviews && (
+                  <tr className="bg-gray-100 text-gray-600 font-semibold text-left">
+                    <th className="px-4 py-2">Sr. No.</th>
+                    <th className="px-4 py-2">Interviewee</th>
+                    <th className="px-4 py-2">Interviewer</th>
+                    <th className="px-4 py-2">Start Time</th>
+                    <th className="px-4 py-2">Duration (Min.)</th>
+                    <th className="px-4 py-2">Feedback</th>
+                  </tr>
+                )}
               </thead>
               <tbody>
                 {displayInterviews?.map((interview, index) => (
                   <tr
                     key={index}
-                    className="border-b border-gray-200 hover:bg-gray-600 transition-all"
+                    className="border-b border-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition-all cursor-pointer "
                     onClick={() => navigate(`/interview/${interview.id}`)}
                   >
                     <td className="px-4 py-2">{index + 1}.</td>
