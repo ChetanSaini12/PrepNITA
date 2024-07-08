@@ -240,7 +240,7 @@ const QuestionById = () => {
           </div >
         ) :
         (<div className='w-screen min-h-screen shadow-md rounded-md p-6'>
-          <h1 className='text-3xl flex justify-center'>Something went wrong </h1>
+          <h1 className='text-xl md:text-3xl flex justify-center'>Wait... </h1>
         </div>)
       }
     </>

@@ -18,7 +18,6 @@ import PageNotFound from "./Pages/404Page.jsx";
 import QuestionById from "./Pages/Questions/QuestionById.jsx";
 import "particles.js/particles";
 import { ProfileById } from "./Pages/UserPages/ProfileById.jsx";
-import Interviewhome from "./Pages/InterviewPages/Interviewhome.jsx";
 import AdminInterview from "./Pages/InterviewPages/adminInterview.jsx";
 import { CreateQuiz } from "./Pages/Contribute/CreateQuiz.jsx";
 import QuizDetail from "./Pages/Quiz/QuizDetail.jsx";
@@ -83,7 +82,6 @@ function App() {
             <Route path="/students" element={<AllUsers />}></Route>
             <Route path="/onboarding" element={<Onboarding />}></Route>
             <Route path="/interview" element={<Interview />}></Route>
-            <Route path="/interviewdummy" element={<Interviewhome />}></Route>
             <Route
               path="/interviewdummyadmin"
               element={<AdminInterview />}
@@ -95,9 +93,10 @@ function App() {
 
             <Route path="/contribute" element={<Contribute />}></Route>
             <Route path="/texted" element={<TextEditor />}></Route>
-            <Route path="/pending-approval" element={<PendingApproval />}></Route>
+            <Route path="/pending_approval" element={<PendingApproval />}></Route>
             <Route path="/notFound" element={<PageNotFound />}></Route>
             <Route path="/*" element={<PageNotFound />}></Route>
+            {/* <Route path="/loader" element={<Loader/>}></Route> */}
           </Routes>
           <FooterCom></FooterCom>
         </BrowserRouter>
