@@ -93,7 +93,7 @@ function App() {
 
             <Route path="/contribute" element={<Contribute />}></Route>
             <Route path="/texted" element={<TextEditor />}></Route>
-            <Route path="/pending-approval" element={<PendingApproval />}></Route>
+            <Route path="/pending_approval" element={<PendingApproval />}></Route>
             <Route path="/notFound" element={<PageNotFound />}></Route>
             <Route path="/*" element={<PageNotFound />}></Route>
             {/* <Route path="/loader" element={<Loader/>}></Route> */}
