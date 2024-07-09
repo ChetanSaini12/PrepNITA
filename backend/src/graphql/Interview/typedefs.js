@@ -34,6 +34,11 @@ export const typeDefs = `#graphql
         topics : [String]
     }
 
+    input InterviewOptional {
+        intervieweeId : Int
+        interviewerId : Int
+    }
+
     input FeedbackInput {
         interviewId : Int!
         communication : Int!

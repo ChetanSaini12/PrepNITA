@@ -43,4 +43,8 @@ export const typeDefs = `#graphql
         options : [String]!
         correctOption : Int!
     }
+
+    input QuizOptional {
+        title : String
+    }
 `

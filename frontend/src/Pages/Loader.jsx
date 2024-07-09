@@ -46,7 +46,7 @@ export const Loader = () => {
           width={200}
       /> */}
       <div className="loader"></div>
-      <p className="text-neutral-500 font-bold font-sans">{quote}</p>
+      <p className=" px-1 text-center text-neutral-500 font-bold font-sans">{quote}</p>
     </div>
   );
 };

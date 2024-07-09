@@ -1,14 +1,14 @@
 import { prisma } from '../../../prisma/index.js'
 import { addUserDetails } from '../../utils/addUserDetails.js'
+import { filterData } from '../../utils/filteration.js'
 
 export const getQuestions = async (_, payload) => {
-  console.log('GETTING ALL QUESTIONS')
   let questions = await prisma.question.findMany({
-    where: payload,
+    where: payload.Question,
   })
-  console.log('ALL QUESTIONS FETCHED SUCCESSFULLY')
   for (let i = 0; i < questions.length; i++) {
     questions[i] = await addUserDetails(questions[i], questions[i].createdBy)
   }
+  questions = filterData(questions, payload.filter)
   return questions
 }

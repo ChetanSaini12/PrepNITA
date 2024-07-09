@@ -28,10 +28,10 @@ const InterviewDetails = () => {
   const dispatch = useDispatch();
 
   const dummyFeedBack = {
-    communication : 4,
-    development : 3,
-    dsa : 2,
-    csfundamentals : 1,
+    communication: 4,
+    development: 3,
+    dsa: 2,
+    csfundamentals: 1,
 
     notes: [
       "Good communication skills",
@@ -60,25 +60,21 @@ const InterviewDetails = () => {
     dispatch(setLoading(true));
     (async () => {
       try {
-        const { data, errors } = await getInterviewById({
+        const { data } = await getInterviewById({
           variables: {
             interviewId: parseInt(id),
           },
         });
-        console.log("res ", data, errors);
-
-        if (errors) {
-          dispatch(setLoading(false));
-          return setError(errors);
-        } else if (data) {
+        console.log("res ", data);
+        if (data) {
           console.log("data at interview details page ", data);
           setInterview(data.getInterviewById);
-          dispatch(setLoading(false));
         }
       } catch (error) {
         console.log("error at interview page ", error);
+        setError(error);
+      } finally {
         dispatch(setLoading(false));
-        return setError(error);
       }
     })();
   }, [id, fetch]);
@@ -132,19 +128,23 @@ const InterviewDetails = () => {
   if (ERROR) {
     console.log("error at interview page ", ERROR);
     toast.error(ERROR.message ? ERROR.message : "Something went wrong !");
+    setTimeout(() => {
+      setError(null);
+    }, 2000);
   }
   if (isLoading) return <Loader />;
   return (
     <>
       {interview && (
-        <div className="w-full p-5">
-          <h1 className="text-4xl"> Intrerview Id : #{id}</h1>
-          <hr></hr>
+        <div className="w-full px-2 pt-0 pb-5">
+          <h1 className="flex justify-center items-baseline py-2 mx-2 rounded-b-md bg-gray-300 dark:bg-gray-800 
+          text-xl sm:text-2xl md:text-3xl"> Intrerview Id : #{id}</h1>
+          {/* <hr></hr> */}
           <div className="m-4 flex flex-col gap-4">
             <div className="flex flex-row justify-between ">
               <div>
                 <p className="border-b-2 w-fit">Interviewee Name : </p>
-                <h1 className="text-2xl my-2">
+                <h1 className="text-lg sm:text-xl my-2">
                   {interview.intervieweeName !== null
                     ? interview.intervieweeName
                     : "N/A"}
@@ -157,21 +157,21 @@ const InterviewDetails = () => {
                     <span>|</span>
                     <span>{moment(interview.startTime).format("ddd")}</span>
                   </div>
-                  <div className="flex justify-center w-full text-xl">
+                  <div className="flex justify-center w-full text-lg sm:text-xl">
                     <span>{moment(interview.startTime).format("h:mm A")}</span>
                   </div>
                 </div>
               </div>
               <div>
                 <p className="border-b-2 w-fit">Interviewer Name : </p>
-                <h1 className="text-2xl my-2">
+                <h1 className="text-lg sm:text-xl my-2">
                   {interview.interviewerName !== null
                     ? interview.interviewerName
                     : "N/A"}
                 </h1>
                 <div className="border-2 bg-teal-700 border-gray-500 text-white rounded p-2 flex flex-col justify-center items-center gap-2 h-20">
                   <div>Duration : </div>
-                  <div className="text-xl">{interview.duration} Minutes</div>
+                  <div className="text-lg sm:text-xl">{interview.duration} Minutes</div>
                 </div>
               </div>
             </div>
@@ -181,7 +181,7 @@ const InterviewDetails = () => {
                 {interview.topics?.map((topic, index) => (
                   <span
                     key={index}
-                    className="bg-teal-700 text-white text-sm font-medium py-1 px-3 rounded-full"
+                    className="bg-teal-700 text-white text-sm  py-1 px-2 rounded-md"
                   >
                     {topic}
                   </span>
