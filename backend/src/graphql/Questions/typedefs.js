@@ -35,4 +35,9 @@ export const typeDefs = `#graphql
         title : String!
         url : String!
     }
+
+    input QuestionOptional {
+        title: String
+        tags: [String]
+    }
 `
