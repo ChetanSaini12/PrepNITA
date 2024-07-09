@@ -6,7 +6,7 @@ export const mutations = `#graphql
 
     getQuizById(QuizId : Int!) : Quiz
 
-    getAllQuiz : [Quiz]
+    getAllQuiz(Quiz : QuizOptional, filter : [FilterCondition]) : [Quiz]
 
     changeApproveStatusOfQuiz(quizId : Int!) : Quiz
     

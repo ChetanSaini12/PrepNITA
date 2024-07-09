@@ -7,16 +7,27 @@ import { Experience } from './Experience/index.js'
 import { Quiz } from './Quiz/index.js'
 import { mergeTypeDefs } from '@graphql-tools/merge'
 import GraphQLUpload from 'graphql-upload/GraphQLUpload.mjs'
-import { ApolloServerPluginLandingPageLocalDefault, gql } from 'apollo-server-core'
+import {
+  ApolloServerPluginLandingPageLocalDefault,
+  gql,
+} from 'apollo-server-core'
 
 const UploadTypeDefinition = gql`
   scalar Upload
-`;
+`
 
+const filterTypeDefinition = gql`
+  input FilterCondition {
+    field: String!
+    operator: String!
+    value: String!
+  }
+`
 
 const mergedTypes = mergeTypeDefs([
   UploadTypeDefinition,
   DateTimeTypeDefinition,
+  filterTypeDefinition,
   User.typeDefs,
   Question.typeDefs,
   Interview.typeDefs,
@@ -26,7 +37,8 @@ const mergedTypes = mergeTypeDefs([
 async function createApolloGraphqlServer() {
   const gqlserver = new ApolloServer({
     typeDefs: [
-      mergedTypes,`
+      mergedTypes,
+      `
       type Query {
         ${User.queries}
         ${Question.queries}
@@ -65,7 +77,7 @@ async function createApolloGraphqlServer() {
     cache: 'bounded',
     plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })],
     includeStacktraceInErrorResponses: false,
-    introspection : true
+    introspection: true,
   })
 
   await gqlserver.start()
