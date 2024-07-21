@@ -1,5 +1,5 @@
 export const mutations = `#graphql
-    getAllExperience : [Experience]
+    getAllExperience(Experience : InputExperience, filter : [FilterCondition]) : [Experience]
 
     getExperienceById(experienceId : Int!) : Experience
 
