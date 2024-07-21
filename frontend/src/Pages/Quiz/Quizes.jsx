@@ -14,7 +14,7 @@ import { BiBookAdd } from "react-icons/bi";
 function Quizes() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isLoading,ready,loggedIn } = useSelector((state) => state.user);
+  const { isLoading, ready, loggedIn } = useSelector((state) => state.user);
   const QuizLogo1 = '/Quiz-logo-1.png';
 
 
@@ -101,7 +101,7 @@ function Quizes() {
   const nonSelectedButtonClass = "border-b";
 
 
-  if (isLoading||!ready) {
+  if (isLoading || !ready) {
     return <Loader />;
   }
   if (ERROR) {
@@ -109,7 +109,11 @@ function Quizes() {
   }
   return (
     <div className='flex flex-col my-4 items-center mb-5 mx-1 gap-5 min-w-screen max-w-screen min-h-screen' >
-      <img className=' w-2/3 rounded object-cover' src={QuizLogo1} alt="Quiz logo" />
+      <img
+        className='w-10/12 h-60 -mt-4 rounded object-cover object-position-center'
+        src={QuizLogo1}
+        alt="Quiz logo"
+      />
       <div className='w-full flex'>
         <button className={`${baseButtonClass} ${buttonIndex === 0 ? selectedButtonClass : nonSelectedButtonClass
           }`}
@@ -135,7 +139,7 @@ function Quizes() {
         >
           Ongoing
         </button>
-        <button className={`${ready&&!loggedIn?"disabledButton":""} ${baseButtonClass} ${buttonIndex === 4 ? selectedButtonClass : nonSelectedButtonClass
+        <button className={`${ready && !loggedIn ? "disabledButton" : ""} ${baseButtonClass} ${buttonIndex === 4 ? selectedButtonClass : nonSelectedButtonClass
           }`}
           onClick={handleNewQuiz}
         >
