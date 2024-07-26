@@ -19,6 +19,8 @@ export const typeDefs = `#graphql
         downvotes : Int
         isLiked  : Boolean
         isDisliked  : Boolean
+        isApproved  : Boolean
+        isVisible  : Boolean
     }
 
     type ExpComment {
