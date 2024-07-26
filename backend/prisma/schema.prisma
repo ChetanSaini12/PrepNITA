@@ -135,7 +135,7 @@ model Article {
   title       String
   description String
   isApproved  Boolean          @default(false)
-  isVisibile  Boolean          @default(false)
+  isVisible  Boolean          @default(false)
   creator     UserContribution @relation(fields: [createdBy], references: [id], map: "article_user_fk")
 }
 
@@ -175,6 +175,8 @@ model Experience {
   eventDate      DateTime @default("2024-07-03T14:58:39.091Z")
   type           ExperienceType @default(ON_CAMPUS)
   createdAt      DateTime
+  isApproved     Boolean          @default(false)
+  isVisible      Boolean          @default(false)
   createdBy      Int
   upvotes        Int       @default(0)
   downvotes      Int       @default(0)

@@ -8,6 +8,10 @@ export const mutations = `#graphql
     updateExperience(id : Int!, Experience : InputExperience) : Experience
 
     deleteExperience(id : Int!) : Experience
+    
+    changeApproveStatusOfExp(experienceId : Int!) : Experience
+
+    changeVisibleStatusOfExp(experienceId : Int!) : Experience
 
     upvoteExperience(id : Int!) : Experience
     

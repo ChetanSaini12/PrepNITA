@@ -1,6 +1,8 @@
 import { Button, FloatingLabel, TextInput, Textarea, ToggleSwitch } from "flowbite-react";
 import React, { useState } from "react";
 import TextEditor from "../../Components/sampleTextEditor";
+import { useSelector } from "react-redux";
+
 
 const sampleExp = `<div><span style="font-weight: bold;">Note: THIS IS A SAMPLE EXPERIENCE. PLEASE CLEAR IT FIRST.
 <br /><br /></span><span style="font-weight: bold;">Status:</span> Final year student, Tier 2 college (NIT/IIIT)
@@ -38,6 +40,11 @@ function CreateExperience() {
   const [data, setData] = useState(sampleExp);
   const [anonymous, setAnonymous] = useState(1);
 
+  const { name } = useSelector(
+    (state) => state.user
+  );
+
+
   return (
     <div className="flex flex-col items-center min-w-screen my-5">
       <h1 className="text-lg sm:text-2xl mx-1 py-2 px-3 text-center  border-t border-l border-r rounded-t-lg border-gray-300 dark:border-gray-700">
@@ -53,7 +60,7 @@ function CreateExperience() {
                 <span className="text-2xl sm:text-4xl">{companyName}</span>
                 <span className="text-lg sm:text-xl bottom-0">| {position}</span>
               </div>
-              <p>Written by -: {anonymous == 0 ? <span>Chetan Saini</span> : <span>Anonymous User</span>}</p>
+              <p>Written by -: {anonymous == 0 && name ? <span>{name}</span> : <span>Anonymous User</span>}</p>
             </div>
             <hr />
             <div dangerouslySetInnerHTML={{ __html: data }} />

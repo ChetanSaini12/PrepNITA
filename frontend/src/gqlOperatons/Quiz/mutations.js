@@ -27,10 +27,10 @@ export const CREATE_QUIZ = gql`
         }
     }
 `;
-
+// getAllQuiz(Quiz : QuizOptional, filter : [FilterCondition]) : [Quiz]
 export const GET_ALL_QUIZ = gql`
-    mutation getAllQuizMutation{
-        getAllQuiz{
+    mutation getAllQuizMutation($Quiz : QuizOptional, $filter : [FilterCondition]){
+        getAllQuiz(Quiz : $Quiz, filter : $filter){
             id 
             createdBy
             creatorUsername

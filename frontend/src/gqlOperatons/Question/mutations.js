@@ -1,8 +1,11 @@
 import { gql } from '@apollo/client';
 
+
+// getQuestions(Question : QuestionOptional, filter : [FilterCondition]) : [Question]
+
 export const GET_ALL_QUESTIONS = gql`
-     mutation getAllQuestions($title: String, $tags: [String]){
-        getQuestions(title: $title, tags: $tags){
+     mutation getAllQuestions($Question : QuestionOptional, $filter : [FilterCondition]){
+        getQuestions(Question: $Question, filter: $filter){
             id 
             description
             answer

@@ -45,11 +45,7 @@ function Interviews() {
     if (!ready) return;
     (async () => {
       try {
-        const { data } = await getInterviews({
-          variables: {
-            intervieweeId: parseInt(id),
-          },
-        });
+        const { data } = await getInterviews();
         // console.log("Interviews data ", data);
         if (data) {
           setInterviews(data.getInterview);
