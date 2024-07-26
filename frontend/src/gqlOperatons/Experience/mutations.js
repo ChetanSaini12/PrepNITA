@@ -9,10 +9,10 @@ export const CREATE_EXPERIENCE = gql`
         }
     }
 `;
-
+// getAllExperience(Experience : InputExperience, filter : [FilterCondition]) : [Experience]
 export const GET_ALL_EXPERIENCE = gql`
-    mutation getAllExperienceMutaiton{
-        getAllExperience{
+    mutation getAllExperienceMutaiton($Experience : InputExperience, $filter : [FilterCondition]){
+        getAllExperience(Experience : $Experience, filter : $filter){
          id
          company
          role
