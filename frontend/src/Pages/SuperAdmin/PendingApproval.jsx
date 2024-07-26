@@ -98,6 +98,19 @@ function PendingApproval() {
   const handleApprove = (type, id) => {
     const userConfirmation = window.confirm(`You are sure to approve ${type} ${id} ?`);
     if (!userConfirmation) return;
+    // if(type === 'Question') {
+    //   approveQuestion({
+    //     variables: { id },
+    //     refetchQueries: [{ query: GET_ALL_QUESTIONS, variables: { isApproved: false } }],
+    //   });
+    // }
+    // if(type === 'Quiz') {
+    //   approveQuiz({
+    //     variables: { id },
+    //     refetchQueries: [{ query: GET_ALL_QUIZ, variables: { isApproved: false } }],
+    //   });
+    // }
+  
 
   };
 
