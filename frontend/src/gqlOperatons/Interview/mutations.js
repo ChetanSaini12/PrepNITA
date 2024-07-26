@@ -1,9 +1,10 @@
 import { gql } from '@apollo/client';
 
+// getInterview(Interview : InterviewOptional, filter : [FilterCondition]) : [Interview]
 
 export const GET_INTERVIEW = gql`
-    mutation getInterview($intervieweeId: Int, $interviewerId: Int){
-        getInterview(intervieweeId: $intervieweeId, interviewerId: $interviewerId){
+    mutation getInterview($Interview : InterviewOptional, $filter : [FilterCondition]){
+        getInterview(Interview : $Interview, filter : $filter){
             id
             intervieweeId
             interviewerId
