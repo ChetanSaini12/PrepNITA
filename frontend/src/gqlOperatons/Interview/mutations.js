@@ -13,6 +13,7 @@ export const GET_INTERVIEW = gql`
             topics
             isCompleted
             intervieweeName
+            roomId
             interviewerName
             feedback {
                 points
@@ -30,6 +31,7 @@ export const GET_INTERVIEW_BY_ID = gql`
                 startTime
                 duration
                 topics
+                roomId
                 isCompleted
                 intervieweeName
                 interviewerName

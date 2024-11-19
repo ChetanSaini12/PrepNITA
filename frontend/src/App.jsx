@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import Dashboard from "./Pages/Dashboard";
 import Home from "./Pages/Home";
 import Header from "./Components/Header";
@@ -34,12 +34,21 @@ import MyQuizes from "./Pages/Quiz/MyQuizes.jsx";
 import { AllExperience } from "./Pages/Experience/AllExperience.jsx";
 import { ExperienceById } from "./Pages/Experience/ExperienceById.jsx";
 import PendingApproval from "./Pages/SuperAdmin/PendingApproval.jsx";
+import EditorPage from "./Pages/InterviewPages/EditorPage.js";
 
 function App() {
   const { theme } = useSelector((state) => state.theme);
   if (theme === "dark") {
     window.particlesJS.load("particles", "/particlesjs-config.json");
   }
+  const currentPath = window.location.pathname;
+  
+  // List of routes where Header and Footer should be hidden
+  const hideNavAndFooter = ["/editor"];
+
+  const shouldHideNavAndFooter = hideNavAndFooter.some((path) =>
+    currentPath.startsWith(path)
+  );
 
   return (
     <div className="App">
@@ -56,22 +65,25 @@ function App() {
         </div>
         <BrowserRouter>
           <ScrollToTop />
-          <Header />
+          {!shouldHideNavAndFooter && <Header />}
           <Routes>
             <Route path="/" element={<Home />}></Route>
             <Route path="/faltu" element={<AllUsers />}></Route>
             <Route path="/dashboard" element={<Dashboard />}></Route>
             <Route path="/quizes" element={<Quizes />}></Route>
-            <Route path="/quizes/my" element={<MyQuizes/>}></Route>
+            <Route path="/quizes/my" element={<MyQuizes />}></Route>
             <Route path="/contribute/quiz" element={<CreateQuiz />}></Route>
-            <Route path="/contribute/experience" element={<CreateExperience />}></Route>
+            <Route
+              path="/contribute/experience"
+              element={<CreateExperience />}
+            ></Route>
             <Route
               path="/contribute/question"
               element={<CreateQuestion />}
             ></Route>
             <Route path="/quiz/id/:id" element={<QuizDetail />}></Route>
             <Route path="/quiz/view/:id" element={<ParticipateQuiz />}></Route>
-
+            <Route path="/editor/:roomId" element={<EditorPage />} />
             <Route path="/discuss" element={<Discuss />}></Route>
             <Route path="/register" element={<SignUp />}></Route>
             <Route path="/profile" element={<Profile />}></Route>
@@ -88,17 +100,20 @@ function App() {
             ></Route>
             <Route path="/interview/:id" element={<InterviewDetail />}></Route>
 
-            <Route path="/experience" element={<AllExperience/>}></Route>
-            <Route path="/experience/:id" element={<ExperienceById/>}></Route>
+            <Route path="/experience" element={<AllExperience />}></Route>
+            <Route path="/experience/:id" element={<ExperienceById />}></Route>
 
             <Route path="/contribute" element={<Contribute />}></Route>
             <Route path="/texted" element={<TextEditor />}></Route>
-            <Route path="/pending_approval" element={<PendingApproval />}></Route>
+            <Route
+              path="/pending_approval"
+              element={<PendingApproval />}
+            ></Route>
             <Route path="/notFound" element={<PageNotFound />}></Route>
             <Route path="/*" element={<PageNotFound />}></Route>
             {/* <Route path="/loader" element={<Loader/>}></Route> */}
           </Routes>
-          <FooterCom></FooterCom>
+          {!shouldHideNavAndFooter && <FooterCom />}
         </BrowserRouter>
       </div>
     </div>
