@@ -38,9 +38,7 @@ import EditorPage from "./Pages/InterviewPages/EditorPage.js";
 
 function App() {
   const { theme } = useSelector((state) => state.theme);
-  if (theme === "dark") {
-    window.particlesJS.load("particles", "/particlesjs-config.json");
-  }
+  
   const currentPath = window.location.pathname;
   
   // List of routes where Header and Footer should be hidden
