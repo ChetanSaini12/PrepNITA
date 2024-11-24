@@ -1,8 +1,4 @@
-import React, { useEffect } from "react";
-import { VerifyToken } from "../utils/verifyToken";
-import { useDispatch, useSelector } from "react-redux";
-import { LogoutUser } from "../app/user/userSlice";
-import Pic from "../Assets/HomePagePic.jpg";
+import React from "react";
 import toast from "react-hot-toast";
 import HomeLottie from "../lotties/HomeLotties";
 
@@ -10,9 +6,9 @@ function Home() {
   return (
     toast.success("Welcome to the Home Page", { duration: 2000 }),
     (
-      <div class="relative overflow-hidden rounded-lg bg-cover bg-no-repeat p-12 text-center h-screen ">
+      <div className="relative overflow-hidden rounded-lg bg-cover bg-no-repeat p-12 text-center h-screen ">
         <div
-          class="absolute bottom-0 left-0 right-0 top-0 h-full w-full overflow-hidden bg-fixed"
+          className="absolute bottom-0 left-0 right-0 top-0 h-full w-full overflow-hidden bg-fixed"
           // style={{ backgroundColor: "rgb(0,0,0,0.6)" }}  
         >
           <div className="flex h-full items-center justify-evenly ">
