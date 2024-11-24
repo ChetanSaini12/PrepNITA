@@ -17,8 +17,11 @@ export const createExperience = async (_, payload, context) => {
       let experience = await prisma.experience.create({
         data: {
           company: payload.Experience.company,
+          type: payload.Experience.type,
           role: payload.Experience.role,
+          location: payload.Experience.location,
           anonymous: payload.Experience.anonymous,
+          eventDate: payload.Experience.eventDate,
           description: payload.Experience.description,
           createdAt: moment(),
           createdBy: context.userId,

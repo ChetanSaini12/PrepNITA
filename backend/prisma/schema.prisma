@@ -148,6 +148,7 @@ model Interview {
   topics        String[]
   isCompleted   Boolean           @default(false)
   feedback      Feedback?
+  roomId        String            @default("0")
   interviewee   UserTraining      @relation(fields: [intervieweeId], references: [id], map: "interviewee_user_contribution_fk")
   interviewer   UserContribution? @relation(fields: [interviewerId], references: [id], map: "interviewer_user_contribution_fk")
 }

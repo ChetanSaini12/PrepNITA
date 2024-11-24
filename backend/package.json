@@ -34,7 +34,9 @@
     "nodemailer-express-handlebars": "^6.1.2",
     "otp-generator": "^4.0.1",
     "path": "^0.12.7",
-    "pg": "^8.11.3"
+    "pg": "^8.11.3",
+    "socket.io": "^4.8.1",
+    "uuid": "^11.0.3"
   },
   "devDependencies": {
     "nodemon": "^3.0.3",
