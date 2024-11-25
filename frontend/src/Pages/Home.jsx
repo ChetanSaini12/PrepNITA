@@ -23,9 +23,9 @@ function Home() {
               NITA
             </h2>
             <h4 className="mb-6 text-xl font-semibold">
-              A small Initiative from our Mind_Set
+            Push Progress Prosper
             </h4>
-            <button
+            {/* <button
               type="button"
               className="rounded border-2  dark:border-cyan-400  px-7 pb-[8px] pt-[10px] text-sm font-medium uppercase leading-normal dark:text-cyan-700 transition duration-150 ease-in-out
                 dark:hover:border-cyan-50 hover:bg-cyan-500 hover:bg-opacity-10 hover:text-cyan-800 focus:border-cyan-800 focus:text-cyan-100 focus:outline-none focus:ring-0 active:border-cyan-200 active:text-cyan-200"
@@ -33,7 +33,7 @@ function Home() {
               data-twe-ripple-color="light"
             >
               PreP
-            </button>
+            </button> */}
           </div>
 
           <div className="home-lottie mb-20">

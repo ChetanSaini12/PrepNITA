@@ -68,9 +68,6 @@ function Header() {
           <Navbar.Link active={path === '/questions'} as="div">
             <Link to="/questions">Questions</Link>
           </Navbar.Link>
-          <Navbar.Link active={path === '/dashboard'} as="div">
-            <Link to="/dashboard">Dashboard</Link>
-          </Navbar.Link>
           <Navbar.Link active={path === '/interview'} as="div">
             <Link to="/interview">Interviews</Link>
           </Navbar.Link>
@@ -79,6 +76,9 @@ function Header() {
           </Navbar.Link>
           <Navbar.Link active={path === '/contribute'} as="div">
             <Link to="/contribute">Contribute</Link>
+          </Navbar.Link>
+          <Navbar.Link active={path === '/dashboard'} as="div">
+            <Link to="/dashboard">Dashboard</Link>
           </Navbar.Link>
           <Navbar.Link active={path === '/profile'} as="div">
             <Link to="/profile">Profile</Link>
