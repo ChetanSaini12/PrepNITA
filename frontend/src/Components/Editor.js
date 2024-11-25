@@ -7,7 +7,7 @@ import "codemirror/addon/edit/closetag";
 import "codemirror/addon/edit/closebrackets";
 import { useRef } from "react";
 
-const Editor = ({ socketRef, roomId ,onCodeChange}) => {
+const Editor = ({ socketRef, roomId, onCodeChange }) => {
   const textareaRef = useRef(null);
   const editorRef = useRef(null);
 
