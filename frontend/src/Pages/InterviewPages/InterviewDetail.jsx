@@ -79,7 +79,7 @@ const InterviewDetails = () => {
         dispatch(setLoading(false));
       }
     })();
-  }, [id, fetch]);
+  }, [id, fetch, dispatch, getInterviewById]);
 
   useEffect(() => {
     if (!interview) return;
@@ -129,7 +129,9 @@ const InterviewDetails = () => {
     }
   };
 
-  const [link] = useState("https://leetcode.com/nd98u4rrhf9o"); // Replace with dynamic link
+  // const [link] = useState("https://prepnita.netlify.app"); // Replace with dynamic link
+  const link = `https://prepnita.netlify.app/editor/${interview?.roomId}`;
+
   const handleCopy = () => {
     navigator.clipboard.writeText(link);
     alert("Link copied to clipboard!");
@@ -211,8 +213,10 @@ const InterviewDetails = () => {
       <div className="min-w-screen min-h-screen flex flex-col mt-8 mb-5">
         <div className="w-full flex justify-center">
           <div className="flex flex-col gap-2">
-            <div className="text-lg text-gray-600 px-1 rounded bg-slate-800 flex items-center w-128 overflow-hidden relative">
-              <span className="truncate w-full pr-8 hover:text-white">{link}</span>
+            <div className="text-lg text-gray-300 px-1 rounded bg-slate-800 flex items-center w-128 overflow-hidden relative">
+              <span className="truncate w-full pr-8 hover:text-white">
+                {link}
+              </span>
               <button
                 onClick={handleCopy}
                 className="absolute right-2 px-2 text-sm hover:text-white"
@@ -221,7 +225,11 @@ const InterviewDetails = () => {
               </button>
             </div>
             <div>
-              <Button color="warning" className="w-full rounded">
+              <Button
+                color="warning"
+                className="w-full rounded"
+                onClick={() => window.open(link, "_blank")}
+              >
                 Join Interview
               </Button>
             </div>
@@ -332,14 +340,14 @@ const InterviewDetails = () => {
 
             <div className="flex flex-col justify-center items-center mb-5">
               {/* <h1 className='text-3xl my-2 text-blue-500'> Comments on Candidate </h1> */}
-              <l>
+              <ul>
                 {dummyFeedBack.notes.map((note, index) => (
                   <li key={index} className="text-lg my-2">
                     {" "}
                     {note}{" "}
                   </li>
                 ))}
-              </l>
+              </ul>
             </div>
           </>
         )}
