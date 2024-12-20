@@ -3,7 +3,7 @@ export const mutations = `#graphql
 
     getQuestionById(QuestionId : Int!) : Question
 
-    getQuestions(Question : QuestionOptional, filter : [FilterCondition]) : [Question]
+    getQuestions(tags : [String]) : [Question]
 
     upVoteQuestion(QuestionId : Int!) : Question  
     
