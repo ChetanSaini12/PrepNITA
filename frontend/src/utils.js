@@ -1,4 +1,4 @@
 // get interview url from .env
-export const INTERVIEW_URL = process.env.REACT_APP_INTERVIEW_URL;
+export const INTERVIEW_URL = "https://prepnita-interview.onrender.com";
 // get base url from .env
-export const BASE_URL = process.env.REACT_APP_BASE_URL;
+export const BASE_URL = "https://prepnita.onrender.com";
