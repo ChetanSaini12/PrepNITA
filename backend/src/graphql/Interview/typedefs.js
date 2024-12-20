@@ -13,6 +13,7 @@ export const typeDefs = `#graphql
         intervieweeUsername : String
         interviewerName : String
         interviewerEmail : String
+        roomId : String
         interviewerUsername : String
         feedback : Feedback
     }

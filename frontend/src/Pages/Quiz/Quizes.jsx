@@ -109,11 +109,11 @@ function Quizes() {
   }
   return (
     <div className='flex flex-col my-4 items-center mb-5 mx-1 gap-5 min-w-screen max-w-screen min-h-screen' >
-      <img
+      {/* <img
         className='w-10/12 h-60 -mt-4 rounded object-cover object-position-center'
         src={QuizLogo1}
         alt="Quiz logo"
-      />
+      /> */}
       <div className='w-full flex'>
         <button className={`${baseButtonClass} ${buttonIndex === 0 ? selectedButtonClass : nonSelectedButtonClass
           }`}

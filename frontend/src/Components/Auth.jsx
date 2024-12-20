@@ -12,10 +12,10 @@ export const Auth = ({ children }) => {
   useEffect(() => {
     (async () => {
       console.log("Enter in Auth component");
-      console.log('LoggedIn : ', loggedIn);
+      console.log("LoggedIn : ", loggedIn);
       try {
-        if ((!loggedIn && token)) {
-          console.log('YHA token hai but login nhi h ');
+        if (!loggedIn && token) {
+          console.log("YHA token hai but login nhi h ");
 
           try {
             const response = await VerifyToken(dispatch);
@@ -38,20 +38,17 @@ export const Auth = ({ children }) => {
               dispatch(setReadyStates(true));
               return dispatch(LogoutUser()); // Assuming you have a LogoutUser action
             }
-
           } catch (error) {
             console.log("error in auth try catch", error);
             dispatch(setLoading(false));
             dispatch(setReadyStates(true));
             return dispatch(LogoutUser());
           }
-        }
-        else if (!token) {
-          console.log('TOKEN IS NOT PRESENT!');
+        } else if (!token) {
+          console.log("TOKEN IS NOT PRESENT!");
           dispatch(setReadyStates(true));
-          dispatch(LogoutUser)
-        }
-        else {
+          dispatch(LogoutUser);
+        } else {
           console.log("Already logged in");
           dispatch(setReadyStates(true));
         }

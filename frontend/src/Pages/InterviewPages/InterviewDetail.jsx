@@ -13,6 +13,8 @@ import moment from "moment";
 import { Chart as ChartJS } from "chart.js/auto";
 import { Bar, Doughnut, Pie } from "react-chartjs-2";
 import ProgressBar from "./ProgressBas";
+import { FaCopy } from "react-icons/fa";
+import { Button } from "flowbite-react";
 // import { ArcElement, } from "chart.js";
 
 const InterviewDetails = () => {
@@ -77,8 +79,7 @@ const InterviewDetails = () => {
         dispatch(setLoading(false));
       }
     })();
-  }, [id, fetch]);
-
+  }, [id, fetch, dispatch, getInterviewById]);
 
   useEffect(() => {
     if (!interview) return;
@@ -87,7 +88,10 @@ const InterviewDetails = () => {
       setCurrentStatus(2);
     } else if (interview.startTime && interview.duration) {
       const startTime = moment(interview.startTime);
-      const endTime = moment(interview.startTime).add(interview.duration, 'minutes');
+      const endTime = moment(interview.startTime).add(
+        interview.duration,
+        "minutes"
+      );
       const now = moment();
 
       if (now.isBetween(startTime, endTime)) {
@@ -125,6 +129,14 @@ const InterviewDetails = () => {
     }
   };
 
+  // const [link] = useState("https://prepnita.netlify.app"); // Replace with dynamic link
+  const link = `https://prepnita.netlify.app/editor/${interview?.roomId}`;
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(link);
+    alert("Link copied to clipboard!");
+  };
+
   if (ERROR) {
     console.log("error at interview page ", ERROR);
     toast.error(ERROR.message ? ERROR.message : "Something went wrong !");
@@ -137,8 +149,13 @@ const InterviewDetails = () => {
     <>
       {interview && (
         <div className="w-full px-2 pt-0 pb-5">
-          <h1 className="flex justify-center items-baseline py-2 mx-2 rounded-b-md bg-gray-300 dark:bg-gray-800 
-          text-xl sm:text-2xl md:text-3xl"> Intrerview Id : #{id}</h1>
+          <h1
+            className="flex justify-center items-baseline py-2 mx-2 rounded-b-md bg-gray-300 dark:bg-gray-800 
+          text-xl sm:text-2xl md:text-3xl"
+          >
+            {" "}
+            Interview Id : #{id}
+          </h1>
           {/* <hr></hr> */}
           <div className="m-4 flex flex-col gap-4">
             <div className="flex flex-row justify-between ">
@@ -171,7 +188,9 @@ const InterviewDetails = () => {
                 </h1>
                 <div className="border-2 bg-teal-700 border-gray-500 text-white rounded p-2 flex flex-col justify-center items-center gap-2 h-20">
                   <div>Duration : </div>
-                  <div className="text-lg sm:text-xl">{interview.duration} Minutes</div>
+                  <div className="text-lg sm:text-xl">
+                    {interview.duration} Minutes
+                  </div>
                 </div>
               </div>
             </div>
@@ -192,53 +211,30 @@ const InterviewDetails = () => {
         </div>
       )}
       <div className="min-w-screen min-h-screen flex flex-col mt-8 mb-5">
-        {/* <h1 className=' text-3xl flex justify-center my-2'> Interview detail page  </h1> */}
-
-        {/* {interview && (
-
-        <div className="bg-gray-200 dark:bg-gray-800 flex flex-col items-center justify-start p-5 ">
-          {interview.isCompleted && (
-            <h1 className='text-lg md:text-xl bg-green-400 p-1 rounded-md'>Interview Completed </h1>
-          )}
-          {interview.isCompleted === false && (
-            <h1 className='text-md md:text-lg bg-red-400 p-1 rounded-md'>Interview Pending </h1>
-          )}
-          <div className="mx-5 md:mx-20 p-10  flex flex-col gap-3">
-            <div>
-              <span className="text-lg md:text-xl mr-5 ">Student Name : </span>
-              <span className=" md:text-lg">{interview.intervieweeName !== null ? interview.intervieweeName : "N/A"}</span>
+        <div className="w-full flex justify-center">
+          <div className="flex flex-col gap-2">
+            <div className="text-lg text-gray-300 px-1 rounded bg-slate-800 flex items-center w-128 overflow-hidden relative">
+              <span className="truncate w-full pr-8 hover:text-white">
+                {link}
+              </span>
+              <button
+                onClick={handleCopy}
+                className="absolute right-2 px-2 text-sm hover:text-white"
+              >
+                <FaCopy />
+              </button>
             </div>
             <div>
-              <span className="text-lg md:text-xl mr-5 ">Interviewer  : </span>
-              <span className=" md:text-lg">{interview.interviewerName ? interview.interviewerName : "N/A"}</span>
-            </div>
-            <div>
-              <span className="text-lg md:text-xl mr-5 ">Start Time : </span>
-              <span className=" md:text-lg">{moment(interview.startTime).format('MMMM Do YYYY, h:mm:ss a')}</span>
-            </div>
-            <div>
-              <span className="text-lg md:text-xl mr-5 ">Duration : </span>
-              <span className=" md:text-lg">{interview.duration} minutes</span>
-            </div>
-            <div>
-              <span className="text-lg md:text-xl mr-5 ">Topics : </span>
-              <span className=" md:text-lg">{interview.topics?.join(', ') || "N/A"}</span>
-            </div>
-            <div>
-              <span className="text-lg md:text-xl mr-5 ">Feedback: </span>
-              <span className=" md:text-lg">{interview.feedback ? "Given" : "Not Given"}</span>
+              <Button
+                color="warning"
+                className="w-full rounded"
+                onClick={() => window.open(link, "_blank")}
+              >
+                Join Interview
+              </Button>
             </div>
           </div>
-          {interview?.interviewerId ===null && (
-            <div className=''>
-              <span>You want to take interview this student ? </span>
-              <button className='font-semibold underline mx-2'
-                onClick={assignInterviewHandler}
-              >Assign to me </button>
-            </div>
-          )}
         </div>
-      )} */}
         <div>
           <ProgressBar currentStatus={currentStatus} />
         </div>
@@ -344,14 +340,14 @@ const InterviewDetails = () => {
 
             <div className="flex flex-col justify-center items-center mb-5">
               {/* <h1 className='text-3xl my-2 text-blue-500'> Comments on Candidate </h1> */}
-              <l>
+              <ul>
                 {dummyFeedBack.notes.map((note, index) => (
                   <li key={index} className="text-lg my-2">
                     {" "}
                     {note}{" "}
                   </li>
                 ))}
-              </l>
+              </ul>
             </div>
           </>
         )}
